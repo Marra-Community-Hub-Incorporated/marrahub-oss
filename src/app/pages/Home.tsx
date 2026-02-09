@@ -26,7 +26,7 @@ export function Home() {
         {/* Background Image with Dark Overlay for Contrast */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="/media/hero-background.png" 
+            src={new URL('../../../public/media/hero-background.png', import.meta.url).href} 
             alt="Community Connection" 
             className="w-full h-full object-cover"
           />
