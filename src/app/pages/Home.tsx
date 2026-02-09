@@ -15,8 +15,6 @@ import {
   ArrowDown
 } from 'lucide-react';
 
-import heroBg from '../../../../public/media/hero-background.png';
-
 /**
  * Hero Section: 'The Shared Journey'
  * Redesigned for a brighter, warmer "Golden Hour" feel with high-contrast buttons.
@@ -39,6 +37,9 @@ function Hero() {
     }
   };
 
+  // Correct path for GitHub Pages using the base set in vite.config.ts
+  const heroBgPath = `${import.meta.env.BASE_URL}media/hero-background.png`;
+
   return (
     <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden bg-primary">
       
@@ -50,7 +51,7 @@ function Hero() {
         className="absolute inset-0 z-0"
       >
         <img 
-          src={heroBg} 
+          src={heroBgPath} 
           alt="Community Connection" 
           className="w-full h-full object-cover object-[center_30%]"
         />
