@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 import { Button } from '../components/Button';
 import { SectionHeader } from '../components/SectionHeader';
 import { ProgramCard } from '../components/ProgramCard';
@@ -11,164 +11,106 @@ import {
   BookOpen, 
   Sprout,
   HandHeart,
-  Shield,
-  ArrowDown
+  Shield
 } from 'lucide-react';
-
-/**
- * Hero Section: 'The Shared Journey'
- * Redesigned for a brighter, warmer "Golden Hour" feel with high-contrast buttons.
- */
-function Hero() {
-  const shouldReduceMotion = useReducedMotion();
-
-  const bgVariants = {
-    initial: { 
-      opacity: 0, 
-      scale: shouldReduceMotion ? 1 : 1.05,
-    },
-    animate: { 
-      opacity: 1, 
-      scale: 1,
-      transition: { 
-        duration: 2, 
-        ease: [0.22, 1, 0.36, 1],
-      }
-    }
-  };
-
-  // Correct path for GitHub Pages using the base set in vite.config.ts
-  const heroBgPath = `${import.meta.env.BASE_URL}media/hero-background.png`;
-
-  return (
-    <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden bg-primary">
-      
-      {/* Background Image Wrapper with Brighter "Golden Hour" Overlays */}
-      <motion.div 
-        variants={bgVariants}
-        initial="initial"
-        animate="animate"
-        className="absolute inset-0 z-0"
-      >
-        <img 
-          src={heroBgPath} 
-          alt="Community Connection" 
-          className="w-full h-full object-cover object-[center_30%]"
-        />
-        {/* 
-           Brightened Overlay System:
-           - Lighter top gradient for header clarity.
-           - Warm amber tint to create the "Golden Hour" effect.
-           - Reduced overall darkness to keep the image vibrant.
-        */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/40"></div>
-        <div className="absolute inset-0 bg-accent/20 mix-blend-overlay"></div>
-        <div className="absolute inset-0 bg-orange-400/10 mix-blend-soft-light"></div>
-      </motion.div>
-
-      {/* Content Container: Positioned higher to ensure visibility */}
-      <div className="relative z-20 w-full max-w-6xl mx-auto px-6 pt-16 pb-32 text-center flex flex-col items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
-          className="max-w-4xl"
-        >
-          {/* Pill Badge */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="mb-8 flex justify-center"
-          >
-            <span className="inline-flex items-center py-1.5 px-5 rounded-full border border-white/30 bg-black/20 backdrop-blur-md">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent mr-3"></span>
-              <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-white">
-                A Family Founded Community
-              </span>
-            </span>
-          </motion.div>
-          
-          {/* Main Headline */}
-          <h1 className="text-white mb-8 font-serif font-medium leading-[1.1] tracking-tight text-5xl md:text-8xl lg:text-9xl drop-shadow-xl">
-            Building a Future, <br />
-            <span className="relative inline-block mt-2">
-              {/* Glow Layer: Softened and shifted away from white */}
-              <span className="absolute inset-0 bg-gradient-to-r from-accent via-secondary/40 to-accent bg-clip-text text-transparent opacity-30 blur-lg animate-pulse">
-                Together
-              </span>
-              {/* Main Text Layer: Richer gold/terracotta tones for better definition */}
-              <span className="relative bg-gradient-to-r from-[#d4a574] via-[#f7dcb8] to-[#b05e45] bg-clip-text text-transparent italic font-semibold filter drop-shadow-[0_2px_10px_rgba(0,0,0,0.2)]">
-                Together
-              </span>
-            </span>
-          </h1>
-          
-          {/* Body Text: Increased contrast */}
-          <p className="text-lg md:text-2xl mb-12 text-white font-sans font-normal text-balance drop-shadow-md max-w-2xl mx-auto">
-            MARRA represents connection and helping hands. 
-            We build belonging for all across Melbourne and Victoria.
-          </p>
-          
-          {/* CTA Buttons: Distinct colors for maximum visibility */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-5 justify-center items-center w-full"
-          >
-            <Button 
-              href="/programs" 
-              size="lg" 
-              className="w-full sm:w-auto min-w-[220px] h-16 text-lg bg-secondary hover:bg-secondary/90 text-white shadow-2xl font-bold border-none rounded-full transition-all hover:scale-105"
-            >
-              Explore Programs
-            </Button>
-            <Button 
-              href="/contact" 
-              variant="outline"
-              size="lg"
-              className="w-full sm:w-auto min-w-[220px] h-16 text-lg bg-white/10 hover:bg-white/20 border-white/60 text-white backdrop-blur-md rounded-full transition-all font-semibold"
-            >
-              Get Involved
-            </Button>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-20 text-white/70 hidden md:flex flex-col items-center gap-2">
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <ArrowDown size={24} />
-        </motion.div>
-      </div>
-
-      {/* Organic Wave Bottom Overlay */}
-      <div className="absolute bottom-[-1px] left-0 w-full leading-[0] z-10 pointer-events-none">
-        <svg 
-          viewBox="0 0 1440 180" 
-          fill="none" 
-          xmlns="http://www.w3.org/2000/svg" 
-          className="w-full h-auto min-h-[100px]"
-          preserveAspectRatio="none"
-        >
-          <path 
-            d="M0,60 C320,160 520,180 720,120 C920,60 1120,0 1440,80 L1440,180 L0,180 Z" 
-            fill="var(--background)"
-          />
-        </svg>
-      </div>
-    </section>
-  );
-}
 
 export function Home() {
   return (
     <div className="min-h-screen">
-      <Hero />
+      {/* 
+          Hero Section: 'The Shared Journey'
+          Redesigned with a high-quality background image and signature curved bottom.
+      */}
+      <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center overflow-hidden bg-primary">
+        
+        {/* Background Image with Dark Overlay for Contrast */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/media/hero-background.png" 
+            alt="Community Connection" 
+            className="w-full h-full object-cover"
+          />
+          {/* Multi-layered gradient overlay:
+              1. A dark base to ensure text readability.
+              2. A subtle primary-tinted gradient to unify the brand colors.
+          */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
+        </div>
+
+        {/* Content Container: Constrained for readability on wide screens */}
+        <div className="relative z-20 w-full max-w-5xl mx-auto px-6 py-24 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {/* Tagline */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="mb-8"
+            >
+              <span className="inline-block py-1 px-4 border border-white/30 rounded-full text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-white bg-black/20 backdrop-blur-sm">
+                A Family Founded Community Centre
+              </span>
+            </motion.div>
+            
+            {/* Main Headline */}
+            <h1 className="text-white mb-8 font-serif font-semibold leading-[1.1] tracking-tight text-4xl md:text-7xl lg:text-8xl">
+              Bringing Communities <br className="hidden md:block" /> 
+              <span className="text-accent italic">Together</span>
+            </h1>
+            
+            {/* Body Text */}
+            <p className="text-lg md:text-2xl mb-12 text-white/90 leading-relaxed max-w-2xl mx-auto font-sans font-light text-balance">
+              Inspired by Aboriginal language, representing connection and helping hands. 
+              We build belonging for all across Melbourne and Victoria.
+            </p>
+            
+            {/* CTA Buttons: Fixed positioning, contrast, and spacing */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="flex flex-col sm:flex-row gap-5 justify-center items-center"
+            >
+              <Button 
+                href="/programs" 
+                size="lg" 
+                className="w-full sm:w-auto h-16 px-10 text-lg shadow-xl bg-secondary hover:bg-secondary/90 text-white border-none rounded-2xl transition-all hover:scale-105 active:scale-95"
+              >
+                Explore Programs
+              </Button>
+              <Button 
+                href="/contact" 
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto h-16 px-10 text-lg bg-white/10 hover:bg-white/20 border-white/40 text-white backdrop-blur-md rounded-2xl transition-all hover:scale-105 active:scale-95 ring-offset-primary focus-visible:ring-2 focus-visible:ring-white"
+              >
+                Get Involved
+              </Button>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Signature Curved Bottom: SVG Divider for crisp rendering */}
+        <div className="absolute bottom-[-1px] left-0 w-full leading-[0] z-10 pointer-events-none">
+          <svg 
+            viewBox="0 0 1440 120" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg" 
+            className="w-full h-auto"
+            preserveAspectRatio="none"
+          >
+            <path 
+              d="M0 120L1440 120L1440 0C1440 0 1080 120 720 120C360 120 0 0 0 0L0 120Z" 
+              fill="var(--background)"
+            />
+          </svg>
+        </div>
+      </section>
 
       {/* Why MARRA Section */}
       <section className="py-24 bg-background relative z-10">
