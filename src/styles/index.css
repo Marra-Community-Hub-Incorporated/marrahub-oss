@@ -1,0 +1,46 @@
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
+
+@layer base {
+  ::selection {
+    @apply bg-accent/30 text-primary;
+  }
+
+  /* Custom Scrollbar for a more refined feel */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 rounded-full border-4 border-background hover:bg-primary/40 transition-colors;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-cultural-fusion {
+    /* 
+       A fusion of:
+       1. Flowing Curves (Australian Landscape influence) 
+       2. Geometric Diamonds (Ukrainian Embroidery influence)
+       3. Subtle Cross-hatch (UK/Celtic Weave influence)
+    */
+    background-image: 
+      /* Organic Flowing Lines */
+      url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 100 C 40 80, 70 120, 110 100 S 160 80, 200 100' fill='none' stroke='white' stroke-width='0.5' opacity='0.07'/%3E%3Cpath d='M0 40 C 50 60, 90 20, 140 40 S 180 60, 200 40' fill='none' stroke='white' stroke-width='0.5' opacity='0.05'/%3E%3C/svg%3E"),
+      /* Geometric Diamond Pulse */
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10 L35 15 L30 20 L25 15 Z M10 40 L15 45 L10 50 L5 45 Z' fill='white' opacity='0.06'/%3E%3C/svg%3E"),
+      /* Subtle Structural Weave */
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 10px),
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 10px);
+    background-size: 400px 400px, 60px 60px, 20px 20px, 20px 20px;
+  }
+}

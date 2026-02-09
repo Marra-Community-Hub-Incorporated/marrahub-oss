@@ -1,0 +1,143 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --background: #fdfcfb; /* Warmer stone background */
+  --foreground: #1c1c1c;
+  --card: #ffffff;
+  --card-foreground: #1c1c1c;
+  --popover: #ffffff;
+  --popover-foreground: #1c1c1c;
+  
+  /* Refined Primary: Slightly deeper and richer */
+  --primary: #1e453a; 
+  --primary-foreground: #fdfcfb;
+  
+  /* Refined Secondary: More sophisticated terracotta */
+  --secondary: #b05e45;
+  --secondary-foreground: #ffffff;
+  
+  --muted: #f1eee9;
+  --muted-foreground: #666666;
+  
+  /* Refined Accent: Softer, more golden sand */
+  --accent: #d4a574;
+  --accent-foreground: #1c1c1c;
+  
+  --destructive: #c01a35;
+  --destructive-foreground: #ffffff;
+  
+  /* Subtle border using primary with low opacity */
+  --border: rgba(30, 69, 58, 0.12);
+  --input: transparent;
+  --input-background: #ffffff;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #1e453a;
+  
+  --radius: 0.75rem; /* Slightly rounder for a friendlier feel */
+  
+  /* Typography Stack */
+  --font-serif: "Ibarra Real Nova", Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+.dark {
+  --background: #121414;
+  --foreground: #fdfcfb;
+  --card: #1a1c1c;
+  --card-foreground: #fdfcfb;
+  --popover: #1a1c1c;
+  --popover-foreground: #fdfcfb;
+  --primary: #fdfcfb;
+  --primary-foreground: #121414;
+  --secondary: #333333;
+  --secondary-foreground: #fdfcfb;
+  --muted: #242626;
+  --muted-foreground: #a0a0a0;
+  --accent: #242626;
+  --accent-foreground: #fdfcfb;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #242626;
+  --input: #242626;
+  --ring: #fdfcfb;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Custom Font Families */
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    /* Subtle texture effect */
+    background-image: radial-gradient(#1e453a05 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  html {
+    font-size: var(--font-size);
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-serif tracking-tight text-balance;
+    color: var(--primary);
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    line-height: 1.1;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: var(--text-3xl);
+    line-height: 1.2;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: var(--text-2xl);
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+}
