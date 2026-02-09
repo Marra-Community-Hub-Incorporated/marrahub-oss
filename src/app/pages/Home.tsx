@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 
 export function Home() {
+  const heroBackgroundUrl = `${import.meta.env.BASE_URL}media/hero-background.png`;
+
   return (
     <div className="min-h-screen">
       {/* 
@@ -26,7 +28,7 @@ export function Home() {
         {/* Background Image with Dark Overlay for Contrast */}
         <div className="absolute inset-0 z-0">
           <img 
-            src={new URL('../../../public/media/hero-background.png', import.meta.url).href} 
+            src={heroBackgroundUrl} 
             alt="Community Connection" 
             className="w-full h-full object-cover"
           />
