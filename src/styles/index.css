@@ -26,6 +26,15 @@
     text-wrap: balance;
   }
 
+  .page-hero-background {
+    background-image:
+      linear-gradient(rgba(30, 69, 58, 0.82), rgba(30, 69, 58, 0.78)),
+      url("/media/bkg-pg.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
   .bg-cultural-fusion {
     /* 
        A fusion of:

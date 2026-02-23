@@ -9,7 +9,7 @@ export function Impact() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-primary text-primary-foreground py-20">
+      <section className="page-hero-background bg-primary text-primary-foreground py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
