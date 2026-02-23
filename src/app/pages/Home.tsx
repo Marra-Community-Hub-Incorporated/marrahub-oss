@@ -153,10 +153,6 @@ export function Home() {
                   It represents the very essence of what we do: reaching out, providing support, and building lasting bonds.
                 </p>
                 <p>
-                  Founded by a local family in Caulfield South, MARRA was born from a simple belief: 
-                  every person deserves a place where they are seen, heard, and valued.
-                </p>
-                <p>
                   We operate with a commitment to transparency and cultural awareness, 
                   ensuring our programs serve as a bridge for families and individuals across Victoria.
                 </p>
@@ -293,13 +289,13 @@ export function Home() {
         </div>
       </section>
 
-      {/* Impact Section */}
+      {/* Roadmap Section */}
       <section className="py-20 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader 
-            subtitle="Our Impact"
-            title="Creating Meaningful Change"
-            description="Together, we're building stronger, more connected communities across Melbourne and Victoria."
+            subtitle="Our Roadmap"
+            title="The Journey Starts Here"
+            description="We are currently laying the foundation for a vibrant community space. Here is what we aim to achieve in our first year."
           />
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -310,9 +306,9 @@ export function Home() {
               transition={{ duration: 0.5 }}
             >
               <ImpactCard 
-                number="2,500+"
-                label="Community Members Served"
-                description="Individuals and families supported annually"
+                number="500+"
+                label="Initial Members"
+                description="Connecting local residents in our first six months"
               />
             </motion.div>
 
@@ -323,9 +319,9 @@ export function Home() {
               transition={{ duration: 0.5, delay: 0.1 }}
             >
               <ImpactCard 
-                number="40+"
-                label="Active Programs"
-                description="Diverse services meeting community needs"
+                number="5"
+                label="Core Pilot Programs"
+                description="Focusing on youth, health, and local social connection"
               />
             </motion.div>
 
@@ -336,9 +332,9 @@ export function Home() {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <ImpactCard 
-                number="150+"
-                label="Volunteer Contributors"
-                description="Dedicated community members giving back"
+                number="50+"
+                label="Founding Volunteers"
+                description="Building a dedicated team to lead our initiatives"
               />
             </motion.div>
 
@@ -349,16 +345,16 @@ export function Home() {
               transition={{ duration: 0.5, delay: 0.3 }}
             >
               <ImpactCard 
-                number="95%"
-                label="Satisfaction Rating"
-                description="Community members reporting positive outcomes"
+                number="100%"
+                label="Community Driven"
+                description="Programs designed by locals, for locals"
               />
             </motion.div>
           </div>
 
           <div className="mt-12 text-center">
-            <Button href="/impact" variant="primary">
-              Explore Our Impact
+            <Button href="/vision" variant="primary">
+              See Our Vision for Melbourne
             </Button>
           </div>
         </div>
