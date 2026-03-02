@@ -49,6 +49,24 @@ if (!fs.existsSync(distDir)) {
 
 const robotsPath = path.join(distDir, 'robots.txt');
 const sitemapPath = path.join(distDir, 'sitemap.xml');
+const indexHtmlPath = path.join(distDir, 'index.html');
+
+if (fs.existsSync(indexHtmlPath)) {
+  const indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
+
+  for (const route of routes) {
+    if (route === '/') {
+      continue;
+    }
+
+    const routeSegment = route.replace(/^\/+|\/+$/g, '');
+    const routeDirectory = path.join(distDir, routeSegment);
+    const routeIndexPath = path.join(routeDirectory, 'index.html');
+
+    fs.mkdirSync(routeDirectory, { recursive: true });
+    fs.writeFileSync(routeIndexPath, indexHtml, 'utf8');
+  }
+}
 
 if (!siteUrl) {
   if (fs.existsSync(sitemapPath)) {
