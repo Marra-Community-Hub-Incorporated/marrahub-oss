@@ -22,7 +22,9 @@ export function ImpactCard({ number, label, description, icon: Icon }: ImpactCar
       )}
       <div className="h-0.5 w-12 bg-secondary/30 mx-auto mb-4 group-hover:w-20 transition-all duration-500"></div>
       <div className="text-lg font-semibold text-foreground mb-2 px-2 text-center w-full leading-tight">{label}</div>
-      <p className="text-sm text-muted-foreground leading-relaxed mt-auto text-justify [text-align-last:center] w-full">{description}</p>
+      <p className="text-sm text-muted-foreground leading-relaxed mt-auto w-full text-center text-balance">
+        {description}
+      </p>
     </div>
   );
 }

@@ -1,14 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MARRA Community Centre</title>
+    <title>MARRA Community Hub | Interactive Community Centre in Caulfield South</title>
     <meta
       name="description"
-      content="MARRA is a family-founded community initiative growing an interactive community centre in Caulfield South through connection, care, and local partnerships."
+      content="MARRA is a family-founded community hub growing in Caulfield South through connection, care, interactive programs, and local partnerships."
     />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="MARRA Community Centre" />
+    <meta name="application-name" content="MARRA Community Hub" />
+    <meta name="apple-mobile-web-app-title" content="MARRA" />
     <meta name="theme-color" content="#1e453a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MARRA Community Hub" />
+    <meta property="og:title" content="MARRA Community Hub | Interactive Community Centre in Caulfield South" />
+    <meta
+      property="og:description"
+      content="MARRA is a family-founded community hub growing in Caulfield South through connection, care, interactive programs, and local partnerships."
+    />
+    <meta property="og:image" content="/media/hero-background.png" />
+    <meta property="og:image:alt" content="MARRA Community Hub hero image and brand identity" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="MARRA Community Hub | Interactive Community Centre in Caulfield South" />
+    <meta
+      name="twitter:description"
+      content="MARRA is a family-founded community hub growing in Caulfield South through connection, care, interactive programs, and local partnerships."
+    />
+    <meta name="twitter:image" content="/media/hero-background.png" />
     <link rel="icon" type="image/svg+xml" href="/media/favicon/favicon.svg" />
     <link rel="icon" type="image/png" sizes="96x96" href="/media/favicon/favicon-96x96.png" />
     <link rel="icon" href="/media/favicon/favicon.ico" sizes="any" />
@@ -17,6 +37,21 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      (function (locationData) {
+        if (locationData.search[1] === '/') {
+          var decoded = locationData.search
+            .slice(1)
+            .split('&')
+            .map(function (segment) {
+              return segment.replace(/~and~/g, '&');
+            })
+            .join('?');
+
+          window.history.replaceState(null, '', decoded + locationData.hash);
+        }
+      })(window.location);
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

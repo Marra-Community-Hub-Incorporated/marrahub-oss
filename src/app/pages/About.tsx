@@ -38,7 +38,9 @@ export function About() {
             >
               <img 
                 src="https://images.unsplash.com/photo-1765614766505-b4afa9eef2f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoZWxwaW5nJTIwaGFuZHMlMjB0b2dldGhlciUyMHN1cHBvcnR8ZW58MXx8fHwxNzcwNTk1MzMzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                alt="Helping hands together"
+                alt="Helping hands together to represent support, belonging, and community care"
+                loading="lazy"
+                decoding="async"
                 className="rounded-2xl shadow-lg w-full h-[500px] object-cover"
               />
             </motion.div>

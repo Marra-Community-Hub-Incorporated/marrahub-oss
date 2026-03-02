@@ -27,9 +27,10 @@ export function Home() {
         
         {/* Background Image with Dark Overlay for Contrast */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src={heroBackgroundUrl} 
-            alt="Community Connection" 
+          <img
+            src={heroBackgroundUrl}
+            alt="MARRA Community Hub background showing people gathering together"
+            fetchPriority="high"
             className="w-full h-full object-cover"
           />
           {/* Multi-layered gradient overlay:
@@ -67,8 +68,9 @@ export function Home() {
             
             {/* Body Text */}
             <p className="text-lg md:text-2xl mb-12 text-white/90 leading-relaxed max-w-2xl mx-auto font-sans font-light text-balance">
-              Inspired by Aboriginal language, representing connection and helping hands. 
-              We build belonging for all across Melbourne and Victoria.
+              Inspired by Aboriginal language, representing connection and helping hands.
+              We are growing an interactive community hub in Caulfield South that brings people
+              together through care, culture, and belonging.
             </p>
             
             {/* CTA Buttons: Fixed positioning, contrast, and spacing */}
@@ -131,7 +133,9 @@ export function Home() {
               
               <img 
                 src="https://images.unsplash.com/photo-1765614766505-b4afa9eef2f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoZWxwaW5nJTIwaGFuZHMlMjB0b2dldGhlciUyMHN1cHBvcnR8ZW58MXx8fHwxNzcwNTk1MzMzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                alt="Helping hands together"
+                alt="Hands joined together to represent support and community connection"
+                loading="lazy"
+                decoding="async"
                 className="rounded-3xl shadow-2xl w-full h-[500px] object-cover relative z-10"
               />
             </motion.div>
@@ -153,8 +157,9 @@ export function Home() {
                   It represents the very essence of what we do: reaching out, providing support, and building lasting bonds.
                 </p>
                 <p>
-                  We operate with a commitment to transparency and cultural awareness, 
-                  ensuring our programs serve as a bridge for families and individuals across Victoria.
+                  We are building MARRA as a trusted community hub with a commitment to transparency,
+                  cultural awareness, and practical support for families and individuals across
+                  Caulfield South, Melbourne, and the wider Victorian community.
                 </p>
               </div>
             </motion.div>
@@ -454,8 +459,8 @@ export function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader 
             subtitle="Where We Are"
-            title="Serving Melbourne & Victoria"
-            description="Based in Caulfield South, with a vision to support communities across Victoria."
+            title="Community Hub in Caulfield South"
+            description="Based in Caulfield South, with a long-term vision to support communities across Melbourne and Victoria."
           />
           
           <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -467,7 +472,9 @@ export function Home() {
             >
               <img 
                 src="https://images.unsplash.com/photo-1766050588355-0bed0aba1eed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZWxib3VybmUlMjBjaXR5c2NhcGUlMjB2aWN0b3JpYXxlbnwxfHx8fDE3NzA1OTUzMzV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                alt="Melbourne cityscape"
+                alt="Melbourne skyline representing the wider community MARRA hopes to support"
+                loading="lazy"
+                decoding="async"
                 className="rounded-2xl shadow-lg w-full h-[400px] object-cover"
               />
             </motion.div>
@@ -490,8 +497,8 @@ export function Home() {
               <div className="bg-card rounded-xl p-6 border border-border">
                 <h4 className="font-semibold text-lg mb-3">Service Areas</h4>
                 <p className="text-muted-foreground">
-                  We currently serve communities across greater Melbourne and have plans to 
-                  extend our reach to regional Victoria in partnership with local councils.
+                  MARRA Community Hub is starting in Caulfield South and aims to grow its reach
+                  across greater Melbourne and regional Victoria through local partnerships.
                 </p>
               </div>
 
