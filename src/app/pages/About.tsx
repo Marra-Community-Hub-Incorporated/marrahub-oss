@@ -18,8 +18,9 @@ export function About() {
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">About MARRA</h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
-              We are a family-founded, non-profit community centre dedicated to building 
-              connection, care, and belonging across Melbourne and Victoria.
+              We are a family-founded initiative growing a community centre rooted in connection,
+              care, and belonging, beginning in Caulfield South and strengthening through local
+              partnerships.
             </p>
           </motion.div>
         </div>
@@ -93,20 +94,19 @@ export function About() {
               inclusive, accessible community spaces where everyone could feel welcome and supported.
             </p>
             <p>
-              What started as a small initiative to support local families has grown into a 
-              comprehensive community centre serving thousands of people across Melbourne. Our 
-              founders believed that strong communities are built on trust, care, and genuine 
-              human connection—values that continue to guide us today.
+              What started as a small local initiative is steadily growing into a community centre
+              shaped by trust, care, and genuine human connection. Our aim is to build something
+              lasting that feels practical, welcoming, and deeply connected to the people around us.
             </p>
             <p>
-              As we've grown, we've remained committed to our grassroots origins: listening to 
-              community needs, responding with compassion and expertise, and always maintaining 
-              transparency in our operations and governance.
+              As we grow, we remain committed to our grassroots beginnings: listening to community
+              needs, responding with compassion, and building the kind of centre that people can
+              trust, contribute to, and help shape over time.
             </p>
             <p>
-              Today, MARRA is preparing for expansion across Victoria, working in partnership with 
-              local councils and community groups to bring our model of inclusive, sustainable 
-              community support to more regions.
+              Today, MARRA is building relationships with local councils, community groups, and
+              future partners as we take the next steps toward a stronger community centre presence
+              and broader local impact.
             </p>
           </motion.div>
         </div>

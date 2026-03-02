@@ -293,9 +293,9 @@ export function Home() {
       <section className="py-20 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader 
-            subtitle="Our Roadmap"
-            title="The Journey Starts Here"
-            description="We are currently laying the foundation for a vibrant community space. Here is what we aim to achieve in our first year."
+            subtitle="Our Targets"
+            title="What We Are Building Together"
+            description="We are building an interactive, community-led space where people do not just attend, but participate, connect, and help shape what comes next. These are the early goals guiding our first stage."
           />
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -304,11 +304,12 @@ export function Home() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
+              className="h-full"
             >
               <ImpactCard 
-                number="500+"
-                label="Initial Members"
-                description="Connecting local residents in our first six months"
+                number="50+"
+                label="Early Community Reach"
+                description="Welcoming local people into events, conversations, and first-round activities"
               />
             </motion.div>
 
@@ -317,11 +318,12 @@ export function Home() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
+              className="h-full"
             >
               <ImpactCard 
                 number="5"
-                label="Core Pilot Programs"
-                description="Focusing on youth, health, and local social connection"
+                label="Interactive Pilot Programs"
+                description="Hands-on programs that invite participation, feedback, and real community input"
               />
             </motion.div>
 
@@ -330,11 +332,12 @@ export function Home() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
+              className="h-full"
             >
               <ImpactCard 
-                number="50+"
-                label="Founding Volunteers"
-                description="Building a dedicated team to lead our initiatives"
+                number="12+"
+                label="Interactive Sessions"
+                description="Events, workshops, and meetups designed for people to join in, respond, and connect"
               />
             </motion.div>
 
@@ -343,18 +346,19 @@ export function Home() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
+              className="h-full"
             >
               <ImpactCard 
                 number="100%"
-                label="Community Driven"
-                description="Programs designed by locals, for locals"
+                label="Community Shaped"
+                description="A space where local voices help guide what we create, test, and improve"
               />
             </motion.div>
           </div>
 
           <div className="mt-12 text-center">
-            <Button href="/vision" variant="primary">
-              See Our Vision for Melbourne
+            <Button href="/about" variant="primary">
+              About Our Mission
             </Button>
           </div>
         </div>

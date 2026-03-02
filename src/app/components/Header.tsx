@@ -7,6 +7,7 @@ import { Button } from './Button';
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const logoUrl = `${import.meta.env.BASE_URL}media/favicon/web-app-manifest-512x512.png`;
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -29,11 +30,13 @@ export function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-11 h-11 bg-primary rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-primary/10">
-              <span className="text-white font-serif font-bold text-2xl">M</span>
-            </div>
-            <span className="text-2xl font-serif font-bold text-primary tracking-tight">MARRA</span>
+          <Link to="/" className="flex items-center group" aria-label="MARRA home">
+            <img
+              src={logoUrl}
+              alt="MARRA logo"
+              className="w-14 h-14 object-contain -mr-1 transition-transform duration-300 ease-out group-hover:translate-x-2 group-hover:scale-105"
+            />
+            <span className="text-3xl font-serif font-bold text-primary tracking-tight">arra</span>
           </Link>
 
           {/* Desktop Navigation */}

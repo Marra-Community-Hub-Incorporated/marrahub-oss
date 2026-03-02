@@ -32,8 +32,8 @@ export function Programs() {
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">Programs & Services</h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
-              Comprehensive community programs designed to foster connection, growth, and 
-              wellbeing for all community members across Melbourne and Victoria.
+              The programs we want to build at MARRA are designed to foster connection, growth,
+              and wellbeing through practical, community-shaped support.
             </p>
           </motion.div>
         </div>
@@ -44,8 +44,8 @@ export function Programs() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader 
             subtitle="Core Services"
-            title="Our Flagship Programs"
-            description="Established programs with proven community impact and outcomes."
+            title="Programs We Want to Build"
+            description="These are the core program areas we want to develop as MARRA grows and community needs become clearer."
           />
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -58,12 +58,12 @@ export function Programs() {
               <ProgramCard 
                 icon={Users}
                 title="Family Support Services"
-                description="Comprehensive support for families navigating life's challenges, including parenting workshops, family counseling, and peer support groups."
+                description="Support we want to offer for families navigating life's challenges, including parenting workshops, family guidance, and peer support spaces."
                 outcomes={[
                   "Stronger family connections",
-                  "Access to resources and support",
-                  "Improved parenting confidence",
-                  "Community belonging"
+                  "Better access to support and resources",
+                  "More parenting confidence",
+                  "A stronger sense of community belonging"
                 ]}
               />
             </motion.div>
@@ -77,12 +77,12 @@ export function Programs() {
               <ProgramCard 
                 icon={BookOpen}
                 title="Educational Programs"
-                description="Learning opportunities for all ages, from early childhood education to adult literacy and skills development programs."
+                description="Learning opportunities we hope to create for all ages, from early support through to adult literacy, skills-building, and lifelong learning."
                 outcomes={[
-                  "Improved literacy and numeracy",
-                  "Lifelong learning pathways",
-                  "Career development support",
-                  "Digital skills training"
+                  "Stronger literacy and numeracy foundations",
+                  "Clearer lifelong learning pathways",
+                  "Practical career development support",
+                  "Improved digital confidence"
                 ]}
               />
             </motion.div>
@@ -96,12 +96,12 @@ export function Programs() {
               <ProgramCard 
                 icon={Heart}
                 title="Wellbeing & Health"
-                description="Mental health support, physical wellness activities, and holistic programs promoting overall community health."
+                description="Wellbeing-focused activities we want to develop, including mental health support, physical wellness, and accessible community care."
                 outcomes={[
-                  "Better mental health outcomes",
-                  "Active and healthy lifestyles",
-                  "Reduced social isolation",
-                  "Access to health resources"
+                  "Improved wellbeing and confidence",
+                  "Healthier day-to-day routines",
+                  "Less social isolation",
+                  "Better access to helpful resources"
                 ]}
               />
             </motion.div>
@@ -115,12 +115,12 @@ export function Programs() {
               <ProgramCard 
                 icon={Sprout}
                 title="Youth Development"
-                description="Engaging programs for young people focusing on leadership, mentorship, creative expression, and life skills."
+                description="Programs we want to shape with young people around leadership, mentorship, creative expression, and practical life skills."
                 outcomes={[
-                  "Youth empowerment",
+                  "Greater youth confidence and participation",
                   "Leadership development",
                   "Positive peer connections",
-                  "Career pathway support"
+                  "Clearer future pathways"
                 ]}
               />
             </motion.div>
@@ -134,12 +134,12 @@ export function Programs() {
               <ProgramCard 
                 icon={HandHeart}
                 title="Elder Care & Support"
-                description="Dedicated services for older community members, including social activities, health support, and companionship programs."
+                description="Dedicated support we hope to offer older community members through social activities, companionship, and wellbeing-focused programs."
                 outcomes={[
-                  "Reduced loneliness",
-                  "Active aging support",
+                  "Reduced loneliness and isolation",
+                  "Active ageing support",
                   "Intergenerational connections",
-                  "Health and wellness monitoring"
+                  "Stronger wellbeing support"
                 ]}
               />
             </motion.div>
@@ -153,12 +153,12 @@ export function Programs() {
               <ProgramCard 
                 icon={Shield}
                 title="Inclusion & Advocacy"
-                description="Support for diverse communities, cultural inclusion initiatives, and advocacy for community rights and accessibility."
+                description="Inclusive and advocacy-focused work we want to build for diverse communities, cultural safety, and better accessibility."
                 outcomes={[
                   "Cultural safety and respect",
                   "Equal access to services",
-                  "Community voice amplification",
-                  "Disability support"
+                  "Stronger community voice",
+                  "More inclusive support pathways"
                 ]}
               />
             </motion.div>
@@ -172,7 +172,7 @@ export function Programs() {
           <SectionHeader 
             subtitle="Extended Services"
             title="Additional Community Initiatives"
-            description="Specialized programs addressing specific community needs and interests."
+            description="Additional ideas we would like to explore as MARRA grows and community priorities become clearer."
           />
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -185,11 +185,11 @@ export function Programs() {
               <ProgramCard 
                 icon={Music}
                 title="Arts & Creative Expression"
-                description="Workshops, classes, and community events celebrating creativity through music, visual arts, and performance."
+                description="Creative workshops, classes, and community events we would love to run through music, visual arts, and performance."
                 outcomes={[
                   "Creative skill development",
                   "Cultural expression",
-                  "Community showcase events"
+                  "Community showcase opportunities"
                 ]}
               />
             </motion.div>
@@ -203,11 +203,11 @@ export function Programs() {
               <ProgramCard 
                 icon={Briefcase}
                 title="Employment Support"
-                description="Job readiness training, resume workshops, interview preparation, and connections to employment opportunities."
+                description="Employment-focused support we want to offer through job readiness training, resume workshops, interview preparation, and practical guidance."
                 outcomes={[
                   "Improved employability",
-                  "Job placement support",
-                  "Workplace skills training"
+                  "Stronger job readiness",
+                  "More workplace confidence"
                 ]}
               />
             </motion.div>
@@ -221,7 +221,7 @@ export function Programs() {
               <ProgramCard 
                 icon={Home}
                 title="Housing & Homelessness Support"
-                description="Advocacy, resources, and support for individuals and families experiencing housing instability or homelessness."
+                description="Housing support we hope to provide through advocacy, practical resources, and guidance for people facing housing instability."
                 outcomes={[
                   "Housing pathway support",
                   "Crisis intervention",
@@ -239,7 +239,7 @@ export function Programs() {
               <ProgramCard 
                 icon={Lightbulb}
                 title="Financial Literacy"
-                description="Budgeting workshops, financial planning support, and resources for building financial capability and resilience."
+                description="Financial capability programs we want to develop around budgeting, planning, and building long-term resilience."
                 outcomes={[
                   "Better money management",
                   "Reduced financial stress",
@@ -257,7 +257,7 @@ export function Programs() {
               <ProgramCard 
                 icon={Coffee}
                 title="Social Connection Groups"
-                description="Regular meetups, interest groups, and social activities designed to reduce isolation and build friendships."
+                description="Regular meetups, interest groups, and welcoming social activities we want to create to help people connect and feel included."
                 outcomes={[
                   "New friendships",
                   "Reduced loneliness",
@@ -275,7 +275,7 @@ export function Programs() {
               <ProgramCard 
                 icon={GraduationCap}
                 title="Volunteer & Leadership Training"
-                description="Programs to develop community leaders and train volunteers who give back to strengthen our community."
+                description="Leadership and volunteer pathways we hope to build so community members can contribute, host, and grow with MARRA."
                 outcomes={[
                   "Leadership skills",
                   "Community contribution",
@@ -291,8 +291,8 @@ export function Programs() {
       <section className="py-20 bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader 
-            title="How to Access Our Programs"
-            description="We make it easy to connect with the support and services you need."
+            title="How People Will Join Our Programs"
+            description="As programs begin to roll out, we want the process to feel welcoming, simple, and easy to navigate."
           />
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -308,8 +308,8 @@ export function Programs() {
               </div>
               <h3 className="text-xl font-semibold mb-3">Get in Touch</h3>
               <p className="text-muted-foreground">
-                Contact us by phone, email, or visit our centre. We'll discuss your needs and 
-                interests in a welcoming, judgment-free conversation.
+                Reach out by phone or email to register interest, ask questions, or tell us what
+                kind of support and community activity matters most to you.
               </p>
             </motion.div>
 
@@ -325,8 +325,8 @@ export function Programs() {
               </div>
               <h3 className="text-xl font-semibold mb-3">Find Your Fit</h3>
               <p className="text-muted-foreground">
-                Together we'll identify programs that match your goals, interests, and circumstances. 
-                All services are flexible and person-centered.
+                As programs develop, we want to help people find activities that match their
+                goals, interests, and circumstances in a flexible, person-centered way.
               </p>
             </motion.div>
 
@@ -342,8 +342,8 @@ export function Programs() {
               </div>
               <h3 className="text-xl font-semibold mb-3">Join & Participate</h3>
               <p className="text-muted-foreground">
-                Start participating in programs at your own pace. We provide ongoing support, 
-                check-ins, and connections to additional resources as needed.
+                Join programs as they launch, participate at your own pace, and help shape what
+                improves through feedback, conversation, and continued involvement.
               </p>
             </motion.div>
           </div>
@@ -354,29 +354,29 @@ export function Programs() {
               <div>
                 <h4 className="font-semibold text-foreground mb-2">Free & Low-Cost Services</h4>
                 <p className="text-sm">
-                  Most programs are free or low-cost. We never turn anyone away due to financial 
-                  constraints—speak to us about your situation.
+                  We want most programs to be free or low-cost wherever possible so financial
+                  barriers do not stop people from taking part.
                 </p>
               </div>
               <div>
                 <h4 className="font-semibold text-foreground mb-2">Accessible for All</h4>
                 <p className="text-sm">
-                  Our centre and programs are designed to be accessible. Contact us about specific 
-                  accessibility needs or accommodations.
+                  Accessibility will be a core part of how programs are designed. Contact us about
+                  specific access needs or accommodations you would want us to consider.
                 </p>
               </div>
               <div>
                 <h4 className="font-semibold text-foreground mb-2">Confidential Support</h4>
                 <p className="text-sm">
-                  All interactions are confidential and respectful. We maintain strict privacy 
-                  standards and safeguarding practices.
+                  We intend to keep all interactions respectful, confidential, and supported by
+                  strong privacy and safeguarding practices.
                 </p>
               </div>
               <div>
                 <h4 className="font-semibold text-foreground mb-2">Flexible Scheduling</h4>
                 <p className="text-sm">
-                  Programs run at various times to accommodate different schedules, including 
-                  evenings and weekends where possible.
+                  We want to schedule programs in ways that suit real life, including evenings and
+                  weekends where possible.
                 </p>
               </div>
             </div>
@@ -388,8 +388,8 @@ export function Programs() {
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CTABanner 
-            title="Ready to Get Started?"
-            description="Reach out to learn more about our programs or register your interest. We're here to support you."
+            title="Want to Shape These Programs With Us?"
+            description="Reach out to register your interest, share what matters to your community, or help us build these programs well."
             primaryButtonText="Contact Us"
             primaryButtonHref="/contact"
             secondaryButtonText="View Impact"

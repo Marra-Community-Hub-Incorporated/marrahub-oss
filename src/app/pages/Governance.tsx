@@ -499,7 +499,7 @@ export function Governance() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
-              href="mailto:governance@marra.org.au"
+              href="mailto:hello@marrahub.com.au"
               className="inline-flex items-center justify-center px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-lg font-medium"
             >
               Contact Governance Team

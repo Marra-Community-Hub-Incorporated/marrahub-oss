@@ -69,7 +69,7 @@ export function Contact() {
                       Melbourne, Australia
                     </p>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Serving communities across Melbourne and Victoria
+                      Focused on Caulfield South as our primary local area
                     </p>
                   </div>
                 </div>
@@ -80,9 +80,14 @@ export function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Phone</h3>
-                    <a href="tel:+61312345678" className="text-muted-foreground hover:text-primary transition-colors">
-                      (03) 1234 5678
-                    </a>
+                    <div className="text-muted-foreground space-y-1">
+                      <a href="tel:+61421803285" className="block hover:text-primary transition-colors">
+                        Main: 0421 803 285
+                      </a>
+                      <a href="tel:+61433212855" className="block hover:text-primary transition-colors">
+                        0433 212 855
+                      </a>
+                    </div>
                     <p className="text-sm text-muted-foreground mt-1">
                       Monday to Friday, 9:00 AM - 5:00 PM
                     </p>
@@ -95,8 +100,8 @@ export function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Email</h3>
-                    <a href="mailto:info@marra.org.au" className="text-muted-foreground hover:text-primary transition-colors">
-                      info@marra.org.au
+                    <a href="mailto:hello@marrahub.com.au" className="text-muted-foreground hover:text-primary transition-colors">
+                      hello@marrahub.com.au
                     </a>
                     <p className="text-sm text-muted-foreground mt-1">
                       We typically respond within 1-2 business days
@@ -316,7 +321,7 @@ export function Contact() {
               We'll work with you to ensure you can fully participate in our programs and services.
             </p>
             <a 
-              href="mailto:accessibility@marra.org.au"
+              href="mailto:hello@marrahub.com.au"
               className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
             >
               Contact Accessibility Team
@@ -342,30 +347,18 @@ export function Contact() {
           >
             <div className="bg-background rounded-xl p-6">
               <h3 className="font-semibold mb-3">Current Service Area</h3>
-              <p className="text-muted-foreground mb-3">
-                Our primary centre is based in Caulfield South, serving the broader Melbourne 
-                metropolitan area including:
+              <p className="text-muted-foreground">
+                Our primary service area is currently focused on Caulfield South, where we are
+                building the first stage of MARRA's local community presence.
               </p>
-              <div className="grid md:grid-cols-2 gap-2 text-sm text-muted-foreground">
-                <ul className="space-y-1">
-                  <li>• Glen Eira region</li>
-                  <li>• Bayside communities</li>
-                  <li>• Port Phillip area</li>
-                </ul>
-                <ul className="space-y-1">
-                  <li>• Stonnington district</li>
-                  <li>• Greater Melbourne metro</li>
-                  <li>• Surrounding suburbs</li>
-                </ul>
-              </div>
             </div>
 
             <div className="bg-background rounded-xl p-6">
               <h3 className="font-semibold mb-3">Expansion Plans</h3>
               <p className="text-muted-foreground">
-                We are actively working with local councils and community partners to extend our 
-                services to regional Victoria. If you're interested in bringing MARRA programs to 
-                your area, please get in touch.
+                Right now, we are working closely with Glen Eira Council and local community
+                partners as we explore how MARRA can grow into a more interactive community
+                presence, with future programs, events, and spaces that bring people together.
               </p>
             </div>
           </motion.div>

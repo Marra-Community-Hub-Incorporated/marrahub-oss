@@ -19,8 +19,8 @@ export function Impact() {
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">Community Impact</h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
-              Measuring what matters: the meaningful change we create together in our 
-              communities across Melbourne and Victoria.
+              We are building MARRA with impact in mind from the beginning, focusing on the
+              changes we want to create and the signals we will track as the work grows.
             </p>
           </motion.div>
         </div>
@@ -29,12 +29,12 @@ export function Impact() {
       {/* Key Metrics */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader 
-            subtitle="By the Numbers"
-            title="Our Reach & Impact"
-            description="Data from our most recent annual reporting period."
+          <SectionHeader
+            subtitle="What We Will Track"
+            title="Our Early Impact Focus"
+            description="As MARRA begins, these are the first areas we will use to understand whether our work is meaningful, trusted, and sustainable."
           />
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -42,10 +42,11 @@ export function Impact() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <ImpactCard 
-                number="2,500+"
-                label="People Served"
-                description="Community members supported annually across all programs"
+              <ImpactCard
+                number="01"
+                icon={Users}
+                label="Community Reach"
+                description="Who we are connecting with, who returns, and where access gaps still remain"
               />
             </motion.div>
 
@@ -55,10 +56,11 @@ export function Impact() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <ImpactCard 
-                number="40+"
-                label="Active Programs"
-                description="Diverse services meeting evolving community needs"
+              <ImpactCard
+                number="02"
+                icon={Target}
+                label="Pilot Programs"
+                description="Small, practical activities that help us learn what the community values most"
               />
             </motion.div>
 
@@ -68,10 +70,11 @@ export function Impact() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <ImpactCard 
-                number="150+"
-                label="Volunteers"
-                description="Dedicated community members contributing their time"
+              <ImpactCard
+                number="03"
+                icon={Award}
+                label="Volunteer Readiness"
+                description="Building a capable and supported base of people who can help carry the work"
               />
             </motion.div>
 
@@ -81,10 +84,11 @@ export function Impact() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <ImpactCard 
-                number="95%"
-                label="Satisfaction"
-                description="Participants reporting positive outcomes and experiences"
+              <ImpactCard
+                number="04"
+                icon={TrendingUp}
+                label="Trust & Feedback"
+                description="Listening closely so MARRA grows in ways that feel useful, safe, and community-led"
               />
             </motion.div>
           </div>
@@ -94,11 +98,11 @@ export function Impact() {
       {/* Impact Areas */}
       <section className="py-20 bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader 
+          <SectionHeader
             title="Areas of Impact"
-            description="The key ways MARRA creates meaningful change in our community."
+            description="The key kinds of change MARRA hopes to contribute to as programs begin and develop over time."
           />
-          
+
           <div className="grid md:grid-cols-2 gap-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -114,21 +118,21 @@ export function Impact() {
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Social Connection & Belonging</h3>
                   <p className="text-muted-foreground mb-4 leading-relaxed">
-                    Reducing isolation and loneliness by creating spaces where people connect, 
-                    form friendships, and build a sense of belonging.
+                    Creating welcoming spaces where people can meet, return, and feel part of
+                    something local and meaningful.
                   </p>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      78% reduction in reported loneliness among regular participants
+                      Welcoming environments that reduce isolation and encourage connection
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      1,200+ new community connections formed annually
+                      Stronger peer support and local relationships over time
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      12 peer support groups meeting weekly
+                      Activities shaped by community voice and lived experience
                     </li>
                   </ul>
                 </div>
@@ -149,21 +153,21 @@ export function Impact() {
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Health & Wellbeing</h3>
                   <p className="text-muted-foreground mb-4 leading-relaxed">
-                    Supporting mental, physical, and emotional health through accessible programs 
-                    and compassionate care.
+                    Supporting emotional, social, and practical wellbeing through accessible
+                    activities and compassionate pathways to care.
                   </p>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      82% of participants report improved mental wellbeing
+                      Programs that support confidence, calm, and day-to-day wellbeing
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      500+ individuals accessing mental health support
+                      Clear referral pathways when extra support is needed
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      6 wellness programs running weekly
+                      Practical activities that encourage healthy routines and participation
                     </li>
                   </ul>
                 </div>
@@ -184,21 +188,21 @@ export function Impact() {
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Skills & Employment</h3>
                   <p className="text-muted-foreground mb-4 leading-relaxed">
-                    Building capability through education, training, and pathways to employment 
-                    and financial stability.
+                    Building confidence, capability, and clearer next steps for people navigating
+                    learning, work, and everyday life.
                   </p>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      68% of job seekers gained employment within 6 months
+                      Workshops that build useful skills and everyday confidence
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      350+ training and skills workshops delivered
+                      Support that opens pathways to learning, work, and stability
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      65 community members completed literacy programs
+                      Programs designed around practical next steps, not theory alone
                     </li>
                   </ul>
                 </div>
@@ -219,21 +223,21 @@ export function Impact() {
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Youth Empowerment</h3>
                   <p className="text-muted-foreground mb-4 leading-relaxed">
-                    Investing in young people through mentorship, leadership opportunities, and 
-                    safe spaces for growth.
+                    Making space for young people to participate, be heard, and shape the future
+                    direction of the community around them.
                   </p>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      420+ young people engaged in youth programs
+                      Safe spaces where young people can participate and contribute
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      15 youth-led community projects completed
+                      Leadership and mentoring opportunities that grow over time
                     </li>
                     <li className="flex items-start">
                       <span className="text-primary mr-2">•</span>
-                      90% report increased confidence and leadership skills
+                      Youth ideas informing future activities and community projects
                     </li>
                   </ul>
                 </div>
@@ -246,12 +250,12 @@ export function Impact() {
       {/* Community Partnerships */}
       <section className="py-20 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader 
+          <SectionHeader
             subtitle="Working Together"
             title="Community Partnerships"
-            description="Collaboration strengthens our impact. We work closely with councils, organisations, and community groups."
+            description="Collaboration will strengthen MARRA as it grows. We want to build relationships that make the work more grounded, connected, and useful."
           />
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -262,8 +266,8 @@ export function Impact() {
             >
               <h3 className="text-xl font-semibold mb-4">Local Councils</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Partnering with local government to align services, share resources, and address 
-                community needs identified through council engagement.
+                Building relationships with local government to better understand place-based
+                priorities, community need, and long-term opportunities for collaboration.
               </p>
             </motion.div>
 
@@ -276,8 +280,8 @@ export function Impact() {
             >
               <h3 className="text-xl font-semibold mb-4">Health & Education</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Collaborating with schools, health services, and educational institutions to 
-                provide holistic, coordinated support.
+                Connecting with schools, health services, and educators so support can be more
+                practical, coordinated, and responsive to real community circumstances.
               </p>
             </motion.div>
 
@@ -290,8 +294,8 @@ export function Impact() {
             >
               <h3 className="text-xl font-semibold mb-4">Community Organisations</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Working alongside other non-profits and community groups to avoid duplication 
-                and maximize collective impact.
+                Working alongside grassroots groups and other organisations so MARRA can contribute
+                meaningfully without duplicating what already exists.
               </p>
             </motion.div>
           </div>
@@ -301,11 +305,11 @@ export function Impact() {
       {/* Long-term Vision */}
       <section className="py-20 bg-card">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader 
+          <SectionHeader
             title="Our Long-Term Vision"
-            description="Building sustainable, resilient communities for generations to come."
+            description="Building a community model that grows responsibly, stays grounded, and earns trust over time."
           />
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -314,36 +318,36 @@ export function Impact() {
             className="space-y-6 text-muted-foreground leading-relaxed"
           >
             <p>
-              MARRA's impact extends beyond immediate service delivery. We're committed to creating 
-              lasting change that strengthens communities for the long term.
+              MARRA's long-term impact is not only about scale. It is about building something
+              community-led, culturally aware, and practical enough to stay useful as it grows.
             </p>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-background rounded-lg p-6">
                 <h4 className="font-semibold text-foreground mb-2">Expansion Across Victoria</h4>
                 <p className="text-sm">
-                  Plans to establish satellite centres in regional Victoria, bringing our model of 
-                  community-centered care to underserved areas.
+                  Grow carefully into new communities only when the foundations, partnerships, and
+                  support systems are strong enough to do it well.
                 </p>
               </div>
               <div className="bg-background rounded-lg p-6">
                 <h4 className="font-semibold text-foreground mb-2">Capacity Building</h4>
                 <p className="text-sm">
-                  Training community leaders and volunteers to sustain programs independently, 
-                  ensuring long-term viability.
+                  Strengthen volunteers, leaders, and local contributors so programs can become
+                  more resilient over time.
                 </p>
               </div>
               <div className="bg-background rounded-lg p-6">
-                <h4 className="font-semibold text-foreground mb-2">Innovation & Research</h4>
+                <h4 className="font-semibold text-foreground mb-2">Learning & Improvement</h4>
                 <p className="text-sm">
-                  Partnering with universities to evaluate impact, share learnings, and develop 
-                  evidence-based best practices.
+                  Use feedback, evidence, and reflection to improve programs continuously rather
+                  than assuming the first version will be the best one.
                 </p>
               </div>
               <div className="bg-background rounded-lg p-6">
-                <h4 className="font-semibold text-foreground mb-2">Sustainable Funding</h4>
+                <h4 className="font-semibold text-foreground mb-2">Sustainable Support</h4>
                 <p className="text-sm">
-                  Diversifying funding sources through grants, partnerships, and social enterprise 
-                  to ensure financial sustainability.
+                  Build a funding and partnership base that allows MARRA to remain steady,
+                  transparent, and community-focused.
                 </p>
               </div>
             </div>
@@ -354,9 +358,9 @@ export function Impact() {
       {/* CTA Section */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <CTABanner 
+          <CTABanner
             title="Be Part of Our Impact"
-            description="Whether you're seeking support, want to volunteer, or represent a funding organisation, you can contribute to positive community change."
+            description="Whether you want to support the work, volunteer, or explore a future partnership, you can help shape what MARRA becomes."
             primaryButtonText="Get Involved"
             primaryButtonHref="/contact"
             secondaryButtonText="View Programs"

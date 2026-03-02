@@ -54,15 +54,21 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail size={20} className="flex-shrink-0" />
-                <a href="mailto:info@marra.org.au" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                  info@marra.org.au
+                <a href="mailto:hello@marrahub.com.au" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                  hello@marrahub.com.au
                 </a>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone size={20} className="flex-shrink-0" />
-                <a href="tel:+61123456789" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                  (03) 1234 5678
-                </a>
+              <li className="flex items-start gap-2">
+                <Phone size={20} className="mt-1 flex-shrink-0" />
+                <div className="text-primary-foreground/80">
+                  <a href="tel:+61421803285" className="hover:text-primary-foreground transition-colors">
+                    Main: 0421 803 285
+                  </a>
+                  <br />
+                  <a href="tel:+61433212855" className="pl-11 hover:text-primary-foreground transition-colors">
+                    0433 212 855
+                  </a>
+                </div>
               </li>
             </ul>
           </div>
@@ -98,7 +104,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-primary-foreground/20">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-primary-foreground/60 text-sm">
-              © {new Date().getFullYear()} MARRA Community Centre. ABN: XX XXX XXX XXX. All rights reserved.
+              © {new Date().getFullYear()} MARRA Community Centre. ABN: 79178583024. All rights reserved.
             </p>
             <p className="text-primary-foreground/60 text-sm">
               Acknowledgement: We acknowledge the Traditional Owners of the land and pay our respects to Elders past and present.
