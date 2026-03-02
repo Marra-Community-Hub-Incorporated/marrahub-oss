@@ -1,79 +1,93 @@
 # MARRA Community Hub
 
-A modern, inclusive, and accessible digital platform for the MARRA Community Centre. This website serves as a central hub for community engagement, information sharing, and resource accessibility.
+Public website for MARRA Community Centre.
 
-## 🌟 About the Project
+Live site:
+- `https://marrahub.com.au`
 
-MARRA Community Hub is dedicated to fostering a sense of belonging and empowerment within our diverse community. Our mission is to provide an inclusive space where everyone—regardless of background, ability, or identity—can find support, connection, and opportunity.
+## Overview
 
-### Key Pillars:
-- **Inclusivity:** Designed with accessibility at the forefront.
-- **Diversity:** Celebrating the rich tapestry of our community members.
-- **Connection:** Bridging the gap between resources and those who need them.
-- **Empowerment:** Providing tools and information for community growth.
+MARRA Community Hub is a React and Vite website for a family-founded community centre growing in Caulfield South. The site focuses on:
 
-## 🛠️ Tech Stack
+- community programs and future initiatives
+- impact and governance information
+- contact and enquiry handling
+- SEO-friendly public pages and metadata
 
-This project is built using modern web technologies to ensure performance, scalability, and a great developer experience:
+## Stack
 
-- **Framework:** [React](https://reactjs.org/) (via [Vite](https://vitejs.dev/))
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **Components:** [Radix UI](https://www.radix-ui.com/) & [Lucide React](https://lucide.dev/)
-- **Animation:** [Motion](https://www.framer.com/motion/)
-- **Routing:** [React Router 7](https://reactrouter.com/)
+- React 18
+- Vite
+- TypeScript
+- React Router
+- Tailwind CSS
+- Lucide icons
+- Motion
 
-## 🚀 Getting Started
+## Features
 
-To get a local copy up and running, follow these simple steps:
+- SEO-focused page metadata, canonicals, JSON-LD, `robots.txt`, and `sitemap.xml`
+- GitHub Pages-friendly deep route fallbacks for public pages
+- Contact form integrated with Formspree
+- Cloudflare Turnstile on the enquiry form
+- Custom favicon and organization branding
 
-### Prerequisites
-- Node.js (v18 or higher recommended)
-- npm or pnpm
+## Development
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Xsamsx/Marra_Community.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd Marra_Community
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+Prerequisites:
+- Node.js 18+
+- npm
 
-The application will be available at `http://localhost:5173`.
+Run locally:
 
-## 📂 Project Structure
+```bash
+npm install
+npm run dev
+```
+
+Build:
+
+```bash
+npm run build
+```
+
+## Deployment
+
+This repository is deployed with GitHub Pages through the workflow in [deploy.yml](./.github/workflows/deploy.yml).
+
+The production site URL is configured in:
+- [.env.production](./.env.production)
+
+That value is used for SEO metadata and sitemap generation.
+
+## Project Structure
 
 ```text
 src/
-├── app/
-│   ├── components/    # Reusable UI components
-│   ├── pages/         # Page-level components
-│   ├── routes.ts      # Route definitions
-│   ├── Layout.tsx     # Main application layout
-│   └── App.tsx        # Main application entry
-├── styles/            # Global and Tailwind styles
-└── main.tsx           # Entry point
-media/                 # Static assets and images
-guidelines/            # Documentation and design guidelines
+  app/
+    components/
+    pages/
+    seo/
+    routes.ts
+    Layout.tsx
+    App.tsx
+  styles/
+  main.tsx
+public/
+  media/
+  404.html
+  robots.txt
+scripts/
+  seo-build.mjs
 ```
 
-## 🔮 Future Improvements
+## Security Notes
 
-- [ ] **Internationalization (i18n):** Adding support for multiple community languages.
-- [ ] **Member Portal:** Implementing secure login for personalized resource access.
-- [ ] **Event Booking:** Integration with a calendar system for community events.
-- [ ] **Blog/News Section:** To share community stories and updates.
+- The repository does not store private API secrets for the contact form.
+- Formspree uses a public form endpoint on the frontend.
+- Cloudflare Turnstile uses a public site key on the frontend.
+- Secret keys must stay only in the provider dashboards and must never be committed.
 
----
+## License
 
-Built with ❤️ by the MARRA Community Team.
+See [LICENSE](./LICENSE).
