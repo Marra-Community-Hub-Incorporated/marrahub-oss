@@ -36,7 +36,7 @@ export function Header() {
               alt="MARRA Community Hub logo"
               width="56"
               height="56"
-              className="w-14 h-14 object-contain -mr-1 transition-transform duration-300 ease-out group-hover:translate-x-2 group-hover:scale-105"
+              className="w-14 h-14 object-contain -mr-1 transition-transform duration-300 ease-out group-hover:rotate-6 group-hover:scale-110"
             />
             <span className="text-3xl font-serif font-bold text-primary tracking-tight">arra</span>
           </Link>
