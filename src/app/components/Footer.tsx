@@ -11,7 +11,7 @@ export function Footer() {
           <div>
             <h3 className="text-2xl font-semibold mb-4">MARRA</h3>
             <p className="text-primary-foreground/80 mb-4">
-              A non-profit community centre serving Melbourne and Victoria with care, connection, and commitment.
+              A non-profit community centre serving Glen Eira with care, connection, and commitment.
             </p>
           </div>
 
@@ -49,7 +49,7 @@ export function Footer() {
               <li className="flex items-start gap-2">
                 <MapPin size={20} className="mt-1 flex-shrink-0" />
                 <span className="text-primary-foreground/80">
-                  Caulfield South, VIC<br />Melbourne, Australia
+                  Caulfield South, VIC<br />Glen Eira, Australia
                 </span>
               </li>
               <li className="flex items-center gap-2">

@@ -284,7 +284,7 @@ export function Contact() {
                     <h3 className="font-semibold mb-1">Location</h3>
                     <p className="text-muted-foreground">
                       Caulfield South, VIC<br />
-                      Melbourne, Australia
+                      Glen Eira, Australia
                     </p>
                     <p className="text-sm text-muted-foreground mt-2">
                       Focused on Caulfield South as our primary local area
@@ -582,7 +582,7 @@ export function Contact() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader 
             title="Our Service Areas"
-            description="Currently serving communities across Melbourne with plans to expand throughout Victoria."
+            description="Currently serving communities across Glen Eira."
           />
           
           <motion.div

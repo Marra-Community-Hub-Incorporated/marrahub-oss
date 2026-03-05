@@ -147,7 +147,7 @@ export function Home() {
                 <p>
                   We are building MARRA as a trusted community hub with a commitment to transparency,
                   cultural awareness, and practical support for families and individuals across
-                  Caulfield South, Melbourne, and the wider Victorian community.
+                  Caulfield South and Glen Eira.
                 </p>
               </div>
             </motion.div>
@@ -448,7 +448,7 @@ export function Home() {
           <SectionHeader 
             subtitle="Where We Are"
             title="Community Hub in Caulfield South"
-            description="Based in Caulfield South, with a long-term vision to support communities across Melbourne and Victoria."
+            description="Based in Caulfield South, with a long-term vision to support communities across Glen Eira."
           />
           
           <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -460,7 +460,7 @@ export function Home() {
             >
               <img 
                 src="https://images.unsplash.com/photo-1766050588355-0bed0aba1eed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZWxib3VybmUlMjBjaXR5c2NhcGUlMjB2aWN0b3JpYXxlbnwxfHx8fDE3NzA1OTUzMzV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                alt="Melbourne skyline representing the wider community MARRA hopes to support"
+                alt="Local skyline representing the wider Glen Eira community MARRA hopes to support"
                 loading="lazy"
                 decoding="async"
                 className="rounded-2xl shadow-lg w-full h-[400px] object-cover"
@@ -478,7 +478,7 @@ export function Home() {
                 <h4 className="font-semibold text-lg mb-3">Primary Location</h4>
                 <p className="text-muted-foreground">
                   Caulfield South, VIC<br />
-                  Melbourne, Australia
+                  Glen Eira, Australia
                 </p>
               </div>
 
@@ -486,7 +486,7 @@ export function Home() {
                 <h4 className="font-semibold text-lg mb-3">Service Areas</h4>
                 <p className="text-muted-foreground">
                   MARRA Community Hub is starting in Caulfield South and aims to grow its reach
-                  across greater Melbourne and regional Victoria through local partnerships.
+                  across Glen Eira through local partnerships.
                 </p>
               </div>
 

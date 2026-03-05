@@ -120,7 +120,7 @@ export function Seo() {
       email: siteConfig.email,
       telephone: siteConfig.phones[0],
       taxID: siteConfig.abn,
-      areaServed: ['Caulfield South', 'Glen Eira', 'Melbourne', 'Victoria', 'Australia'],
+      areaServed: ['Caulfield South', 'Glen Eira', 'Australia'],
       address: {
         '@type': 'PostalAddress',
         addressLocality: siteConfig.locality,
