@@ -76,10 +76,12 @@ export function Seo() {
     upsertMeta('meta[property="og:description"]', { property: 'og:description' }, meta.description);
     upsertMeta('meta[property="og:url"]', { property: 'og:url' }, canonicalUrl);
     upsertMeta('meta[property="og:image"]', { property: 'og:image' }, imageUrl);
+    upsertMeta('meta[property="og:image:width"]', { property: 'og:image:width' }, '1200');
+    upsertMeta('meta[property="og:image:height"]', { property: 'og:image:height' }, '630');
     upsertMeta(
       'meta[property="og:image:alt"]',
       { property: 'og:image:alt' },
-      'MARRA Community Hub hero image and brand identity',
+      'MARRA Community Hub – Interactive community centre in Caulfield South',
     );
 
     upsertMeta('meta[name="twitter:card"]', { name: 'twitter:card' }, 'summary_large_image');
@@ -186,7 +188,7 @@ export function Seo() {
         {
           '@type': 'ListItem',
           position: 2,
-          name: meta.title.replace(` | ${siteConfig.name}`, ''),
+          name: meta.title.split(' | ')[0],
           item: canonicalUrl,
         },
       ],

@@ -11,7 +11,7 @@ export function Footer() {
           <div>
             <h3 className="text-2xl font-semibold mb-4">MARRA</h3>
             <p className="text-primary-foreground/80 mb-4">
-              A family-founded, non-profit community centre serving Melbourne and Victoria with care, connection, and commitment.
+              A non-profit community centre serving Melbourne and Victoria with care, connection, and commitment.
             </p>
           </div>
 

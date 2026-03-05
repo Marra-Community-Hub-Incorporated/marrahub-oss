@@ -15,16 +15,16 @@ export const siteConfig = {
   locale: 'en_AU',
   themeColor: '#1e453a',
   description:
-    'MARRA is a family-founded community hub growing in Caulfield South through connection, care, local partnerships, and interactive community programs.',
+    'MARRA is a community hub in Caulfield South connecting people through care, local partnerships, and interactive community programs.',
   email: 'hello@marrahub.com.au',
   phones: ['+61421803285', '+61433212855'],
   locality: 'Caulfield South',
   region: 'VIC',
   country: 'AU',
   abn: '79178583024',
-  logoPath: '/media/favicon/web-app-manifest-512x512.png',
-  faviconPath: '/media/favicon/favicon.svg',
-  defaultImagePath: '/media/hero-background.png',
+  logoPath: '/media/favicon/favicon.png',
+  faviconPath: '/media/favicon/favicon.png',
+  defaultImagePath: '/media/Seo_Prev.png',
   siteUrl:
     import.meta.env.VITE_SITE_URL?.trim().replace(/\/+$/, '') ||
     (typeof window !== 'undefined' ? window.location.origin : ''),
@@ -34,7 +34,7 @@ export const pageSeoMap: Record<string, PageSeoMeta> = {
   '/': {
     title: 'MARRA Community Hub | Interactive Community Centre in Caulfield South',
     description:
-      'Discover MARRA Community Hub, a family-founded community centre growing in Caulfield South with future programs, partnerships, and interactive local support.',
+      'Discover MARRA Community Hub, an interactive community centre in Caulfield South with programs, partnerships, and local support.',
     keywords: [
       'MARRA Community Hub',
       'MARRA Community Centre',

@@ -48,18 +48,6 @@ export function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Tagline */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="mb-8"
-            >
-              <span className="inline-block py-1 px-4 border border-white/30 rounded-full text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-white bg-black/20 backdrop-blur-sm">
-                A Family Founded Community Centre
-              </span>
-            </motion.div>
-            
             {/* Main Headline */}
             <h1 className="text-white mb-8 font-serif font-semibold leading-[1.1] tracking-tight text-4xl md:text-7xl lg:text-8xl">
               Bringing Communities <br className="hidden md:block" /> 
