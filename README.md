@@ -7,7 +7,7 @@ Live site:
 
 ## Overview
 
-MARRA Community Hub is a React and Vite website for a family-founded community centre growing in Caulfield South. The site focuses on:
+MARRA Community Hub is a React and Vite website for a community centre growing in Caulfield South. The site focuses on:
 
 - community programs and future initiatives
 - impact and governance information

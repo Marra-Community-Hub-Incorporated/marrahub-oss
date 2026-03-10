@@ -18,8 +18,8 @@ export function About() {
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">About MARRA</h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
-              We are a family-founded initiative growing a community centre rooted in connection,
-              care, and belonging, beginning in Caulfield South and strengthening through local
+              We are a community initiative growing a centre rooted in connection, care, and
+              belonging, beginning in Caulfield South and strengthening through local
               partnerships.
             </p>
           </motion.div>
@@ -92,8 +92,8 @@ export function About() {
             className="space-y-6 text-muted-foreground leading-relaxed"
           >
             <p>
-              MARRA was founded by a local family in Caulfield South who saw a growing need for 
-              inclusive, accessible community spaces where everyone could feel welcome and supported.
+              MARRA began in Caulfield South in response to a growing need for inclusive,
+              accessible community spaces where everyone could feel welcome and supported.
             </p>
             <p>
               What started as a small local initiative is steadily growing into a community centre

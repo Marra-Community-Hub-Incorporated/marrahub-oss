@@ -11,6 +11,7 @@ export const siteConfig = {
   name: 'MARRA Community Centre',
   alternateName: 'MARRA Community Hub',
   shortName: 'MARRA',
+  siteUrl: 'https://marrahub.com.au',
   language: 'en-AU',
   locale: 'en_AU',
   themeColor: '#1e453a',
@@ -25,9 +26,6 @@ export const siteConfig = {
   logoPath: '/media/favicon/favicon.png',
   faviconPath: '/media/favicon/favicon.png',
   defaultImagePath: '/media/Seo_Prev.png',
-  siteUrl:
-    import.meta.env.VITE_SITE_URL?.trim().replace(/\/+$/, '') ||
-    (typeof window !== 'undefined' ? window.location.origin : ''),
 } as const;
 
 export const pageSeoMap: Record<string, PageSeoMeta> = {

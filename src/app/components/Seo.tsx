@@ -116,7 +116,7 @@ export function Seo() {
         url: logoUrl,
         contentUrl: logoUrl,
       },
-      image: logoUrl,
+      image: imageUrl,
       email: siteConfig.email,
       telephone: siteConfig.phones[0],
       taxID: siteConfig.abn,

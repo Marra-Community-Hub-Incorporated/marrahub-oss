@@ -18,6 +18,7 @@ const siteConfig = {
   name: 'MARRA Community Centre',
   alternateName: 'MARRA Community Hub',
   shortName: 'MARRA',
+  siteUrl: 'https://marrahub.com.au',
   language: 'en-AU',
   locale: 'en_AU',
   themeColor: '#1e453a',
@@ -149,9 +150,7 @@ const envFromFiles = envFiles.reduce((accumulator, fileName) => {
   return { ...accumulator, ...parseEnvFile(path.resolve(fileName)) };
 }, {});
 
-const siteUrl = (process.env.VITE_SITE_URL || envFromFiles.VITE_SITE_URL || '')
-  .trim()
-  .replace(/\/+$/, '');
+const siteUrl = siteConfig.siteUrl;
 const buildDate = new Date().toISOString().split('T')[0];
 
 if (!fs.existsSync(distDir)) {
@@ -261,7 +260,7 @@ function buildSeoHead(routePath) {
           url: logoUrl,
           contentUrl: logoUrl,
         },
-        image: logoUrl,
+        image: imageUrl,
         email: siteConfig.email,
         telephone: siteConfig.phones[0],
         taxID: siteConfig.abn,

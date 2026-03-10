@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="112" fill="#1e453a" />
   <image
-    href="web-app-manifest-512x512.png"
+    href="favicon.png"
     x="56"
     y="56"
     width="400"

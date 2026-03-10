@@ -7,7 +7,7 @@ import { Button } from './Button';
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const logoUrl = `${import.meta.env.BASE_URL}media/favicon/web-app-manifest-512x512.png`;
+  const logoUrl = `${import.meta.env.BASE_URL}media/favicon/favicon.png`;
 
   const navigation = [
     { name: 'Home', href: '/' },
