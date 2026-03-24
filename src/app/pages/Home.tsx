@@ -26,13 +26,11 @@ export function Home() {
       <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center overflow-hidden bg-primary">
         
         {/* Background Image with Dark Overlay for Contrast */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src={heroBackgroundUrl}
-            alt="MARRA Community Hub background showing people gathering together"
-            fetchPriority="high"
-            className="w-full h-full object-cover"
-          />
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${heroBackgroundUrl})` }}
+          aria-hidden="true"
+        >
           {/* Multi-layered gradient overlay:
               1. A dark base to ensure text readability.
               2. A subtle primary-tinted gradient to unify the brand colors.
