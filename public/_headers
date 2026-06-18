@@ -1,4 +1,23 @@
-# Cloudflare Pages cache rules.
+# ── Security headers (apply site-wide) ──────────────────────────────────────
+/*
+  # Force HTTPS for 2 years, including subdomains.
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  # Block MIME-type sniffing.
+  X-Content-Type-Options: nosniff
+  # Clickjacking protection (frame-ancestors below is the modern equivalent).
+  X-Frame-Options: DENY
+  # Don't leak full URLs to other origins.
+  Referrer-Policy: strict-origin-when-cross-origin
+  # Drop access to powerful APIs this site never uses.
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=()
+  # Content Security Policy. Allowlist matches what the site actually loads:
+  #  - Turnstile widget script + iframe (challenges.cloudflare.com)
+  #  - Contact form POST + Turnstile verify (connect-src)
+  #  - Unsplash images used on Home/About; data: covers inline SVG backgrounds
+  #  - the inline SPA-redirect script is allowed by its exact sha256 hash
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-rdWUeyG6djYe/2N/vnB02WmPRGARqBsBQ0zzzQ5+lGk=' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com; font-src 'self' data:; connect-src 'self' https://formspree.io https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+
+# ── Cache rules ──────────────────────────────────────────────────────────────
 # Vite emits content-hashed filenames into /assets/, so they can be cached
 # forever — a new build produces new names and never collides.
 /assets/*
