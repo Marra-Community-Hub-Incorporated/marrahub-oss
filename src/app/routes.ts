@@ -1,25 +1,20 @@
 import { createBrowserRouter } from 'react-router';
 import { Layout } from './Layout';
-import { Home } from './pages/Home';
-import { About } from './pages/About';
-import { Programs } from './pages/Programs';
-import { Impact } from './pages/Impact';
-import { Governance } from './pages/Governance';
-import { Contact } from './pages/Contact';
-import { NotFound } from './pages/NotFound';
 
+// Layout (header/footer) stays eager since it renders on every route.
+// Each page is code-split so visitors only download the page they navigate to.
 export const router = createBrowserRouter([
   {
     path: '/',
     Component: Layout,
     children: [
-      { index: true, Component: Home },
-      { path: 'about', Component: About },
-      { path: 'programs', Component: Programs },
-      { path: 'impact', Component: Impact },
-      { path: 'governance', Component: Governance },
-      { path: 'contact', Component: Contact },
-      { path: '*', Component: NotFound },
+      { index: true, lazy: async () => ({ Component: (await import('./pages/Home')).Home }) },
+      { path: 'about', lazy: async () => ({ Component: (await import('./pages/About')).About }) },
+      { path: 'programs', lazy: async () => ({ Component: (await import('./pages/Programs')).Programs }) },
+      { path: 'impact', lazy: async () => ({ Component: (await import('./pages/Impact')).Impact }) },
+      { path: 'governance', lazy: async () => ({ Component: (await import('./pages/Governance')).Governance }) },
+      { path: 'contact', lazy: async () => ({ Component: (await import('./pages/Contact')).Contact }) },
+      { path: '*', lazy: async () => ({ Component: (await import('./pages/NotFound')).NotFound }) },
     ],
   },
 ]);
