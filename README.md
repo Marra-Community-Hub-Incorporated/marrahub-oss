@@ -1,13 +1,14 @@
 # MARRA Community Hub
 
-Public website for MARRA Community Centre.
+Public website for MARRA Community Hub, a community centre growing in Caulfield South.
 
-Live site:
-- `https://marrahub.com.au`
+Live site: **[marrahub.com.au](https://marrahub.com.au)**
+
+Open source — contributions welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Overview
 
-MARRA Community Hub is a React and Vite website for a community centre growing in Caulfield South. The site focuses on:
+A React + Vite single-page website focused on:
 
 - community programs and future initiatives
 - impact and governance information
@@ -16,78 +17,74 @@ MARRA Community Hub is a React and Vite website for a community centre growing i
 
 ## Stack
 
-- React 18
-- Vite
-- TypeScript
-- React Router
-- Tailwind CSS
-- Lucide icons
-- Motion
-
-## Features
-
-- SEO-focused page metadata, canonicals, JSON-LD, `robots.txt`, and `sitemap.xml`
-- GitHub Pages-friendly deep route fallbacks for public pages
-- Contact form integrated with Formspree
-- Cloudflare Turnstile on the enquiry form
-- Custom favicon and organization branding
+- React 18 + React Router 7 (routes are lazy-loaded / code-split)
+- Vite 6 + TypeScript
+- Tailwind CSS 4
+- Motion (animations) · Lucide (icons)
+- Contact form via Formspree, spam protection via Cloudflare Turnstile
 
 ## Development
 
-Prerequisites:
-- Node.js 18+
-- npm
-
-Run locally:
+Prerequisites: **Node.js 18+** and npm.
 
 ```bash
 npm install
-npm run dev
+npm run dev        # dev server with hot reload
 ```
 
-Build:
-
-```bash
-npm run build
-```
+| Command           | What it does                                          |
+| ----------------- | ----------------------------------------------------- |
+| `npm run dev`     | Start the Vite dev server                             |
+| `npm run build`   | Production build to `dist/` + generate SEO metadata   |
+| `npm run preview` | Serve the production build locally to sanity-check it |
 
 ## Deployment
 
-This repository is deployed with GitHub Pages through the workflow in [deploy.yml](./.github/workflows/deploy.yml).
+Hosted on **Cloudflare Pages**, which **auto-deploys on every push to `main`**.
 
-The production site URL is configured in:
-- [.env.production](./.env.production)
+- Build command: `npm run build`
+- Output directory: `dist`
+- Production URL is set in [.env.production](./.env.production) (used for SEO
+  metadata and sitemap generation)
 
-That value is used for SEO metadata and sitemap generation.
+Security and cache headers are defined in [`public/_headers`](./public/_headers)
+(CSP, HSTS, clickjacking protection, plus long-lived caching for hashed assets).
 
-## Project Structure
+## Project structure
 
 ```text
-src/
-  app/
-    components/
-    pages/
-    seo/
-    routes.ts
-    Layout.tsx
-    App.tsx
-  styles/
-  main.tsx
 public/
-  media/
-  404.html
+  _headers           # Cloudflare Pages: security headers + caching
+  media/             # images, favicons
+  404.html           # SPA deep-link fallback
   robots.txt
+src/
+  main.tsx           # app entry
+  app/
+    App.tsx          # RouterProvider
+    routes.ts        # routes (pages lazy-loaded)
+    Layout.tsx       # shared header + footer
+    pages/           # Home, About, Programs, Impact, Governance, Contact, NotFound
+    components/      # Button, Header, Footer, cards, SEO helper…
+    seo/             # SEO config
+  styles/            # Tailwind entry + theme + fonts
 scripts/
-  seo-build.mjs
+  seo-build.mjs      # post-build: injects JSON-LD / meta tags
 ```
 
-## Security Notes
+## Security notes
 
-- The repository does not store private API secrets for the contact form.
-- Formspree uses a public form endpoint on the frontend.
-- Cloudflare Turnstile uses a public site key on the frontend.
-- Secret keys must stay only in the provider dashboards and must never be committed.
+- No private API secrets are stored in this repository.
+- The Formspree endpoint and Cloudflare Turnstile **site key** are public
+  frontend values by design. Secret keys live only in the provider dashboards
+  and must never be committed.
+- Anything prefixed `VITE_` is **baked into the public client bundle** — never
+  put a secret in a `VITE_` variable.
+- The Content-Security-Policy in `public/_headers` allows the inline
+  SPA-redirect script by an exact `sha256` hash. If you edit that script in
+  `index.html`, recompute the hash (see [CONTRIBUTING.md](./CONTRIBUTING.md)) or
+  deep links will silently break under CSP.
 
 ## License
 
-See [LICENSE](./LICENSE).
+[MIT](./LICENSE) © Marra Community Hub Incorporated

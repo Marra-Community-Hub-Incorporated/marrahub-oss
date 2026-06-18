@@ -1,11 +1,19 @@
 {
-  "name": "@figma/my-make-file",
+  "name": "marrahub-website",
+  "description": "Marra Community Hub marketing website",
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "license": "MIT",
+  "homepage": "https://marrahub.com.au",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Marra-Community-Hub-Incorporated/marrahub.git"
+  },
   "scripts": {
     "build": "vite build && node scripts/seo-build.mjs",
-    "dev": "vite"
+    "dev": "vite",
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "18.3.1",
