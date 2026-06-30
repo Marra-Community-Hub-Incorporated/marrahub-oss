@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -8,6 +8,12 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const logoUrl = `${import.meta.env.BASE_URL}media/favicon/favicon.png`;
+
+  // Always close the mobile menu when the route changes — covers taps on a link,
+  // the CTA button, or any other navigation, including re-selecting the current tab.
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const navigation = [
     { name: 'Home', href: '/' },
