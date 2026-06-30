@@ -1,0 +1,14 @@
+# Azure Functions local config (contains secrets) — never commit
+local.settings.json
+
+# Dependencies & build output
+node_modules/
+dist/
+bin/
+obj/
+
+# Azure Functions Core Tools
+.python_packages/
+__azurite_db*__.json
+__blobstorage__/
+__queuestorage__/

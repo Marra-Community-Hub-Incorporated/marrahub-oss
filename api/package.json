@@ -1,0 +1,16 @@
+{
+  "name": "marra-volunteer-api",
+  "version": "1.0.0",
+  "description": "Azure Function: receives signed volunteer agreements and delivers them via Microsoft Graph (email + optional SharePoint).",
+  "main": "src/functions/*.js",
+  "scripts": {
+    "start": "func start",
+    "deploy": "func azure functionapp publish $FUNCTION_APP_NAME"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.5.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

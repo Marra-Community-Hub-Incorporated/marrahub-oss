@@ -1,0 +1,24 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+
+    "TENANT_ID": "<your-entra-tenant-id>",
+    "CLIENT_ID": "<app-registration-application-client-id>",
+    "CLIENT_SECRET": "<app-registration-client-secret-value>",
+
+    "GRAPH_SENDER": "hello@marrahub.com.au",
+    "NOTIFY_RECIPIENT": "volodymyr.gor@marrahub.com.au",
+
+    "TURNSTILE_SECRET": "<cloudflare-turnstile-secret-key>",
+    "ALLOWED_ORIGINS": "https://marrahub.com.au,http://localhost:5173",
+
+    "SHAREPOINT_ENABLED": "false",
+    "SHAREPOINT_SITE_ID": "",
+    "SHAREPOINT_FOLDER": "Volunteer Agreements"
+  },
+  "Host": {
+    "CORS": "*"
+  }
+}

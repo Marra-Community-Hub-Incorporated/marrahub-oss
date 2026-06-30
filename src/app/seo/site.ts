@@ -95,6 +95,19 @@ export const pageSeoMap: Record<string, PageSeoMeta> = {
     ],
     pageType: 'AboutPage',
   },
+  '/volunteer': {
+    title: 'Volunteer Agreement | MARRA Community Hub',
+    description:
+      'Become a MARRA Community Hub volunteer in Caulfield South. Read and sign the volunteer agreement online to start offering your time, skills, and support.',
+    keywords: [
+      'volunteer Caulfield South',
+      'volunteer Glen Eira',
+      'community volunteering Melbourne',
+      'volunteer agreement',
+      'MARRA volunteer',
+    ],
+    pageType: 'WebPage',
+  },
   '/contact': {
     title: 'Contact MARRA | Community Hub in Caulfield South',
     description:

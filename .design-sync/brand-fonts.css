@@ -1,0 +1,7 @@
+/* Brand fonts for the design system. The repo references "Inter" (sans) and
+   "Ibarra Real Nova" (serif) in theme.css but ships no @font-face, so designs
+   would fall back to Georgia/system. This remote @import loads them at runtime
+   from Google Fonts. It is concatenated ahead of the compiled Tailwind CSS into
+   .design-sync/compiled.css (see NOTES.md → Shape & build). @import must stay
+   first in the file. */
+@import url('https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap');

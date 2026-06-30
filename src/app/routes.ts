@@ -14,6 +14,12 @@ export const router = createBrowserRouter([
       { path: 'impact', lazy: async () => ({ Component: (await import('./pages/Impact')).Impact }) },
       { path: 'governance', lazy: async () => ({ Component: (await import('./pages/Governance')).Governance }) },
       { path: 'contact', lazy: async () => ({ Component: (await import('./pages/Contact')).Contact }) },
+      {
+        path: 'volunteer',
+        lazy: async () => ({
+          Component: (await import('./features/volunteer-agreement')).VolunteerAgreementPage,
+        }),
+      },
       { path: '*', lazy: async () => ({ Component: (await import('./pages/NotFound')).NotFound }) },
     ],
   },

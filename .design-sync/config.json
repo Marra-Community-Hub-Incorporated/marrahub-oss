@@ -1,0 +1,38 @@
+{
+  "projectId": "690038c1-3fa4-4056-8513-e68f494f98bf",
+  "shape": "package",
+  "pkg": "marrahub-website",
+  "globalName": "MarraHub",
+  "buildCmd": "npx vite build",
+  "readmeHeader": ".design-sync/conventions.md",
+  "entry": ".design-sync/ds-entry.ts",
+  "srcDir": "src/app/components",
+  "componentSrcMap": {
+    "Button": "src/app/components/Button.tsx",
+    "CTABanner": "src/app/components/CTABanner.tsx",
+    "Footer": "src/app/components/Footer.tsx",
+    "Header": "src/app/components/Header.tsx",
+    "ImpactCard": "src/app/components/ImpactCard.tsx",
+    "ProgramCard": "src/app/components/ProgramCard.tsx",
+    "SectionHeader": "src/app/components/SectionHeader.tsx"
+  },
+  "dtsPropsFor": {
+    "Button": "  /** Button label / content. */\n  children: React.ReactNode;\n  /** Visual style. Default 'primary'. */\n  variant?: 'primary' | 'secondary' | 'outline';\n  /** Size. Default 'md'. */\n  size?: 'sm' | 'md' | 'lg';\n  /** If set, renders as a link. Internal paths route via react-router; http(s) opens in a new tab. */\n  href?: string;\n  onClick?: () => void;\n  className?: string;\n  /** Native button type when not a link. Default 'button'. */\n  type?: 'button' | 'submit' | 'reset';\n  disabled?: boolean;",
+    "CTABanner": "  title: string;\n  description: string;\n  primaryButtonText: string;\n  primaryButtonHref: string;\n  secondaryButtonText?: string;\n  secondaryButtonHref?: string;\n  /** 'default' = dark green banner (default); 'muted' = white banner. */\n  variant?: 'default' | 'muted';",
+    "ImpactCard": "  /** Large stat shown when no icon is given, e.g. \"500+\". */\n  number: string;\n  label: string;\n  description: string;\n  /** A lucide-react icon component; replaces the number when provided. */\n  icon?: React.ComponentType<{ size?: number | string; className?: string }>;",
+    "ProgramCard": "  /** A lucide-react icon component. */\n  icon: React.ComponentType<{ size?: number | string; className?: string }>;\n  title: string;\n  description: string;\n  /** Optional bullet list rendered under an \"Expected Outcomes\" heading. */\n  outcomes?: string[];",
+    "SectionHeader": "  title: string;\n  /** Small eyebrow label above the title. */\n  subtitle?: string;\n  description?: string;\n  /** Text alignment. Default 'center'. */\n  align?: 'left' | 'center';",
+    "Header": "  // Header takes no props — it renders the site navigation and reads the current route.",
+    "Footer": "  // Footer takes no props — it renders the site footer with contact details and links."
+  },
+  "cssEntry": ".design-sync/compiled.css",
+  "tokensGlob": "src/styles/theme.css",
+  "runtimeFontPrefixes": ["Ibarra Real Nova", "Inter"],
+  "extraEntries": ["./.design-sync/ds-extras.tsx"],
+  "provider": { "component": "PreviewRouter" },
+  "overrides": {
+    "Header": { "cardMode": "single", "primaryStory": "Default" },
+    "Footer": { "cardMode": "single", "primaryStory": "Default" },
+    "CTABanner": { "cardMode": "column" }
+  }
+}

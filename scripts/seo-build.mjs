@@ -9,6 +9,7 @@ const routes = [
   { path: '/impact', changefreq: 'monthly', priority: '0.8' },
   { path: '/governance', changefreq: 'monthly', priority: '0.7' },
   { path: '/contact', changefreq: 'monthly', priority: '0.9' },
+  { path: '/volunteer', changefreq: 'monthly', priority: '0.8' },
 ];
 const envFiles = ['.env.production.local', '.env.production', '.env.local', '.env'];
 const seoHeadStart = '<!-- SEO_HEAD_START -->';
@@ -113,6 +114,19 @@ const pageSeoMap = {
       'MARRA email',
     ],
     pageType: 'ContactPage',
+  },
+  '/volunteer': {
+    title: 'Volunteer Agreement | MARRA Community Hub',
+    description:
+      'Become a MARRA Community Hub volunteer in Caulfield South. Read and sign the volunteer agreement online to start offering your time, skills, and support.',
+    keywords: [
+      'volunteer Caulfield South',
+      'volunteer Glen Eira',
+      'community volunteering Melbourne',
+      'volunteer agreement',
+      'MARRA volunteer',
+    ],
+    pageType: 'WebPage',
   },
 };
 

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MARRA — Redesign Concept</title>
+<style>
+  :root{
+    /* Brand tokens */
+    --background:#fdfcfb;
+    --foreground:#1c1c1c;
+    --primary:#1e453a;
+    --secondary:#b05e45;
+    --accent:#d4a574;
+    --muted:#f1eee9;
+    --muted-foreground:#666666;
+    --card:#ffffff;
+    --border:rgba(30,69,58,0.12);
+    --radius:0.75rem;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    --shadow-sm:0 1px 2px rgba(28,28,28,0.05);
+    --shadow:0 8px 24px -8px rgba(30,69,58,0.12), 0 2px 6px rgba(28,28,28,0.04);
+    --shadow-lg:0 24px 60px -20px rgba(30,69,58,0.22), 0 8px 20px -10px rgba(28,28,28,0.08);
+    --maxw:1180px;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--background);
+    color:var(--foreground);
+    font-family:var(--sans);
+    font-weight:400;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    /* Signature faint green dot-texture, ~40px grid */
+    background-image:radial-gradient(rgba(30,69,58,0.045) 1.4px, transparent 1.4px);
+    background-size:40px 40px;
+    background-position:-20px -20px;
+  }
+
+  h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-0.02em;line-height:1.08;margin:0;text-wrap:balance;}
+  p{margin:0;}
+  a{color:inherit;}
+  img{max-width:100%;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .eyebrow{
+    font-family:var(--sans);font-size:.78rem;font-weight:600;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--secondary);margin:0 0 14px;display:inline-block;
+  }
+  .lead{color:var(--muted-foreground);font-size:1.05rem;line-height:1.7;font-weight:300;}
+
+  /* ---------- Concept chrome (annotations for the client, not part of the product) ---------- */
+  .concept-bar{
+    background:var(--primary);color:#fff;font-family:var(--sans);
+    padding:14px 24px;font-size:.82rem;letter-spacing:.02em;position:sticky;top:0;z-index:200;
+    display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center;
+  }
+  .concept-bar strong{font-weight:600;}
+  .concept-bar .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;}
+  .section-tag{
+    display:inline-block;font-family:var(--sans);font-size:.7rem;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--primary);background:var(--muted);
+    border:1px solid var(--border);border-radius:999px;padding:6px 14px;margin-bottom:8px;
+  }
+  .divider-label{
+    text-align:center;font-family:var(--sans);font-size:.74rem;font-weight:700;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--muted-foreground);
+    padding:64px 24px 8px;position:relative;
+  }
+  .divider-label::before,.divider-label::after{
+    content:"";position:absolute;top:calc(50% + 24px);width:60px;height:1px;background:var(--border);
+  }
+  .divider-label::before{right:calc(50% + 160px);} .divider-label::after{left:calc(50% + 160px);}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    font-family:var(--sans);font-size:1rem;font-weight:500;border-radius:999px;
+    padding:14px 28px;border:1.5px solid transparent;cursor:pointer;display:inline-flex;
+    align-items:center;gap:10px;text-decoration:none;transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+    line-height:1;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:var(--shadow);}
+  .btn-primary:hover{background:#1a3c32;}
+  .btn-secondary{background:var(--secondary);color:#fff;box-shadow:var(--shadow);}
+  .btn-secondary:hover{background:#9c5039;}
+  .btn-outline{background:transparent;color:var(--primary);border-color:var(--primary);}
+  .btn-outline:hover{background:rgba(30,69,58,0.06);}
+  .btn-ghost{background:transparent;color:var(--primary);}
+  .btn-ghost:hover{background:var(--muted);}
+  .btn-sm{padding:9px 18px;font-size:.88rem;}
+  .btn.on-dark.btn-outline{color:#fff;border-color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.08);}
+  .btn.on-dark.btn-outline:hover{background:rgba(255,255,255,0.18);}
+
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px;}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;overflow:hidden;}
+  .hero-inner{position:relative;z-index:5;max-width:var(--maxw);margin:0 auto;padding:120px 24px 150px;}
+  .hero h1{font-size:clamp(2.6rem,7vw,5.4rem);}
+  .hero .accent{color:var(--accent);font-style:italic;}
+  .hero-cta{display:flex;gap:16px;flex-wrap:wrap;margin-top:36px;}
+
+  /* Hero A — dark editorial photo overlay */
+  .heroA{background:var(--primary);color:#fff;min-height:78vh;display:flex;align-items:center;}
+  .heroA .layer{position:absolute;inset:0;z-index:0;}
+  .heroA .photo{
+    position:absolute;inset:-8% 0 0;background:
+      linear-gradient(115deg, rgba(30,69,58,0.92) 0%, rgba(30,69,58,0.55) 45%, rgba(176,94,69,0.35) 100%),
+      repeating-linear-gradient(135deg,#2c5a4c 0 22px,#285346 22px 44px);
+    will-change:transform;
+  }
+  .heroA .grain{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.05) 1px,transparent 1px);background-size:38px 38px;}
+  .heroA p.sub{color:rgba(255,255,255,0.9);max-width:600px;}
+  .photo-note{position:absolute;left:24px;bottom:24px;z-index:6;font-family:var(--sans);font-size:.72rem;letter-spacing:.04em;color:rgba(255,255,255,0.7);background:rgba(0,0,0,0.25);padding:6px 12px;border-radius:8px;border:1px dashed rgba(255,255,255,0.3);}
+
+  /* Hero B — light, split, framed photo */
+  .heroB{background:var(--background);color:var(--foreground);padding-top:90px;}
+  .heroB-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;max-width:var(--maxw);margin:0 auto;padding:40px 24px 130px;}
+  .heroB h1{font-size:clamp(2.4rem,5.6vw,4.4rem);}
+  .heroB .accent{color:var(--secondary);font-style:italic;}
+  .heroB .sub{margin-top:22px;max-width:520px;}
+  .framed{position:relative;}
+  .frame-photo{
+    aspect-ratio:4/5;border-radius:var(--radius);box-shadow:var(--shadow-lg);overflow:hidden;position:relative;
+    will-change:transform;
+  }
+  /* decorative corner frame */
+  .framed::before,.framed::after{content:"";position:absolute;width:64px;height:64px;border:2px solid var(--accent);z-index:3;}
+  .framed::before{top:-14px;left:-14px;border-right:none;border-bottom:none;border-top-left-radius:14px;}
+  .framed::after{bottom:-14px;right:-14px;border-left:none;border-top:none;border-bottom-right-radius:14px;}
+
+  /* Photo placeholders */
+  .ph{
+    background:var(--muted);border:1px dashed var(--border);border-radius:var(--radius);
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    color:var(--muted-foreground);font-family:var(--sans);font-size:.82rem;font-weight:500;
+    letter-spacing:.02em;padding:24px;line-height:1.5;position:relative;min-height:160px;
+    background-image:linear-gradient(135deg,rgba(212,165,116,0.10),rgba(30,69,58,0.06));
+  }
+  .ph::after{content:"PLACEHOLDER";position:absolute;top:10px;right:10px;font-size:.58rem;letter-spacing:.16em;font-weight:700;color:var(--secondary);opacity:.7;}
+  .ph .icon-cam{display:block;margin:0 auto 10px;width:30px;height:30px;opacity:.55;}
+  .frame-photo .ph{height:100%;width:100%;border:none;border-radius:0;}
+
+  /* curved SVG divider */
+  .curve{position:absolute;left:0;right:0;bottom:-1px;z-index:4;line-height:0;}
+  .curve svg{display:block;width:100%;height:auto;}
+
+  /* ---------- generic section ---------- */
+  section.block{padding:96px 0;}
+  .center{text-align:center;}
+  .center .lead{margin:14px auto 0;max-width:620px;}
+
+  /* reveal animation */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1);}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* Why MARRA */
+  .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+  .why-grid h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:20px;}
+  .why-grid .framed .frame-photo{aspect-ratio:1/1;}
+  .pull{font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--primary);border-left:3px solid var(--accent);padding-left:18px;margin-top:24px;}
+
+  /* Programs */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;}
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:30px;box-shadow:var(--shadow-sm);transition:transform .25s ease, box-shadow .25s ease;
+    display:flex;flex-direction:column;
+  }
+  .card:hover{transform:translateY(-6px);box-shadow:var(--shadow);}
+  .glyph{width:52px;height:52px;border-radius:14px;background:var(--muted);display:flex;align-items:center;justify-content:center;margin-bottom:18px;border:1px solid var(--border);}
+  .glyph svg{width:26px;height:26px;stroke:var(--primary);}
+  .card h3{font-size:1.3rem;margin-bottom:10px;}
+  .card p{color:var(--muted-foreground);font-size:.94rem;font-weight:300;}
+  .card ul{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-direction:column;gap:8px;}
+  .card li{position:relative;padding-left:24px;font-size:.86rem;color:var(--foreground);}
+  .card li::before{content:"";position:absolute;left:0;top:7px;width:12px;height:12px;border-radius:50%;background:rgba(212,165,116,0.35);border:2px solid var(--accent);}
+
+  /* Roadmap stats */
+  .stats-wrap{background:var(--primary);color:#fff;border-radius:calc(var(--radius)*1.5);padding:56px 40px;position:relative;overflow:hidden;}
+  .stats-wrap .grain{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.05) 1px,transparent 1px);background-size:34px 34px;}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;position:relative;z-index:2;}
+  .stat .num{font-family:var(--serif);font-size:clamp(2.4rem,4vw,3.2rem);font-weight:600;color:var(--accent);line-height:1;}
+  .stat .lbl{margin-top:10px;font-size:.92rem;color:rgba(255,255,255,0.82);font-weight:300;}
+
+  /* Governance */
+  .gov{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+  .gov-list{display:grid;gap:14px;margin-top:8px;}
+  .gov-item{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow-sm);}
+  .check{flex:none;width:26px;height:26px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .check svg{width:14px;height:14px;stroke:#fff;}
+  .gov-item .t{font-weight:600;font-size:.96rem;}
+  .gov-item .d{font-size:.85rem;color:var(--muted-foreground);font-weight:300;}
+
+  /* Location */
+  .loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:stretch;}
+  .loc-cards{display:grid;gap:18px;align-content:start;}
+  .info-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm);}
+  .info-card h4{font-size:1.05rem;margin-bottom:6px;}
+  .info-card p{font-size:.92rem;color:var(--muted-foreground);font-weight:300;}
+  .map-ph{min-height:340px;border-radius:var(--radius);}
+
+  /* CTA banner */
+  .cta-banner{background:linear-gradient(120deg,var(--secondary),#c56e52);color:#fff;border-radius:calc(var(--radius)*1.5);padding:64px 48px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--shadow-lg);}
+  .cta-banner h2{font-size:clamp(2rem,4vw,3rem);color:#fff;margin-bottom:14px;}
+  .cta-banner p{color:rgba(255,255,255,0.92);max-width:560px;margin:0 auto 30px;font-weight:300;}
+  .cta-banner .grain{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.08) 1px,transparent 1px);background-size:30px 30px;}
+  .cta-banner .row{position:relative;z-index:2;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+  .cta-banner .btn-primary{background:#fff;color:var(--secondary);}
+  .cta-banner .btn-primary:hover{background:#fbeee8;}
+
+  /* ---------- PORTAL ---------- */
+  .portal-stage{background:var(--muted);padding:48px 24px 96px;}
+  .portal-shell{
+    max-width:var(--maxw);margin:0 auto;background:var(--background);border:1px solid var(--border);
+    border-radius:calc(var(--radius)*1.4);overflow:hidden;box-shadow:var(--shadow-lg);
+    display:grid;grid-template-columns:248px 1fr;min-height:560px;
+  }
+  .p-side{background:var(--primary);color:rgba(255,255,255,0.85);padding:24px 16px;display:flex;flex-direction:column;}
+  .p-brand{display:flex;align-items:center;gap:10px;padding:6px 10px 22px;}
+  .p-brand .mark{width:30px;height:30px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--primary);font-family:var(--serif);font-weight:700;}
+  .p-brand b{font-family:var(--serif);color:#fff;font-size:1.15rem;letter-spacing:.02em;}
+  .p-nav{display:flex;flex-direction:column;gap:4px;margin-top:6px;}
+  .p-nav a{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;text-decoration:none;font-size:.92rem;color:rgba(255,255,255,0.8);transition:background .15s ease;}
+  .p-nav a:hover{background:rgba(255,255,255,0.08);}
+  .p-nav a.active{background:rgba(255,255,255,0.14);color:#fff;font-weight:500;}
+  .p-nav svg{width:18px;height:18px;stroke:currentColor;flex:none;}
+  .p-nav .admin{margin-top:auto;border-top:1px solid rgba(255,255,255,0.14);padding-top:12px;}
+  .p-nav .badge-admin{margin-left:auto;font-size:.6rem;letter-spacing:.1em;background:var(--accent);color:var(--primary);padding:2px 7px;border-radius:999px;font-weight:700;}
+
+  .p-main{display:flex;flex-direction:column;background:var(--background);}
+  .p-topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--border);background:var(--card);}
+  .p-topbar .greet{font-size:.85rem;color:var(--muted-foreground);}
+  .p-user{display:flex;align-items:center;gap:12px;}
+  .p-avatar{width:34px;height:34px;border-radius:50%;background:var(--secondary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.85rem;}
+  .p-body{padding:28px;overflow:auto;}
+  .p-welcome h3{font-size:1.6rem;}
+  .p-welcome p{color:var(--muted-foreground);font-size:.94rem;font-weight:300;margin-top:4px;}
+  .p-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:24px;margin-top:26px;align-items:start;}
+  .p-section-title{font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:14px;}
+
+  .event-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;gap:16px;align-items:center;box-shadow:var(--shadow-sm);margin-bottom:14px;}
+  .event-date{flex:none;width:58px;height:58px;border-radius:12px;background:var(--muted);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;}
+  .event-date .m{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--secondary);font-weight:700;}
+  .event-date .d{font-family:var(--serif);font-size:1.5rem;color:var(--primary);font-weight:600;margin-top:2px;}
+  .event-card .info{flex:1;min-width:0;}
+  .event-card .info b{font-size:1rem;}
+  .event-card .info span{display:block;font-size:.82rem;color:var(--muted-foreground);margin-top:2px;}
+
+  .widget{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow-sm);}
+  .progress-track{height:10px;background:var(--muted);border-radius:999px;overflow:hidden;margin:14px 0 8px;}
+  .progress-fill{height:100%;width:70%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:999px;}
+  .widget .pct{font-family:var(--serif);font-size:1.8rem;color:var(--primary);font-weight:600;}
+  .widget ul{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:8px;font-size:.82rem;color:var(--muted-foreground);}
+  .widget li{display:flex;align-items:center;gap:8px;}
+  .widget li.done{color:var(--foreground);}
+  .tick{width:16px;height:16px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--border);}
+  .widget li.done .tick{background:var(--primary);border-color:var(--primary);}
+  .tick svg{width:9px;height:9px;stroke:#fff;}
+
+  /* table */
+  .table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);}
+  table{border-collapse:collapse;width:100%;min-width:480px;font-size:.9rem;}
+  thead th{text-align:left;font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-foreground);font-weight:700;padding:14px 18px;background:var(--muted);border-bottom:1px solid var(--border);}
+  tbody td{padding:14px 18px;border-bottom:1px solid var(--border);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody td:first-child{font-weight:500;}
+
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;font-weight:600;padding:4px 11px;border-radius:999px;letter-spacing:.02em;}
+  .badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .badge-registered{background:rgba(30,69,58,0.10);color:var(--primary);}
+  .badge-waitlist{background:rgba(212,165,116,0.22);color:#8a6322;}
+  .badge-cancelled{background:rgba(176,94,69,0.14);color:var(--secondary);}
+
+  /* design system strip */
+  .ds-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:40px;}
+  .ds-cell{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm);}
+  .ds-cell h4{font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:18px;}
+  .ds-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .field{font-family:var(--sans);font-size:.95rem;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--background);color:var(--foreground);width:100%;}
+  .field:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(30,69,58,0.12);}
+  .field-label{display:block;font-size:.8rem;font-weight:600;margin-bottom:6px;color:var(--foreground);}
+
+  footer{background:var(--primary);color:rgba(255,255,255,0.7);text-align:center;padding:40px 24px;font-size:.84rem;}
+  footer b{color:#fff;font-family:var(--serif);}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:920px){
+    .heroB-grid,.why-grid,.gov,.loc-grid,.p-grid,.ds-grid,.cards,.stats{grid-template-columns:1fr;}
+    .cards{grid-template-columns:1fr 1fr;}
+    .stats{grid-template-columns:1fr 1fr;gap:32px 24px;}
+    .portal-shell{grid-template-columns:1fr;}
+    .p-side{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px;padding:14px;}
+    .p-brand{padding:0 12px 0 4px;}
+    .p-nav{flex-direction:row;flex-wrap:wrap;margin-top:0;}
+    .p-nav .admin{margin:0;border:none;padding:0;}
+    .p-nav a{padding:8px 10px;font-size:.82rem;}
+    .divider-label::before,.divider-label::after{display:none;}
+  }
+  @media (max-width:560px){
+    .cards{grid-template-columns:1fr;}
+    .hero-inner{padding:90px 24px 120px;}
+    section.block{padding:64px 0;}
+    .stats-wrap,.cta-banner{padding:40px 24px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .reveal{opacity:1!important;transform:none!important;transition:none!important;}
+    .heroA .photo,.frame-photo{transform:none!important;}
+    .card:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="concept-bar">
+  <span class="dot"></span>
+  <strong>MARRA — Redesign Concept</strong>
+  <span>Public site + Portal preview + Design system, sharing one language</span>
+  <span class="dot"></span>
+</div>
+
+<!-- ======================= HERO OPTION A ======================= -->
+<div class="divider-label">Hero Option A — Immersive editorial</div>
+<header class="hero heroA">
+  <div class="layer">
+    <div class="photo" data-parallax="0.25" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+  </div>
+  <span class="photo-note">PHOTO — full-bleed: real people connecting at a Caulfield South community gathering</span>
+  <div class="hero-inner">
+    <span class="eyebrow" style="color:var(--accent)">Caulfield South · Glen Eira · VIC</span>
+    <h1>Bringing Communities<br><span class="accent">Together</span></h1>
+    <p class="sub lead" style="color:rgba(255,255,255,0.9);margin-top:24px;">
+      Inspired by Aboriginal language — connection, helping hands, working together. We're growing an
+      interactive community hub that brings people together through care, culture and belonging.
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-secondary" href="#programs">Explore Programs</a>
+      <a class="btn btn-outline on-dark" href="#getinvolved">Get Involved</a>
+    </div>
+  </div>
+  <div class="curve" aria-hidden="true">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,64 C360,128 720,0 1080,40 C1260,60 1380,96 1440,80 L1440,120 L0,120 Z" fill="#fdfcfb"></path></svg>
+  </div>
+</header>
+
+<!-- ======================= HERO OPTION B ======================= -->
+<div class="divider-label">Hero Option B — Light split with framed photo</div>
+<header class="hero heroB">
+  <div class="heroB-grid">
+    <div>
+      <span class="eyebrow">A not-for-profit community centre</span>
+      <h1>Bringing Communities <span class="accent">Together</span></h1>
+      <p class="sub lead">
+        An interactive community hub in Caulfield South. MARRA — drawn from Aboriginal language for
+        connection and helping hands — grows belonging through programs shaped by the community itself.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-secondary" href="#programs">Explore Programs</a>
+        <a class="btn btn-outline" href="#getinvolved">Get Involved</a>
+      </div>
+    </div>
+    <div class="framed reveal">
+      <div class="frame-photo">
+        <div class="ph">
+          <span><svg class="icon-cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8a2 2 0 012-2h2l1.5-2h7L18 6h1a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><circle cx="12" cy="12" r="3.2"/></svg>
+          PHOTO — portrait orientation<br>real volunteers &amp; families,<br>warm natural light</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="curve" aria-hidden="true">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,80 C300,20 620,110 960,60 C1180,28 1320,70 1440,52 L1440,120 L0,120 Z" fill="#f1eee9"></path></svg>
+  </div>
+</header>
+
+<!-- ======================= WHY MARRA ======================= -->
+<section class="block" style="background:var(--muted);">
+  <div class="wrap why-grid">
+    <div class="framed reveal">
+      <div class="frame-photo" style="aspect-ratio:1/1;">
+        <div class="ph"><span><svg class="icon-cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8a2 2 0 012-2h2l1.5-2h7L18 6h1a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><circle cx="12" cy="12" r="3.2"/></svg>PHOTO — community workshop,<br>real people sharing a moment</span></div>
+      </div>
+    </div>
+    <div class="reveal">
+      <span class="section-tag">Why MARRA</span>
+      <h2>A name that means <em style="font-style:italic;color:var(--secondary)">connection</em></h2>
+      <p class="lead" style="margin-top:18px;">
+        MARRA is inspired by Aboriginal language — meaning connection, helping hands, and working
+        together. Those three ideas are our blueprint: a place where neighbours become a community,
+        where no one is left to manage alone, and where everyone has something to give.
+      </p>
+      <p class="pull">We don't run programs <em>for</em> the community. We build them <em>with</em> it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PROGRAMS ======================= -->
+<section class="block" id="programs">
+  <div class="wrap center">
+    <span class="section-tag">What we do</span>
+    <h2 style="font-size:clamp(2rem,4vw,3rem);">Programs built around people</h2>
+    <p class="lead">Six areas of support, each shaped by what the community tells us it needs.</p>
+  </div>
+  <div class="wrap">
+    <div class="cards">
+      <!-- card template repeated; glyphs are simple inline SVG -->
+      <div class="card reveal">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 20c0-2.2 1-4 2.5-5"/></svg></div>
+        <h3>Family Support</h3>
+        <p>Practical, judgement-free help for families navigating everyday pressures.</p>
+        <ul><li>Parenting circles &amp; peer support</li><li>Material aid referrals</li><li>School-holiday family days</li></ul>
+      </div>
+      <div class="card reveal">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M7 9.5V15c0 1.7 2.2 3 5 3s5-1.3 5-3V9.5"/></svg></div>
+        <h3>Educational</h3>
+        <p>Lifelong learning — from literacy and digital skills to language exchange.</p>
+        <ul><li>Adult literacy &amp; English</li><li>Digital confidence sessions</li><li>Homework &amp; study help</li></ul>
+      </div>
+      <div class="card reveal">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 21s-7-4.5-9-9.5C1.5 7 4 4 7.5 4 10 4 12 6 12 6s2-2 4.5-2C20 4 22.5 7 21 11.5 19 16.5 12 21 12 21z"/></svg></div>
+        <h3>Wellbeing &amp; Health</h3>
+        <p>Gentle, accessible activities for body and mind, close to home.</p>
+        <ul><li>Movement &amp; gentle exercise</li><li>Mental-health check-ins</li><li>Healthy cooking groups</li></ul>
+      </div>
+      <div class="card reveal">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3l2.3 4.6 5.1.7-3.7 3.6.9 5.1L12 14.8 7.4 17l.9-5.1L4.6 8.3l5.1-.7z"/></svg></div>
+        <h3>Youth Development</h3>
+        <p>Spaces where young people build skills, confidence and belonging.</p>
+        <ul><li>Mentoring &amp; leadership</li><li>Creative &amp; sports clubs</li><li>Pathways to work</li></ul>
+      </div>
+      <div class="card reveal">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="7" r="3.2"/><path d="M5 21c0-3.9 3.1-7 7-7s7 3.1 7 7M9 11c-1 1.5-1 4 0 6M15 11c1 1.5 1 4 0 6"/></svg></div>
+        <h3>Elder Care</h3>
+        <p>Connection and dignity for older neighbours, countering isolation.</p>
+        <ul><li>Social &amp; cultural mornings</li><li>Friendly check-in calls</li><li>Tech &amp; transport help</li></ul>
+      </div>
+      <div class="card reveal">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3v18M5 8l7-5 7 5M4 21h16M8 12h8M9 16h6"/></svg></div>
+        <h3>Inclusion &amp; Advocacy</h3>
+        <p>Making sure every voice is heard, and every door is open.</p>
+        <ul><li>Accessibility-first design</li><li>Multicultural programming</li><li>Community advocacy</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ROADMAP / TARGETS ======================= -->
+<section class="block" style="padding-top:0;">
+  <div class="wrap">
+    <div class="stats-wrap reveal">
+      <div class="grain" aria-hidden="true"></div>
+      <div style="position:relative;z-index:2;text-align:center;margin-bottom:34px;">
+        <span class="eyebrow" style="color:var(--accent)">Our first chapter</span>
+        <h2 style="color:#fff;font-size:clamp(1.8rem,3.5vw,2.6rem);">Early targets, honestly stated</h2>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num">50+</div><div class="lbl">Early community reach</div></div>
+        <div class="stat"><div class="num">5</div><div class="lbl">Pilot programs</div></div>
+        <div class="stat"><div class="num">12+</div><div class="lbl">Interactive sessions</div></div>
+        <div class="stat"><div class="num">100%</div><div class="lbl">Community shaped</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= GOVERNANCE ======================= -->
+<section class="block" style="background:var(--muted);">
+  <div class="wrap gov">
+    <div class="reveal">
+      <span class="section-tag">Built on trust</span>
+      <h2 style="font-size:clamp(2rem,4vw,3rem);">Transparent by design</h2>
+      <p class="lead" style="margin-top:16px;">
+        We're a not-for-profit, and we act like one. Good governance isn't paperwork to us — it's how
+        we keep faith with the community and the people who support us.
+      </p>
+    </div>
+    <div class="gov-list reveal">
+      <div class="gov-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M4 12l5 5L20 6"/></svg></span><div><div class="t">Registered not-for-profit structure</div><div class="d">Governed by a volunteer committee under a public constitution.</div></div></div>
+      <div class="gov-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M4 12l5 5L20 6"/></svg></span><div><div class="t">Open financial reporting</div><div class="d">Income and spending published in plain language each year.</div></div></div>
+      <div class="gov-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M4 12l5 5L20 6"/></svg></span><div><div class="t">Child-safe &amp; volunteer screening</div><div class="d">Working-with-children checks and a clear safeguarding policy.</div></div></div>
+      <div class="gov-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M4 12l5 5L20 6"/></svg></span><div><div class="t">Community-led decisions</div><div class="d">Programs reviewed with the people who use them, not just for them.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= LOCATION ======================= -->
+<section class="block">
+  <div class="wrap center" style="margin-bottom:8px;">
+    <span class="section-tag">Find us</span>
+    <h2 style="font-size:clamp(2rem,4vw,3rem);">Rooted in Caulfield South</h2>
+  </div>
+  <div class="wrap loc-grid">
+    <div class="reveal" style="display:flex;">
+      <div class="ph map-ph" style="flex:1;"><span><svg class="icon-cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>MAP — Caulfield South,<br>Glen Eira VIC (embed live map)</span></div>
+    </div>
+    <div class="loc-cards reveal">
+      <div class="info-card"><h4>Location</h4><p>Caulfield South, in the City of Glen Eira, Victoria — easy to reach by tram, train and bus.</p></div>
+      <div class="info-card"><h4>Who we serve</h4><p>Glen Eira residents of every age, background and ability. Everyone is welcome.</p></div>
+      <div class="info-card"><h4>Get in touch</h4><p>hello@marrahub.com.au — we'd love to hear what your community needs.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= GET INVOLVED CTA ======================= -->
+<section class="block" id="getinvolved" style="padding-top:0;">
+  <div class="wrap">
+    <div class="cta-banner reveal">
+      <div class="grain" aria-hidden="true"></div>
+      <div style="position:relative;z-index:2;">
+        <h2>Lend a hand. Be part of it.</h2>
+        <p>Volunteer, partner, or simply come along. MARRA grows with every person who shows up.</p>
+        <div class="row">
+          <a class="btn btn-primary" href="#portal">Become a Volunteer</a>
+          <a class="btn btn-outline on-dark" href="#programs">See Programs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PORTAL PREVIEW ======================= -->
+<div class="divider-label" id="portal">— Internal Portal Preview —</div>
+<div class="portal-stage">
+  <div class="wrap center" style="padding-bottom:8px;">
+    <p class="lead" style="margin:0 auto;max-width:640px;">The same design language, logged in. This is the volunteer experience the marketing site grows into — one product, one feel.</p>
+  </div>
+  <div class="portal-shell reveal">
+    <!-- sidebar -->
+    <nav class="p-side" aria-label="Portal navigation">
+      <div class="p-brand"><span class="mark">M</span><b>MARRA</b></div>
+      <div class="p-nav">
+        <a href="#portal" class="active"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</a>
+        <a href="#portal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>My Profile</a>
+        <a href="#portal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Events</a>
+        <a href="#portal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M9 11l3 3 8-8M4 6h11M4 12h5M4 18h8"/></svg>My Registrations</a>
+        <div class="admin">
+          <a href="#portal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M12 3l7 3v6c0 4-3 6.5-7 9-4-2.5-7-5-7-9V6z"/></svg>Admin<span class="badge-admin">STAFF</span></a>
+        </div>
+      </div>
+    </nav>
+    <!-- main -->
+    <div class="p-main">
+      <div class="p-topbar">
+        <div class="greet">Volunteer dashboard</div>
+        <div class="p-user">
+          <span style="font-size:.9rem;">Amara N.</span>
+          <span class="p-avatar">AN</span>
+          <a class="btn btn-ghost btn-sm" href="#portal">Log out</a>
+        </div>
+      </div>
+      <div class="p-body">
+        <div class="p-welcome">
+          <h3>Welcome back, Amara</h3>
+          <p>You have 2 upcoming events and 1 spot on a waitlist. Thanks for showing up.</p>
+        </div>
+
+        <div class="p-grid">
+          <div>
+            <div class="p-section-title">Upcoming Events</div>
+            <div class="event-card">
+              <div class="event-date"><span class="m">Jun</span><span class="d">24</span></div>
+              <div class="info"><b>Parenting Circle — evening session</b><span>6:00pm · MARRA Hub, Caulfield South</span></div>
+              <a class="btn btn-secondary btn-sm" href="#portal">RSVP</a>
+            </div>
+            <div class="event-card">
+              <div class="event-date"><span class="m">Jul</span><span class="d">02</span></div>
+              <div class="info"><b>Digital Confidence for Seniors</b><span>10:30am · Volunteer support needed</span></div>
+              <a class="btn btn-secondary btn-sm" href="#portal">RSVP</a>
+            </div>
+
+            <div class="p-section-title" style="margin-top:26px;">My Registrations</div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Event</th><th>Date</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Parenting Circle</td><td>24 Jun 2026</td><td><span class="badge badge-registered">Registered</span></td></tr>
+                  <tr><td>Healthy Cooking Group</td><td>28 Jun 2026</td><td><span class="badge badge-waitlist">Waitlist</span></td></tr>
+                  <tr><td>Youth Leadership Day</td><td>11 Jul 2026</td><td><span class="badge badge-registered">Registered</span></td></tr>
+                  <tr><td>Elder Social Morning</td><td>03 Jun 2026</td><td><span class="badge badge-cancelled">Cancelled</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <div class="p-section-title">Profile completeness</div>
+            <div class="widget">
+              <span class="pct">70%</span>
+              <div class="progress-track"><div class="progress-fill"></div></div>
+              <p style="font-size:.82rem;color:var(--muted-foreground);margin:0;">A complete profile helps us match you to the right programs.</p>
+              <ul>
+                <li class="done"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></span>Contact details</li>
+                <li class="done"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></span>Interests &amp; availability</li>
+                <li><span class="tick"></span>Working-with-children check</li>
+                <li><span class="tick"></span>Emergency contact</li>
+              </ul>
+              <a class="btn btn-outline btn-sm" href="#portal" style="margin-top:16px;">Complete profile</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= DESIGN SYSTEM ======================= -->
+<div class="divider-label">Design System / Primitives</div>
+<section class="block" style="padding-top:24px;">
+  <div class="wrap center" style="margin-bottom:8px;">
+    <p class="lead" style="margin:0 auto;max-width:640px;">A small, owned component set — not a 50-piece library. Every primitive below is reused across the public site and the portal.</p>
+  </div>
+  <div class="wrap">
+    <div class="ds-grid">
+      <div class="ds-cell">
+        <h4>Buttons</h4>
+        <div class="ds-row">
+          <button class="btn btn-primary">Primary</button>
+          <button class="btn btn-secondary">Secondary</button>
+          <button class="btn btn-outline">Outline</button>
+          <button class="btn btn-ghost">Ghost</button>
+        </div>
+      </div>
+      <div class="ds-cell">
+        <h4>Status Badges</h4>
+        <div class="ds-row">
+          <span class="badge badge-registered">Registered</span>
+          <span class="badge badge-waitlist">Waitlist</span>
+          <span class="badge badge-cancelled">Cancelled</span>
+        </div>
+      </div>
+      <div class="ds-cell">
+        <h4>Form Fields</h4>
+        <div style="display:grid;gap:16px;">
+          <div><label class="field-label" for="ds-in">Full name</label><input id="ds-in" class="field" placeholder="e.g. Amara Nguyen" /></div>
+          <div><label class="field-label" for="ds-sel">Preferred program</label>
+            <select id="ds-sel" class="field">
+              <option>Family Support</option><option>Youth Development</option><option>Elder Care</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="ds-cell">
+        <h4>Card &amp; Table header</h4>
+        <div class="card" style="box-shadow:none;padding:18px;margin-bottom:16px;">
+          <div class="glyph" style="margin-bottom:12px;width:42px;height:42px;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 21s-7-4.5-9-9.5C1.5 7 4 4 7.5 4 10 4 12 6 12 6s2-2 4.5-2C20 4 22.5 7 21 11.5 19 16.5 12 21 12 21z"/></svg></div>
+          <h3 style="font-size:1.05rem;">Reusable Card</h3>
+          <p style="font-size:.85rem;">Same shell drives program cards, events and widgets.</p>
+        </div>
+        <div class="table-scroll">
+          <table><thead><tr><th>Event</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody><tr><td>Example row</td><td>24 Jun</td><td><span class="badge badge-registered">Registered</span></td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><b>MARRA</b> — Bringing communities together · Caulfield South, Glen Eira VIC</p>
+  <p style="margin-top:8px;opacity:.7;font-size:.78rem;">Redesign concept — placeholders mark where real photography and a live map will go.</p>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Scroll reveal */
+  var reveals = document.querySelectorAll('.reveal');
+  if (reduce || !('IntersectionObserver' in window)){
+    reveals.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+    reveals.forEach(function(el){ io.observe(el); });
+  }
+
+  /* Layered parallax on Hero A (background slower than scroll). Skipped under reduced-motion. */
+  if (!reduce){
+    var layers = document.querySelectorAll('[data-parallax]');
+    var ticking = false;
+    function update(){
+      var y = window.pageYOffset || 0;
+      layers.forEach(function(el){
+        var speed = parseFloat(el.getAttribute('data-parallax')) || 0.2;
+        el.style.transform = 'translate3d(0,' + (y * speed) + 'px,0)';
+      });
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if (!ticking){ window.requestAnimationFrame(update); ticking = true; }
+    }, {passive:true});
+    update();
+  }
+})();
+</script>
+</body>
+</html>
