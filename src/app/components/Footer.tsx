@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { Mail, MapPin, Phone } from 'lucide-react';
+import { featureFlags } from '../featureFlags';
 
 export function Footer() {
   return (
@@ -39,11 +40,13 @@ export function Footer() {
                   Governance
                 </Link>
               </li>
-              <li>
-                <Link to="/volunteer" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                  Volunteer
-                </Link>
-              </li>
+              {featureFlags.volunteer && (
+                <li>
+                  <Link to="/volunteer" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                    Volunteer
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 

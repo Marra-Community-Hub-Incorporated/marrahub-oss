@@ -5,6 +5,7 @@ import { SectionHeader } from '../components/SectionHeader';
 import { ProgramCard } from '../components/ProgramCard';
 import { ImpactCard } from '../components/ImpactCard';
 import { CTABanner } from '../components/CTABanner';
+import { featureFlags } from '../featureFlags';
 import { 
   Users, 
   Heart, 
@@ -74,12 +75,12 @@ export function Home() {
                 Explore Programs
               </Button>
               <Button
-                href="/volunteer"
+                href={featureFlags.volunteer ? '/volunteer' : '/contact'}
                 variant="outline"
                 size="lg"
                 className="w-full sm:w-auto h-16 px-10 text-lg bg-white/10 hover:bg-white/20 border-white/40 text-white backdrop-blur-md rounded-2xl transition-all hover:scale-105 active:scale-95 ring-offset-primary focus-visible:ring-2 focus-visible:ring-white"
               >
-                Become a Volunteer
+                {featureFlags.volunteer ? 'Become a Volunteer' : 'Get in touch'}
               </Button>
             </motion.div>
           </motion.div>

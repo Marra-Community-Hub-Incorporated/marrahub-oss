@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './Button';
+import { featureFlags } from '../featureFlags';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -21,9 +22,16 @@ export function Header() {
     { name: 'Programs', href: '/programs' },
     { name: 'Impact', href: '/impact' },
     { name: 'Governance', href: '/governance' },
-    { name: 'Volunteer', href: '/volunteer' },
+    // The Volunteer page is only listed when the volunteer flow is enabled
+    // (see featureFlags). When it's off, visitors are pointed to Contact instead.
+    ...(featureFlags.volunteer ? [{ name: 'Volunteer', href: '/volunteer' }] : []),
     { name: 'Contact', href: '/contact' },
   ];
+
+  // The primary CTA points at the volunteer flow when it's live, otherwise it
+  // invites people to get in touch via the Contact page.
+  const ctaHref = featureFlags.volunteer ? '/volunteer' : '/contact';
+  const ctaLabel = featureFlags.volunteer ? 'Become a Volunteer' : 'Get in touch';
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -64,8 +72,8 @@ export function Header() {
               </Link>
             ))}
             <div className="ml-4 pl-4 border-l border-border/50">
-              <Button href="/volunteer" size="sm" className="shadow-lg shadow-primary/10">
-                Become a Volunteer
+              <Button href={ctaHref} size="sm" className="shadow-lg shadow-primary/10">
+                {ctaLabel}
               </Button>
             </div>
           </div>
@@ -107,8 +115,8 @@ export function Header() {
                   </Link>
                 ))}
                 <div className="pt-4 px-4">
-                  <Button href="/volunteer" className="w-full shadow-lg shadow-primary/10" onClick={() => setMobileMenuOpen(false)}>
-                    Become a Volunteer
+                  <Button href={ctaHref} className="w-full shadow-lg shadow-primary/10" onClick={() => setMobileMenuOpen(false)}>
+                    {ctaLabel}
                   </Button>
                 </div>
               </div>
