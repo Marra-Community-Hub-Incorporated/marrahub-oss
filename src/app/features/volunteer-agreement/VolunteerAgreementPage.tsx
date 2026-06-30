@@ -17,7 +17,6 @@ const initialForm = {
   fullName: '',
   email: '',
   phone: '',
-  startDate: '',
   area: '',
   emergencyContact: '',
   dietary: '',
@@ -105,12 +104,14 @@ export function VolunteerAgreementPage() {
     try {
       const pdf = await buildAgreementPdf({
         ...formData,
+        startDate: signedDate,
         signedDate,
         signatureImage,
       });
 
       const submission: VolunteerAgreementSubmission = {
         ...formData,
+        startDate: signedDate,
         agreementVersion: volunteerAgreementConfig.agreementVersion,
         signedDate,
         signedAtIso: new Date().toISOString(),
@@ -267,40 +268,25 @@ export function VolunteerAgreementPage() {
                     </div>
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="startDate" className="block mb-2 text-foreground">
-                        Start date
-                      </label>
-                      <input
-                        type="date"
-                        id="startDate"
-                        name="startDate"
-                        value={formData.startDate}
-                        onChange={handleChange}
-                        className={inputClasses}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="area" className="block mb-2 text-foreground">
-                        Where would you like to volunteer? *
-                      </label>
-                      <select
-                        id="area"
-                        name="area"
-                        value={formData.area}
-                        onChange={handleChange}
-                        required
-                        className={inputClasses}
-                      >
-                        <option value="">Select an area...</option>
-                        {AREA_OPTIONS.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                  <div>
+                    <label htmlFor="area" className="block mb-2 text-foreground">
+                      Where would you like to volunteer? *
+                    </label>
+                    <select
+                      id="area"
+                      name="area"
+                      value={formData.area}
+                      onChange={handleChange}
+                      required
+                      className={inputClasses}
+                    >
+                      <option value="">Select an area...</option>
+                      {AREA_OPTIONS.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
