@@ -42,7 +42,9 @@ export function VolunteerAgreementPage() {
   // visible instead of leaving the viewport down where the submit button was.
   useEffect(() => {
     if (formStatus.state === 'success') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Instant scroll (matching Layout's route-change scroll) — smooth scrolling
+      // is unreliable right after the form is swapped for the success screen.
+      window.scrollTo(0, 0);
     }
   }, [formStatus.state]);
 
