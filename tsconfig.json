@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode — Vite resolves modules, tsc only type-checks. */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Vite's import.meta.env typings. */
+    "types": ["vite/client"],
+
+    /* Type-safety — the point of the check. Unused-variable detection is left
+       to ESLint (as warnings) so the compiler gate stays focused on
+       correctness rather than style. */
+    "strict": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src", "vite.config.ts"]
+}

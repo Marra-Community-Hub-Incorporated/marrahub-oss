@@ -60,7 +60,7 @@ function ensureTurnstileScript(): Promise<void> {
 }
 
 export interface UseTurnstileResult {
-  containerRef: React.RefObject<HTMLDivElement | null>;
+  containerRef: React.RefObject<HTMLDivElement>;
   token: string;
   error: string | null;
   reset: () => void;
@@ -69,7 +69,7 @@ export interface UseTurnstileResult {
 // Loads and renders a Cloudflare Turnstile widget, exposing the resulting token.
 // Self-contained so the whole feature folder is portable to the Hub SaaS.
 export function useTurnstile(siteKey: string): UseTurnstileResult {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const [token, setToken] = useState('');
   const [error, setError] = useState<string | null>(null);
