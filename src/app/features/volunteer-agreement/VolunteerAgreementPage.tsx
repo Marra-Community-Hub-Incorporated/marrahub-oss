@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { Download, FileText, HeartHandshake, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { FileText, HeartHandshake, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { Button } from '../../components/Button';
 import { SignaturePad, type SignaturePadHandle } from './SignaturePad';
-import { agreementIntro, agreementPdfPath, agreementTerms } from './agreementContent';
+import { agreementIntro, agreementPdfPath } from './agreementContent';
 import { AREA_OPTIONS, DIETARY_OPTIONS, type VolunteerAgreementSubmission } from './types';
 import { volunteerAgreementConfig } from './config';
 import { buildAgreementPdf } from './buildAgreementPdf';
@@ -202,43 +202,7 @@ export function VolunteerAgreementPage() {
             transition={{ duration: 0.5 }}
             className="mb-10"
           >
-            <p className="text-muted-foreground leading-relaxed mb-6">{agreementIntro}</p>
-            <a
-              href={agreementPdfPath}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-primary font-medium hover:underline"
-            >
-              <Download size={18} />
-              Read the full agreement (PDF)
-            </a>
-          </motion.div>
-
-          {/* The terms */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="bg-card rounded-xl border border-border p-6 md:p-8 mb-10"
-          >
-            <div className="flex items-center gap-2 mb-6">
-              <FileText className="text-primary" size={22} />
-              <h2 className="text-2xl font-bold">Terms</h2>
-            </div>
-            <div className="max-h-[28rem] overflow-y-auto pr-2 space-y-6">
-              {agreementTerms.map((term) => (
-                <div key={term.n}>
-                  <h3 className="font-semibold mb-1">
-                    {term.n}. {term.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{term.body}</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-muted-foreground mt-4">
-              Scroll within this box to read all 21 terms.
-            </p>
+            <p className="text-muted-foreground leading-relaxed">{agreementIntro}</p>
           </motion.div>
 
           {/* Form */}
@@ -400,6 +364,16 @@ export function VolunteerAgreementPage() {
                   <ShieldCheck className="text-primary" size={22} />
                   <h2 className="text-2xl font-bold">Acknowledgement &amp; signature</h2>
                 </div>
+
+                <a
+                  href={agreementPdfPath}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 mb-6 rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-primary font-medium transition-colors hover:bg-muted/50"
+                >
+                  <FileText size={18} />
+                  Read the full Volunteer Agreement
+                </a>
 
                 <label className="flex items-start gap-3 cursor-pointer mb-6">
                   <input
