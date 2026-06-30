@@ -65,7 +65,7 @@ export function Header() {
             ))}
             <div className="ml-4 pl-4 border-l border-border/50">
               <Button href="/volunteer" size="sm" className="shadow-lg shadow-primary/10">
-                Get Involved
+                Become a Volunteer
               </Button>
             </div>
           </div>
@@ -108,7 +108,7 @@ export function Header() {
                 ))}
                 <div className="pt-4 px-4">
                   <Button href="/volunteer" className="w-full shadow-lg shadow-primary/10" onClick={() => setMobileMenuOpen(false)}>
-                    Get Involved
+                    Become a Volunteer
                   </Button>
                 </div>
               </div>

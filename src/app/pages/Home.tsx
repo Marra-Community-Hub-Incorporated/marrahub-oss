@@ -73,13 +73,13 @@ export function Home() {
               >
                 Explore Programs
               </Button>
-              <Button 
-                href="/contact" 
+              <Button
+                href="/volunteer"
                 variant="outline"
                 size="lg"
                 className="w-full sm:w-auto h-16 px-10 text-lg bg-white/10 hover:bg-white/20 border-white/40 text-white backdrop-blur-md rounded-2xl transition-all hover:scale-105 active:scale-95 ring-offset-primary focus-visible:ring-2 focus-visible:ring-white"
               >
-                Get Involved
+                Become a Volunteer
               </Button>
             </motion.div>
           </motion.div>
