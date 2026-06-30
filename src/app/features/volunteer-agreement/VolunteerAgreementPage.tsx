@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Download, FileText, HeartHandshake, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { Button } from '../../components/Button';
@@ -36,6 +36,15 @@ export function VolunteerAgreementPage() {
 
   const signaturePadRef = useRef<SignaturePadHandle | null>(null);
   const turnstile = useTurnstile(volunteerAgreementConfig.turnstileSiteKey);
+
+  // When the agreement is submitted, the form is replaced by the success screen.
+  // Scroll back to the top so the "You're all set!" confirmation is actually
+  // visible instead of leaving the viewport down where the submit button was.
+  useEffect(() => {
+    if (formStatus.state === 'success') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [formStatus.state]);
 
   const signedDate = new Date().toLocaleDateString('en-AU', {
     day: '2-digit',
