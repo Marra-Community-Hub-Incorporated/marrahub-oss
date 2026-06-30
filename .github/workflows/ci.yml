@@ -2,7 +2,7 @@ name: CI
 
 # Guardrails before anything reaches `main` (which Cloudflare auto-deploys):
 #  - secret-scan : block commits that contain real secrets/keys
-#  - website     : the production build must succeed
+#  - website     : type-check + lint + the production build must succeed
 #  - api         : the Azure Function must parse + its deps install
 # Make secret-scan and website "required status checks" in branch protection
 # so a failing check blocks the merge (see docs/CI.md).
@@ -45,6 +45,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Type-check (tsc --noEmit)
+        run: npm run typecheck
+      - name: Lint (eslint)
+        run: npm run lint
       - name: Production build must succeed
         run: npm run build
       - name: Dependency audit (informational)

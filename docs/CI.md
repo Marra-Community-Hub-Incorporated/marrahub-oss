@@ -9,7 +9,7 @@ nothing broken or leaky gets there.
 | Check | Blocks merge? | What it protects against |
 |---|---|---|
 | **Secret scan** (gitleaks) | ✅ should be required | A real key/secret being committed (scans full history) |
-| **Website build** (`npm run build`) | ✅ should be required | A change that breaks the production build reaching `main` |
+| **Website build** (`typecheck` + `lint` + `npm run build`) | ✅ should be required | A type error, lint error, or broken production build reaching `main` |
 | **API checks** (`npm ci` + `node --check`) | ✅ should be required | The Azure Function failing to parse / deps not installing |
 | Dependency audit (`npm audit`) | ℹ️ informational | Surfaces vulnerable deps without blocking unrelated PRs |
 

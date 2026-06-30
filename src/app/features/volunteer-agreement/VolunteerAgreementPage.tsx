@@ -433,11 +433,9 @@ export function VolunteerAgreementPage() {
               {formStatus.state !== 'idle' && (
                 <div
                   className={`rounded-lg border px-4 py-3 text-sm ${
-                    formStatus.state === 'success'
-                      ? 'border-primary/20 bg-primary/5 text-primary'
-                      : formStatus.state === 'error'
-                        ? 'border-destructive/20 bg-destructive/5 text-destructive'
-                        : 'border-border bg-muted/50 text-muted-foreground'
+                    formStatus.state === 'error'
+                      ? 'border-destructive/20 bg-destructive/5 text-destructive'
+                      : 'border-border bg-muted/50 text-muted-foreground'
                   }`}
                   role="status"
                   aria-live="polite"
