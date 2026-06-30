@@ -1,0 +1,20 @@
+# gitleaks config — uses the full default ruleset, plus an allowlist for the
+# handful of values that are PUBLIC by design (they ship in the browser bundle
+# anyway). Real secrets (CLIENT_SECRET, storage keys, the Turnstile *secret*
+# key) are never committed — they live only in Azure + git-ignored local files.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Intentionally-public values and placeholder example files"
+# NOTE: .env.production is deliberately NOT allowlisted here — it stays scanned,
+# so if a real secret is ever added to it, gitleaks still catches it.
+paths = [
+  '''\.env\.example$''',
+  '''api/local\.settings\.json\.example$''',
+]
+regexes = [
+  # Cloudflare Turnstile SITE key — public by design (embedded in the widget).
+  '''0x4AAAAAACksijQmW93tasP6''',
+]
