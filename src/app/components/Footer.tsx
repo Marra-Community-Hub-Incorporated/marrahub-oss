@@ -39,6 +39,11 @@ export function Footer() {
                   Governance
                 </Link>
               </li>
+              <li>
+                <Link to="/volunteer" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                  Volunteer
+                </Link>
+              </li>
             </ul>
           </div>
 

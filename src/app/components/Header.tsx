@@ -15,6 +15,7 @@ export function Header() {
     { name: 'Programs', href: '/programs' },
     { name: 'Impact', href: '/impact' },
     { name: 'Governance', href: '/governance' },
+    { name: 'Volunteer', href: '/volunteer' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -57,7 +58,7 @@ export function Header() {
               </Link>
             ))}
             <div className="ml-4 pl-4 border-l border-border/50">
-              <Button href="/contact" size="sm" className="shadow-lg shadow-primary/10">
+              <Button href="/volunteer" size="sm" className="shadow-lg shadow-primary/10">
                 Get Involved
               </Button>
             </div>
@@ -100,7 +101,7 @@ export function Header() {
                   </Link>
                 ))}
                 <div className="pt-4 px-4">
-                  <Button href="/contact" className="w-full shadow-lg shadow-primary/10" onClick={() => setMobileMenuOpen(false)}>
+                  <Button href="/volunteer" className="w-full shadow-lg shadow-primary/10" onClick={() => setMobileMenuOpen(false)}>
                     Get Involved
                   </Button>
                 </div>

@@ -1,0 +1,5 @@
+local.settings.json
+.git*
+.vscode
+README.md
+local.settings.json.example
