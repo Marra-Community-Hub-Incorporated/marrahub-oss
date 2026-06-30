@@ -299,9 +299,6 @@ export function Contact() {
                   <div>
                     <h3 className="font-semibold mb-1">Phone</h3>
                     <div className="text-muted-foreground space-y-1">
-                      <a href="tel:+61421803285" className="block hover:text-primary transition-colors">
-                        Main: 0421 803 285
-                      </a>
                       <a href="tel:+61433212855" className="block hover:text-primary transition-colors">
                         0433 212 855
                       </a>

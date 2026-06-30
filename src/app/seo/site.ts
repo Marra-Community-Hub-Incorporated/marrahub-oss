@@ -18,7 +18,7 @@ export const siteConfig = {
   description:
     'MARRA is a community hub in Caulfield South connecting people through care, local partnerships, and interactive community programs.',
   email: 'hello@marrahub.com.au',
-  phones: ['+61421803285', '+61433212855'],
+  phones: ['+61433212855'],
   locality: 'Caulfield South',
   region: 'VIC',
   country: 'AU',
