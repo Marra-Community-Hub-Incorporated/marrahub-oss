@@ -164,6 +164,15 @@ const envFromFiles = envFiles.reduce((accumulator, fileName) => {
   return { ...accumulator, ...parseEnvFile(path.resolve(fileName)) };
 }, {});
 
+// The volunteer flow is hidden in production unless explicitly enabled. Mirror
+// the app's featureFlags logic here so the sitemap and prerendered pages stay in
+// sync — when it's off, /volunteer is left out of both.
+const resolvedEnv = { ...envFromFiles, ...process.env };
+const volunteerEnabled = resolvedEnv.VITE_VOLUNTEER_ENABLED === 'true';
+const activeRoutes = volunteerEnabled
+  ? routes
+  : routes.filter((route) => route.path !== '/volunteer');
+
 const siteUrl = siteConfig.siteUrl;
 const buildDate = new Date().toISOString().split('T')[0];
 
@@ -358,7 +367,7 @@ function buildSeoHead(routePath) {
 if (fs.existsSync(indexHtmlPath)) {
   const indexHtmlTemplate = fs.readFileSync(indexHtmlPath, 'utf8');
 
-  for (const route of routes) {
+  for (const route of activeRoutes) {
     const routeHtml = upsertSeoHeadBlock(indexHtmlTemplate, buildSeoHead(route.path));
 
     if (route.path === '/') {
@@ -388,7 +397,7 @@ if (!siteUrl) {
 const xmlLines = [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-  ...routes.flatMap((route) => {
+  ...activeRoutes.flatMap((route) => {
     const url = new URL(route.path, `${siteUrl}/`).toString();
     return [
       '  <url>',
