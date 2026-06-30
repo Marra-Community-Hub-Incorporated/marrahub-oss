@@ -85,6 +85,25 @@ app.http('volunteerAgreement', {
       return json(502, { error: 'Could not send the agreement email.' }, cors);
     }
 
+    // 1b) Send the volunteer a thank-you confirmation with a copy of their
+    //     signed agreement. Non-fatal: a bounce (e.g. a mistyped address) must
+    //     not fail the submission — the org has already received the record.
+    //     Skipped if CONFIRMATION_EMAIL_ENABLED is explicitly set to "false".
+    if (String(process.env.CONFIRMATION_EMAIL_ENABLED || 'true').toLowerCase() !== 'false') {
+      try {
+        await sendMailWithAttachment(token, {
+          sender,
+          to: [body.email],
+          subject: 'Thank you for volunteering with Marra Community Hub',
+          html: buildConfirmationHtml(body),
+          attachmentName: filename,
+          attachmentBase64: body.pdfBase64,
+        });
+      } catch (err) {
+        context.error('confirmation email error (non-fatal):', err);
+      }
+    }
+
     // 2) Optionally file it in SharePoint. Failure here does NOT fail the
     //    submission — the email already delivered the record.
     if (String(process.env.SHAREPOINT_ENABLED).toLowerCase() === 'true') {
@@ -162,5 +181,25 @@ function buildEmailHtml(b) {
       ${row('Signed date', b.signedDate || '—')}
       ${row('Agreement version', b.agreementVersion || '—')}
     </table>
+  </div>`;
+}
+
+// Friendly confirmation emailed to the volunteer (from GRAPH_SENDER) with a copy
+// of their signed agreement attached. All interpolated values are escaped.
+function buildConfirmationHtml(b) {
+  const firstName = esc((b.fullName || '').trim().split(/\s+/)[0] || 'there');
+  return `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1c1c1c;line-height:1.6;max-width:560px;margin:0 auto">
+    <div style="background:#1e453a;color:#ffffff;padding:20px 24px;border-radius:12px 12px 0 0">
+      <h1 style="margin:0;font-size:20px">Marra Community Hub</h1>
+      <p style="margin:4px 0 0;opacity:0.85;font-size:13px">Volunteer Agreement</p>
+    </div>
+    <div style="border:1px solid #1e453a1f;border-top:none;padding:24px;border-radius:0 0 12px 12px">
+      <p style="margin:0 0 14px">Hi ${firstName},</p>
+      <p style="margin:0 0 14px">Thank you so much for signing up to volunteer with <strong>Marra Community Hub</strong>! We've received your signed Volunteer Agreement and we're thrilled to have you on board.</p>
+      <p style="margin:0 0 14px">We'll be in touch soon with the next steps${b.area ? ` about <strong>${esc(b.area)}</strong>` : ''}. In the meantime, a copy of your signed agreement is attached for your records.</p>
+      <p style="margin:0 0 14px">If you have any questions, just reply to this email &mdash; we're always happy to help.</p>
+      <p style="margin:18px 0 0">With gratitude,<br/><strong>The Marra Community Hub Team</strong></p>
+    </div>
+    <p style="margin:16px 0 0;font-size:12px;color:#666666;text-align:center">This is an automated confirmation from Marra Community Hub Incorporated &middot; marrahub.com.au</p>
   </div>`;
 }
