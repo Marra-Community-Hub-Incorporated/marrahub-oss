@@ -1,0 +1,18 @@
+/* Self-hosted brand fonts (via @fontsource) so the serif/sans actually render
+   instead of falling back to Georgia/system. Only the latin subset and the
+   weights the site uses are imported to keep the bundle lean. Files are served
+   from the site origin, so the existing CSP (font-src 'self') needs no change. */
+
+/* Ibarra Real Nova — editorial serif for headings (--font-serif) */
+@import '@fontsource/ibarra-real-nova/latin-600.css';
+@import '@fontsource/ibarra-real-nova/latin-700.css';
+@import '@fontsource/ibarra-real-nova/latin-600-italic.css';
+
+/* Inter — humanist sans for body and UI (--font-sans). 300/700 are included
+   because other pages use font-light / font-bold on sans elements; loading them
+   avoids the browser synthesizing (faux) weights. */
+@import '@fontsource/inter/latin-300.css';
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';

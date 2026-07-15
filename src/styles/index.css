@@ -35,6 +35,43 @@
     background-size: cover;
   }
 
+  /* Ambient "aurora" background: soft, blurred colour fields that drift slowly.
+     Only transform/opacity are animated (compositor-friendly), and the whole
+     thing is held perfectly still under prefers-reduced-motion. */
+  .marra-aurora__blob {
+    position: absolute;
+    border-radius: 9999px;
+    will-change: transform, opacity;
+  }
+  .marra-aurora__blob--1 {
+    animation: marra-aurora-1 24s ease-in-out infinite;
+  }
+  .marra-aurora__blob--2 {
+    animation: marra-aurora-2 30s ease-in-out infinite;
+  }
+  .marra-aurora__blob--3 {
+    animation: marra-aurora-3 20s ease-in-out infinite;
+  }
+
+  @keyframes marra-aurora-1 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50%      { transform: translate3d(8%, -6%, 0) scale(1.18); }
+  }
+  @keyframes marra-aurora-2 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1.12); }
+    50%      { transform: translate3d(-7%, 5%, 0) scale(1); }
+  }
+  @keyframes marra-aurora-3 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.55; }
+    50%      { transform: translate3d(5%, 7%, 0) scale(1.22); opacity: 0.85; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marra-aurora__blob {
+      animation: none !important;
+    }
+  }
+
   .bg-cultural-fusion {
     /* 
        A fusion of:

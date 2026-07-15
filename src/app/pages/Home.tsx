@@ -1,519 +1,516 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { Link } from 'react-router';
+import { motion, useReducedMotion } from 'motion/react';
 import { Button } from '../components/Button';
 import { SectionHeader } from '../components/SectionHeader';
-import { ProgramCard } from '../components/ProgramCard';
 import { ImpactCard } from '../components/ImpactCard';
-import { CTABanner } from '../components/CTABanner';
+import { AuroraBackground } from '../components/AuroraBackground';
 import { featureFlags } from '../featureFlags';
-import { 
-  Users, 
-  Heart, 
-  BookOpen, 
-  Sprout,
+import {
   HandHeart,
-  Shield
+  Handshake,
+  Mail,
+  ArrowRight,
+  MapPin,
+  QrCode,
+  Clock,
+  Utensils,
+  ScanLine,
 } from 'lucide-react';
 
+// Volunteer sign-up isn't public yet (see featureFlags): every volunteer CTA
+// gracefully falls back to the Contact page when the flow is hidden.
+const involveHref = featureFlags.volunteer ? '/volunteer' : '/contact';
+const involveLabel = featureFlags.volunteer ? 'Become a Volunteer' : 'Get in touch';
+
+// Warm, representative community photography (Unsplash — allowed by the site CSP).
+// These set mood; they are not photos of Marra's own members or events.
+const ux = (id: string, w = 800) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=70`;
+
+const audiences = [
+  {
+    id: 'photo-1509099836639-18ba1795216d',
+    title: 'Families & Children',
+    note: 'Parents, carers, and kids of every age.',
+    alt: 'Children smiling together outdoors',
+  },
+  {
+    id: 'photo-1517486808906-6ca8b3f04846',
+    title: 'Young People',
+    note: 'Mentorship, creativity, and room to grow.',
+    alt: 'A group of young adults sitting together and smiling',
+  },
+  {
+    id: 'photo-1573497019940-1c28c88b4f3e',
+    title: 'Older Adults',
+    note: 'Connection, wellbeing, and good company.',
+    alt: 'An older woman smiling warmly',
+  },
+  {
+    id: 'photo-1529156069898-49953e39b3ac',
+    title: 'Diverse Communities',
+    note: 'Every culture, ability, and background.',
+    alt: 'Friends standing arm in arm, looking out together',
+  },
+  {
+    id: 'photo-1556484687-30636164638b',
+    title: 'Individuals in Need',
+    note: 'Support for anyone doing it tough.',
+    alt: 'A circle of hands of different skin tones resting together on a table',
+  },
+];
+
+const pillars = [
+  {
+    id: 'photo-1571019613454-1cb2f99b2d8b',
+    title: 'Support & wellbeing',
+    note: 'Practical help for everyday life.',
+    alt: 'A person exercising on a mat',
+  },
+  {
+    id: 'photo-1543269865-cbf427effbad',
+    title: 'Learning & opportunity',
+    note: 'Skills and pathways for every age.',
+    alt: 'Young people learning together around a laptop',
+  },
+  {
+    id: 'photo-1543807535-eceef0bc6599',
+    title: 'Connection & belonging',
+    note: 'Spaces that bring neighbours together.',
+    alt: 'Three friends talking and laughing on a city street',
+  },
+];
+
+const values = [
+  { title: 'Care', note: 'We lead with compassion.' },
+  { title: 'Connection', note: 'We help everyone belong.' },
+  { title: 'Integrity', note: 'We act openly and honestly.' },
+  { title: 'Respect', note: 'We honour every person.' },
+];
+
+const targets = [
+  { number: '50+', label: 'Early Community Reach', description: 'People we hope to welcome first' },
+  { number: '5', label: 'Pilot Programs', description: 'Hands-on and shaped by locals' },
+  { number: '12+', label: 'Interactive Sessions', description: 'Workshops and meetups to join' },
+  { number: '100%', label: 'Community Shaped', description: 'Local voices guiding what we build' },
+];
+
+// Small stylised QR glyph drawn in SVG (no external asset) for the app vignette.
+function QrGlyph({ size = 88 }: { size?: number }) {
+  const n = 13;
+  const cell = size / n;
+  const inFinder = (r: number, c: number) =>
+    (r < 3 && c < 3) || (r < 3 && c >= n - 3) || (r >= n - 3 && c < 3);
+  const cells: React.ReactNode[] = [];
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      if (inFinder(r, c)) continue;
+      // Deterministic pseudo-pattern so the glyph reads as a QR code.
+      if ((r * 3 + c * 5 + ((r ^ c) & 3)) % 4 < 2) {
+        cells.push(
+          <rect key={`${r}-${c}`} x={c * cell} y={r * cell} width={cell} height={cell} rx={cell * 0.15} />,
+        );
+      }
+    }
+  }
+  const finder = (x: number, y: number) => (
+    <g key={`f-${x}-${y}`}>
+      <rect x={x} y={y} width={cell * 3} height={cell * 3} rx={cell * 0.6} />
+      <rect
+        x={x + cell * 0.55}
+        y={y + cell * 0.55}
+        width={cell * 1.9}
+        height={cell * 1.9}
+        rx={cell * 0.4}
+        fill="var(--card)"
+      />
+      <rect x={x + cell} y={y + cell} width={cell} height={cell} rx={cell * 0.25} />
+    </g>
+  );
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      role="img"
+      aria-label="Example QR code"
+      fill="var(--primary)"
+    >
+      {cells}
+      {finder(0, 0)}
+      {finder(size - cell * 3, 0)}
+      {finder(0, size - cell * 3)}
+    </svg>
+  );
+}
+
 export function Home() {
-  const heroBackgroundUrl = `${import.meta.env.BASE_URL}media/hero-background.png`;
+  const reduce = useReducedMotion();
+
+  // On-scroll reveal; disabled entirely under reduced motion.
+  const rise = (delay = 0) =>
+    reduce
+      ? {}
+      : {
+          initial: { opacity: 0, y: 20 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, margin: '-80px' },
+          transition: { duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] as const },
+        };
+
+  // Hero reveals on load rather than on scroll.
+  const enter = (delay = 0) =>
+    reduce
+      ? {}
+      : {
+          initial: { opacity: 0, y: 24 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] as const },
+        };
 
   return (
     <div className="min-h-screen">
-      {/* 
-          Hero Section: 'The Shared Journey'
-          Redesigned with a high-quality background image and signature curved bottom.
-      */}
-      <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center overflow-hidden bg-primary">
-        
-        {/* Background Image with Dark Overlay for Contrast */}
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${heroBackgroundUrl})` }}
-          aria-hidden="true"
-        >
-          {/* Multi-layered gradient overlay:
-              1. A dark base to ensure text readability.
-              2. A subtle primary-tinted gradient to unify the brand colors.
-          */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent"></div>
-          <div className="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
-        </div>
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-background">
+        <AuroraBackground />
 
-        {/* Content Container: Constrained for readability on wide screens */}
-        <div className="relative z-20 w-full max-w-5xl mx-auto px-6 py-24 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {/* Main Headline */}
-            <h1 className="text-white mb-8 font-serif font-semibold leading-[1.1] tracking-tight text-4xl md:text-7xl lg:text-8xl">
-              Bringing Communities <br className="hidden md:block" /> 
-              <span className="text-accent italic">Together</span>
-            </h1>
-            
-            {/* Body Text */}
-            <p className="text-lg md:text-2xl mb-12 text-white/90 leading-relaxed max-w-2xl mx-auto font-sans font-light text-balance">
-              Inspired by Aboriginal language, representing connection and helping hands.
-              We are growing an interactive community hub in Caulfield South that brings people
-              together through care, culture, and belonging.
-            </p>
-            
-            {/* CTA Buttons: Fixed positioning, contrast, and spacing */}
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="flex flex-col sm:flex-row gap-5 justify-center items-center"
-            >
-              <Button 
-                href="/programs" 
-                size="lg" 
-                className="w-full sm:w-auto h-16 px-10 text-lg shadow-xl bg-secondary hover:bg-secondary/90 text-white border-none rounded-2xl transition-all hover:scale-105 active:scale-95"
-              >
-                Explore Programs
-              </Button>
-              <Button
-                href={featureFlags.volunteer ? '/volunteer' : '/contact'}
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto h-16 px-10 text-lg bg-white/10 hover:bg-white/20 border-white/40 text-white backdrop-blur-md rounded-2xl transition-all hover:scale-105 active:scale-95 ring-offset-primary focus-visible:ring-2 focus-visible:ring-white"
-              >
-                {featureFlags.volunteer ? 'Become a Volunteer' : 'Get in touch'}
-              </Button>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24 md:pt-24 md:pb-28">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Left: value proposition — headline + one line */}
+            <motion.div {...enter(0)} className="lg:col-span-6">
+              <p className="flex items-center gap-2 text-secondary font-semibold uppercase tracking-[0.2em] text-xs mb-6">
+                <MapPin size={14} aria-hidden="true" />
+                Caulfield South · Glen Eira, VIC
+              </p>
+              <h1 className="font-serif text-primary leading-[1.05] tracking-tight text-4xl md:text-6xl lg:text-7xl">
+                A community where everyone <span className="italic text-secondary">belongs</span>.
+              </h1>
+              <p className="mt-6 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-lg">
+                A digital-first community hub, taking shape in Caulfield South. Not open yet — help
+                shape what we become.
+              </p>
+
+              <div className="mt-9 flex flex-col sm:flex-row gap-4">
+                <Button href={involveHref} variant="primary" size="lg" className="w-full sm:w-auto">
+                  {involveLabel}
+                </Button>
+                <Button href="/about" variant="outline" size="lg" className="w-full sm:w-auto">
+                  Explore our vision
+                </Button>
+              </div>
             </motion.div>
+
+            {/* Right: photo composition with the meaning of Marra overlaid */}
+            <motion.div {...enter(0.15)} className="lg:col-span-6">
+              <div className="relative">
+                <div className="overflow-hidden rounded-[1.75rem] shadow-xl shadow-primary/10">
+                  <img
+                    src={ux('photo-1511632765486-a01980e01a18', 1100)}
+                    alt="Friends standing together at sunset with their arms around each other"
+                    width={1100}
+                    height={730}
+                    decoding="async"
+                    className="h-[320px] md:h-[440px] w-full object-cover"
+                  />
+                </div>
+                {/* Overlapping meaning card */}
+                <div className="absolute -bottom-6 -left-2 sm:left-6 max-w-[19rem] rounded-2xl bg-primary text-primary-foreground p-6 shadow-xl shadow-primary/20">
+                  <p className="text-accent font-semibold uppercase tracking-[0.2em] text-[0.65rem] mb-2">
+                    The name
+                  </p>
+                  <p className="font-serif text-xl leading-snug">
+                    <span className="text-accent">Marra</span> means connection and helping hands.
+                  </p>
+                  <p className="mt-2 text-sm text-primary-foreground/75">
+                    Inspired by Aboriginal language.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Who it's for ─────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-24 bg-background border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader subtitle="Who it's for" title="A hub for the whole community" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {audiences.map((item, i) => (
+              <motion.div key={item.title} {...rise(i * 0.06)}>
+                <div className="group h-full overflow-hidden rounded-2xl bg-card border border-border shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                  <div className="relative h-44 overflow-hidden">
+                    <img
+                      src={ux(item.id, 760)}
+                      alt={item.alt}
+                      width={760}
+                      height={352}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-serif text-xl text-primary mb-1 leading-snug">{item.title}</h3>
+                    <p className="text-muted-foreground text-sm">{item.note}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── What we're building (vision, not live services) ──────────────── */}
+      <section className="py-20 md:py-24 bg-muted/40 border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            subtitle="What we're building"
+            title="The hub we're working towards"
+            description="Areas we're planning as Marra grows. Nothing is running yet — we're building it with the community."
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {pillars.map((item, i) => (
+              <motion.div key={item.title} {...rise(i * 0.08)}>
+                <div className="group h-full overflow-hidden rounded-2xl bg-card border border-border shadow-sm">
+                  <div className="relative h-40 overflow-hidden">
+                    <img
+                      src={ux(item.id, 760)}
+                      alt={item.alt}
+                      width={760}
+                      height={320}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="p-7">
+                    <h3 className="font-serif text-2xl text-primary mb-2 leading-snug">{item.title}</h3>
+                    <p className="text-muted-foreground">{item.note}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div {...rise(0.1)} className="mt-8 text-center">
+            <Link
+              to="/programs"
+              className="inline-flex items-center gap-2 font-medium text-primary hover:text-secondary transition-colors"
+            >
+              See the full picture
+              <ArrowRight size={18} aria-hidden="true" />
+            </Link>
           </motion.div>
         </div>
+      </section>
 
-        {/* Signature Curved Bottom: SVG Divider for crisp rendering */}
-        <div className="absolute bottom-[-1px] left-0 w-full leading-[0] z-10 pointer-events-none">
-          <svg 
-            viewBox="0 0 1440 120" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg" 
-            className="w-full h-auto"
-            preserveAspectRatio="none"
+      {/* ── A digital community centre ───────────────────────────────────── */}
+      <section className="relative overflow-hidden py-20 md:py-24 bg-primary text-primary-foreground border-t border-border">
+        <AuroraBackground className="opacity-60" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-14 lg:gap-16 items-center">
+            {/* Copy */}
+            <motion.div {...rise(0)}>
+              <p className="text-accent font-semibold uppercase tracking-[0.2em] text-xs mb-5">
+                A digital community centre
+              </p>
+              <h2 className="font-serif text-white text-4xl md:text-5xl leading-tight">
+                Built for how people live today.
+              </h2>
+              <p className="mt-6 text-lg text-primary-foreground/80 leading-relaxed max-w-xl">
+                We&apos;re building simple tools so taking part is effortless — in development now,
+                ready for the day we open.
+              </p>
+
+              <ul className="mt-8 space-y-4 max-w-md">
+                {[
+                  { icon: QrCode, title: 'QR workshop sign-ups', note: 'Scan, book, and check in.' },
+                  { icon: Clock, title: 'Volunteer hours', note: 'Tracked automatically.' },
+                  { icon: Utensils, title: 'FoodQue', note: 'Fair, dignified free-food queues.' },
+                ].map(({ icon: Icon, title, note }) => (
+                  <li key={title} className="flex items-start gap-4">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-white/10 text-accent">
+                      <Icon size={20} aria-hidden="true" />
+                    </span>
+                    <span>
+                      <span className="block font-semibold text-white">{title}</span>
+                      <span className="block text-sm text-primary-foreground/70">{note}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* CSS/SVG app vignette */}
+            <motion.div {...rise(0.12)} className="relative">
+              <div className="relative mx-auto w-full max-w-sm">
+                {/* Lifestyle photo banner — the device card overlaps up over it */}
+                <div className="overflow-hidden rounded-[1.5rem] shadow-xl shadow-black/20">
+                  <img
+                    src={ux('photo-1522202176988-66273c2fd55f', 720)}
+                    alt="Young people collaborating around a laptop"
+                    width={720}
+                    height={288}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-40 w-full object-cover"
+                  />
+                </div>
+                {/* Device card */}
+                <div className="relative z-10 -mt-12 mx-auto w-[92%] rounded-[2rem] border border-white/15 bg-card text-foreground shadow-2xl shadow-black/30 p-5">
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="font-serif text-primary text-lg">Marra Hub</span>
+                    <span className="rounded-full bg-secondary/10 text-secondary text-[0.65rem] font-semibold uppercase tracking-wider px-2.5 py-1">
+                      In development
+                    </span>
+                  </div>
+
+                  <div className="rounded-2xl bg-muted/60 border border-border p-4">
+                    <p className="text-secondary font-semibold uppercase tracking-[0.15em] text-[0.6rem] mb-3">
+                      Workshop check-in
+                    </p>
+                    <div className="flex items-center gap-4">
+                      <div className="rounded-xl bg-card border border-border p-2">
+                        <QrGlyph size={80} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-serif text-primary text-lg leading-tight">Community cooking</p>
+                        <p className="text-sm text-muted-foreground">Saturdays · all welcome</p>
+                        <span className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-primary">
+                          <ScanLine size={14} aria-hidden="true" />
+                          Scan to sign up
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    <div className="rounded-xl bg-primary/5 p-3">
+                      <p className="text-2xl font-serif font-semibold text-primary tabular-nums">12.5h</p>
+                      <p className="text-xs text-muted-foreground">Volunteer hours</p>
+                    </div>
+                    <div className="rounded-xl bg-primary/5 p-3">
+                      <p className="text-2xl font-serif font-semibold text-primary tabular-nums">3rd</p>
+                      <p className="text-xs text-muted-foreground">in the FoodQue</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Values ───────────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-24 bg-background border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader subtitle="What guides us" title="Four values, in everything we do" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {values.map((item, i) => (
+              <motion.div key={item.title} {...rise(i * 0.06)}>
+                <div className="h-full bg-card rounded-2xl p-6 md:p-7 border border-border shadow-sm">
+                  <h3 className="font-serif text-xl text-primary mb-1">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm">{item.note}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Our goals (aspirational targets, clearly framed) ─────────────── */}
+      <section className="py-20 md:py-24 bg-muted/40 border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            subtitle="Where we're headed"
+            title="Our goals for the first stage"
+            description="Milestones we're aiming for — not numbers we've reached yet."
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {targets.map((item, i) => (
+              <motion.div key={item.label} {...rise(i * 0.08)} className="h-full">
+                <ImpactCard number={item.number} label={item.label} description={item.description} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Get involved ─────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-24 bg-background border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            subtitle="Get involved"
+            title="Help shape what Marra becomes"
+            description="We're just getting started — there's real room to make a difference."
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <motion.div {...rise(0)}>
+              <div className="h-full flex flex-col bg-card rounded-2xl p-8 border border-border shadow-sm">
+                <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-5 text-secondary">
+                  <HandHeart size={24} aria-hidden="true" />
+                </div>
+                <h3 className="font-serif text-2xl text-primary mb-2">Volunteer</h3>
+                <p className="text-muted-foreground mb-6">Give your time and skills as we build.</p>
+                <div className="mt-auto">
+                  <Button href={involveHref} variant="primary">
+                    {involveLabel}
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div {...rise(0.08)}>
+              <div className="h-full flex flex-col bg-card rounded-2xl p-8 border border-border shadow-sm">
+                <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-5 text-secondary">
+                  <Handshake size={24} aria-hidden="true" />
+                </div>
+                <h3 className="font-serif text-2xl text-primary mb-2">Partner with us</h3>
+                <p className="text-muted-foreground mb-6">Councils, schools, and local organisations.</p>
+                <div className="mt-auto">
+                  <Button href="/contact" variant="outline">
+                    Become a partner
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div {...rise(0.16)}>
+              <div className="h-full flex flex-col bg-card rounded-2xl p-8 border border-border shadow-sm">
+                <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-5 text-secondary">
+                  <Mail size={24} aria-hidden="true" />
+                </div>
+                <h3 className="font-serif text-2xl text-primary mb-2">Stay in touch</h3>
+                <p className="text-muted-foreground mb-6">Questions or ideas? We&apos;d love to hear.</p>
+                <div className="mt-auto">
+                  <Button href="/contact" variant="outline">
+                    Contact us
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div
+            {...rise(0.1)}
+            className="mt-10 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-center text-center text-sm text-muted-foreground"
           >
-            <path 
-              d="M0 120L1440 120L1440 0C1440 0 1080 120 720 120C360 120 0 0 0 0L0 120Z" 
-              fill="var(--background)"
-            />
-          </svg>
-        </div>
-      </section>
-
-      {/* Why MARRA Section */}
-      <section className="py-24 bg-background relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative"
+            <span>Independent governance, safeguarding, and cultural safety guide everything we do.</span>
+            <Link
+              to="/governance"
+              className="inline-flex items-center justify-center gap-1 font-medium text-primary hover:text-secondary transition-colors"
             >
-              {/* Decorative Frame */}
-              <div className="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-secondary/30 rounded-tl-3xl"></div>
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 border-primary/30 rounded-br-3xl"></div>
-              
-              <img 
-                src="https://images.unsplash.com/photo-1765614766505-b4afa9eef2f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoZWxwaW5nJTIwaGFuZHMlMjB0b2dldGhlciUyMHN1cHBvcnR8ZW58MXx8fHwxNzcwNTk1MzMzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                alt="Hands joined together to represent support and community connection"
-                loading="lazy"
-                decoding="async"
-                className="rounded-3xl shadow-2xl w-full h-[500px] object-cover relative z-10"
-              />
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <SectionHeader 
-                subtitle="Our Purpose"
-                title="Connection, Helping Hands & Working Together"
-                align="left"
-              />
-              <div className="space-y-6 text-muted-foreground leading-relaxed text-lg">
-                <p>
-                  The name <strong className="text-primary font-semibold">MARRA</strong> is inspired by Aboriginal language. 
-                  It represents the very essence of what we do: reaching out, providing support, and building lasting bonds.
-                </p>
-                <p>
-                  We are building MARRA as a trusted community hub with a commitment to transparency,
-                  cultural awareness, and practical support for families and individuals across
-                  Caulfield South and Glen Eira.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Programs Section */}
-      <section className="py-24 bg-muted/20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader 
-            subtitle="What We Offer"
-            title="Community Programs"
-            description="Purpose-built initiatives designed to foster connection and wellbeing for every stage of life."
-          />
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <ProgramCard 
-                icon={Users}
-                title="Family Support Services"
-                description="Comprehensive support for families navigating life's challenges, including parenting workshops, family counseling, and peer support groups."
-                outcomes={[
-                  "Stronger family connections",
-                  "Access to resources and support",
-                  "Community belonging"
-                ]}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <ProgramCard 
-                icon={BookOpen}
-                title="Educational Programs"
-                description="Learning opportunities for all ages, from early childhood education to adult literacy and skills development programs."
-                outcomes={[
-                  "Improved literacy and skills",
-                  "Lifelong learning pathways",
-                  "Career development support"
-                ]}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <ProgramCard 
-                icon={Heart}
-                title="Wellbeing & Health"
-                description="Mental health support, physical wellness activities, and holistic programs promoting overall community health."
-                outcomes={[
-                  "Better mental health outcomes",
-                  "Active and healthy lifestyles",
-                  "Reduced social isolation"
-                ]}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <ProgramCard 
-                icon={Sprout}
-                title="Youth Development"
-                description="Engaging programs for young people focusing on leadership, mentorship, creative expression, and life skills."
-                outcomes={[
-                  "Youth empowerment",
-                  "Leadership development",
-                  "Positive peer connections"
-                ]}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <ProgramCard 
-                icon={HandHeart}
-                title="Elder Care & Support"
-                description="Dedicated services for older community members, including social activities, health support, and companionship programs."
-                outcomes={[
-                  "Reduced loneliness",
-                  "Active aging support",
-                  "Intergenerational connections"
-                ]}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              <ProgramCard 
-                icon={Shield}
-                title="Inclusion & Advocacy"
-                description="Support for diverse communities, cultural inclusion initiatives, and advocacy for community rights and accessibility."
-                outcomes={[
-                  "Cultural safety and respect",
-                  "Equal access to services",
-                  "Community voice amplification"
-                ]}
-              />
-            </motion.div>
-          </div>
-
-          <div className="text-center mt-12">
-            <Button href="/programs" variant="primary" size="lg">
-              View All Programs
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Roadmap Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader 
-            subtitle="Our Targets"
-            title="What We Are Building Together"
-            description="We are building an interactive, community-led space where people do not just attend, but participate, connect, and help shape what comes next. These are the early goals guiding our first stage."
-          />
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="h-full"
-            >
-              <ImpactCard 
-                number="50+"
-                label="Early Community Reach"
-                description="Welcoming local people into events, conversations, and first-round activities"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="h-full"
-            >
-              <ImpactCard 
-                number="5"
-                label="Interactive Pilot Programs"
-                description="Hands-on programs that invite participation, feedback, and real community input"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="h-full"
-            >
-              <ImpactCard 
-                number="12+"
-                label="Interactive Sessions"
-                description="Events, workshops, and meetups designed for people to join in, respond, and connect"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="h-full"
-            >
-              <ImpactCard 
-                number="100%"
-                label="Community Shaped"
-                description="A space where local voices help guide what we create, test, and improve"
-              />
-            </motion.div>
-          </div>
-
-          <div className="mt-12 text-center">
-            <Button href="/about" variant="primary">
-              About Our Mission
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Governance Preview Section */}
-      <section className="py-20 bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <SectionHeader 
-                subtitle="Transparency & Accountability"
-                title="Built on Trust"
-                align="left"
-              />
-              <div className="space-y-4 text-muted-foreground leading-relaxed">
-                <p>
-                  MARRA operates with complete transparency and strong governance structures. 
-                  We are committed to ethical practices, safeguarding, and accountability to our community.
-                </p>
-                <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2 mt-1">✓</span>
-                    <span>Independent board oversight and ethical governance</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2 mt-1">✓</span>
-                    <span>Comprehensive safeguarding and child protection policies</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2 mt-1">✓</span>
-                    <span>Regular reporting and community consultation</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2 mt-1">✓</span>
-                    <span>Cultural safety and inclusion frameworks</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="mt-8">
-                <Button href="/governance" variant="outline">
-                  View Governance Structure
-                </Button>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="bg-muted/50 rounded-2xl px-14 py-10 border border-border"
-            >
-              <h3 className="text-4xl font-semibold mb-8">Our Commitments</h3>
-              <div className="space-y-8">
-                <div>
-                  <h4 className="font-semibold text-foreground text-lg mb-3">Community-First Approach</h4>
-                  <p className="text-base text-muted-foreground">
-                    Every decision is guided by the needs and voices of our community members.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-foreground text-lg mb-3">Cultural Respect</h4>
-                  <p className="text-base text-muted-foreground">
-                    We honour Aboriginal heritage and maintain culturally safe spaces for all.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-foreground text-lg mb-3">Financial Transparency</h4>
-                  <p className="text-base text-muted-foreground">
-                    Open reporting on funding, expenditure, and community investment.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-foreground text-lg mb-3">Continuous Improvement</h4>
-                  <p className="text-base text-muted-foreground">
-                    Regular evaluation and adaptation based on community feedback.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Location Section */}
-      <section className="py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader 
-            subtitle="Where We Are"
-            title="Community Hub in Caulfield South"
-            description="Based in Caulfield South, with a long-term vision to support communities across Glen Eira."
-          />
-          
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <img 
-                src="https://images.unsplash.com/photo-1766050588355-0bed0aba1eed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZWxib3VybmUlMjBjaXR5c2NhcGUlMjB2aWN0b3JpYXxlbnwxfHx8fDE3NzA1OTUzMzV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                alt="Local skyline representing the wider Glen Eira community MARRA hopes to support"
-                loading="lazy"
-                decoding="async"
-                className="rounded-2xl shadow-lg w-full h-[400px] object-cover"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="space-y-6"
-            >
-              <div className="bg-card rounded-xl p-6 border border-border">
-                <h4 className="font-semibold text-lg mb-3">Primary Location</h4>
-                <p className="text-muted-foreground">
-                  Caulfield South, VIC<br />
-                  Glen Eira, Australia
-                </p>
-              </div>
-
-              <div className="bg-card rounded-xl p-6 border border-border">
-                <h4 className="font-semibold text-lg mb-3">Service Areas</h4>
-                <p className="text-muted-foreground">
-                  MARRA Community Hub is starting in Caulfield South and aims to grow its reach
-                  across Glen Eira through local partnerships.
-                </p>
-              </div>
-
-              <div className="bg-card rounded-xl p-6 border border-border">
-                <h4 className="font-semibold text-lg mb-3">Contact Us</h4>
-                <p className="text-muted-foreground mb-4">
-                  Have questions or want to learn more? We'd love to hear from you.
-                </p>
-                <Button href="/contact" variant="primary">
-                  Get in Touch
-                </Button>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <CTABanner 
-            title="Join Our Community"
-            description="Whether you're looking for support, want to volunteer, or represent a council or funding body, we welcome you to connect with MARRA."
-            primaryButtonText="Explore Programs"
-            primaryButtonHref="/programs"
-            secondaryButtonText="Contact Us"
-            secondaryButtonHref="/contact"
-          />
+              Our governance
+              <ArrowRight size={15} aria-hidden="true" />
+            </Link>
+          </motion.div>
         </div>
       </section>
     </div>
