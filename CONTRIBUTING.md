@@ -14,6 +14,10 @@ npm install
 npm run dev
 ```
 
+Or open the folder in VS Code / a GitHub Codespace and "Reopen in Container" —
+there's a `.devcontainer/` config with Node + npm preinstalled, no local setup
+needed.
+
 ## Making changes
 
 1. Create a branch off `main` (e.g. `fix/contact-typo` or `feat/events-page`).
