@@ -5,6 +5,8 @@ Public website for MARRA Community Hub, a community centre growing in Caulfield 
 Live site: **[marrahub.com.au](https://marrahub.com.au)**
 
 Open source — contributions welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md).
+Reviewed changes here get promoted to the production site separately — see
+[docs/PROMOTING.md](./docs/PROMOTING.md).
 
 ## Overview
 
