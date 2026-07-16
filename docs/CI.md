@@ -8,9 +8,10 @@ nothing broken or leaky gets there.
 
 | Check | Blocks merge? | What it protects against |
 |---|---|---|
-| **Secret scan** (gitleaks) | ✅ should be required | A real key/secret being committed (scans full history) |
-| **Website build** (`typecheck` + `lint` + `npm run build`) | ✅ should be required | A type error, lint error, or broken production build reaching `main` |
-| **API checks** (`npm ci` + `node --check`) | ✅ should be required | The Azure Function failing to parse / deps not installing |
+| **Secret scan** (gitleaks) | ✅ required | A real key/secret being committed (scans full history) |
+| **Website build** (`typecheck` + `lint` + `npm run build`) | ✅ required | A type error, lint error, or broken production build reaching `main` |
+| **API checks** (`npm ci` + `node --check`) | ✅ required | The Azure Function failing to parse / deps not installing |
+| **1 approving review, from a CODEOWNER** | ✅ required | Unreviewed changes reaching production |
 | Dependency audit (`npm audit`) | ℹ️ informational | Surfaces vulnerable deps without blocking unrelated PRs |
 
 Public values (the Turnstile **site** key, the Azure Function URL, the site URL)
@@ -18,17 +19,17 @@ are not secrets — they ship in the browser bundle. The gitleaks allowlist in
 `.gitleaks.toml` exempts the known public Turnstile site key so it isn't a false
 positive; everything else stays scanned.
 
-## Make the checks actually block `main` (one-time)
+## Current branch protection on `main`
 
-CI only *reports* until you mark the checks **required**:
+All of the above are enforced already — a PR can't merge (and therefore can't
+deploy) unless the build passes, no secret is detected, and a code owner has
+approved it. Confirm the live config anytime with:
 
-GitHub → repo **Settings → Branches → Add branch ruleset** (or "Branch protection rule")
-for `main`:
-- ✅ Require a pull request before merging
-- ✅ Require status checks to pass → select **Secret scan**, **Website build**, **API checks**
-- ✅ (recommended) Require branches to be up to date before merging
+```bash
+gh api repos/Marra-Community-Hub-Incorporated/marrahub/branches/main/protection
+```
 
-Or via CLI (needs admin):
+To change it (needs admin):
 ```bash
 gh api -X PUT repos/Marra-Community-Hub-Incorporated/marrahub/branches/main/protection \
   -H "Accept: application/vnd.github+json" \
@@ -37,9 +38,8 @@ gh api -X PUT repos/Marra-Community-Hub-Incorporated/marrahub/branches/main/prot
   -f 'required_status_checks[checks][][context]=Website build' \
   -f 'required_status_checks[checks][][context]=API checks' \
   -F 'enforce_admins=false' \
-  -F 'required_pull_request_reviews=null' \
+  -F 'required_pull_request_reviews[required_approving_review_count]=1' \
+  -F 'required_pull_request_reviews[require_code_owner_reviews]=true' \
+  -F 'required_pull_request_reviews[dismiss_stale_reviews]=true' \
   -F 'restrictions=null'
 ```
-
-After that, a PR can't merge into `main` (and therefore can't deploy) unless the
-build passes and no secret is detected.
