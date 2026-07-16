@@ -26,6 +26,26 @@ npm run dev
 Pushing to `main` triggers an automatic production deploy via Cloudflare Pages,
 so please work on a branch and use pull requests.
 
+## Merge requirements
+
+Branch protection on `main` enforces all of this — there's no way around it,
+including for admins:
+
+- The three CI checks (secret scan, website build, API checks) must pass —
+  see [`docs/CI.md`](./docs/CI.md).
+- At least **1 approving review from a CODEOWNER** (see
+  [`.github/CODEOWNERS`](./.github/CODEOWNERS)).
+- Force-pushes and branch deletion on `main` are blocked.
+
+## Access levels
+
+- **Write** collaborators can push branches and open PRs, but can't merge
+  without review and can't change repo/CI settings.
+- **Admin** is reserved for maintainers who manage settings, secrets, and
+  branch protection itself.
+- Deploy secrets (Cloudflare, Azure) live only in those platforms' dashboards —
+  Write access to this repo never grants access to them.
+
 ## Project conventions
 
 - **TypeScript + React function components.** Match the style of the file you're
