@@ -35,6 +35,9 @@ const siteConfig = {
   defaultImagePath: '/media/Seo_Prev.png',
 };
 
+// Duplicated from src/app/seo/site.ts (this Node script can't import the TS
+// module) — any edit to the SEO map there must be mirrored here, or the
+// prerendered HTML keeps serving the old meta tags.
 const pageSeoMap = {
   '/': {
     title: 'MARRA Community Hub | Interactive Community Centre in Caulfield South',
@@ -66,8 +69,10 @@ const pageSeoMap = {
   '/programs': {
     title: 'Programs and Services | MARRA Community Hub',
     description:
-      'Explore the programs MARRA Community Hub is building across family support, education, wellbeing, youth development, inclusion, and community connection.',
+      'Our Volunteer IT Program is now running — hands-on experience for IT students and graduates. Explore this and the programs MARRA is building across family support, education, wellbeing, and community connection.',
     keywords: [
+      'volunteer IT program Melbourne',
+      'IT volunteering local experience',
       'community programs Glen Eira',
       'family support programs',
       'youth development Caulfield South',

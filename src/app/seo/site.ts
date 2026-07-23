@@ -28,6 +28,8 @@ export const siteConfig = {
   defaultImagePath: '/media/Seo_Prev.png',
 } as const;
 
+// Mirrored in scripts/seo-build.mjs (which can't import this TS module) —
+// keep both copies in sync or prerendered HTML serves stale meta tags.
 export const pageSeoMap: Record<string, PageSeoMeta> = {
   '/': {
     title: 'MARRA Community Hub | Interactive Community Centre in Caulfield South',
