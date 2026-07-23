@@ -103,6 +103,49 @@ export function Home() {
         </div>
       </section>
 
+      {/* Volunteer IT Program Announcement */}
+      <section className="pt-16 pb-4 bg-background relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-primary text-primary-foreground rounded-3xl p-10 md:p-12 shadow-2xl shadow-primary/10 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 opacity-20 pointer-events-none">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-secondary rounded-full blur-[100px]"></div>
+            </div>
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center gap-8">
+              <div className="flex-grow">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-4">
+                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                  Now running
+                </span>
+                <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
+                  Volunteer IT Program — Applications Open
+                </h2>
+                <p className="text-primary-foreground/80 text-lg leading-relaxed max-w-2xl">
+                  Build real features on our volunteer platform, get mentoring and code review,
+                  and gain local, referenceable experience for your job search. Open to anyone
+                  holding, or currently studying towards, an IT certificate or bachelor's degree.
+                </p>
+              </div>
+              <div className="shrink-0">
+                <Button
+                  href="/programs"
+                  variant="secondary"
+                  size="lg"
+                  className="w-full lg:w-auto shadow-xl shadow-black/10"
+                >
+                  Learn More & Apply
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Why MARRA Section */}
       <section className="py-24 bg-background relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

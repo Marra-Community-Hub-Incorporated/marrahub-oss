@@ -3,10 +3,11 @@ import { motion } from 'motion/react';
 import { SectionHeader } from '../components/SectionHeader';
 import { ProgramCard } from '../components/ProgramCard';
 import { CTABanner } from '../components/CTABanner';
-import { 
-  Users, 
-  Heart, 
-  BookOpen, 
+import { Button } from '../components/Button';
+import {
+  Users,
+  Heart,
+  BookOpen,
   Sprout,
   HandHeart,
   Shield,
@@ -15,7 +16,12 @@ import {
   Home,
   Lightbulb,
   Coffee,
-  GraduationCap
+  GraduationCap,
+  Clock,
+  MapPin,
+  CalendarDays,
+  Laptop,
+  Mail
 } from 'lucide-react';
 
 export function Programs() {
@@ -33,8 +39,159 @@ export function Programs() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">Programs & Services</h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
               The programs we want to build at MARRA are designed to foster connection, growth,
-              and wellbeing through practical, community-shaped support.
+              and wellbeing through practical, community-shaped support. Our first program — the
+              Volunteer IT Program — is now running and open for applications.
             </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Now Running: Volunteer IT Program */}
+      <section id="volunteer-it-program" className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="rounded-3xl border border-primary/10 bg-card shadow-2xl shadow-primary/10 overflow-hidden">
+              <div className="grid lg:grid-cols-5">
+                {/* Program story */}
+                <div className="lg:col-span-3 p-10 md:p-14">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 text-secondary px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-6">
+                    <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                    Now running · Applications open
+                  </span>
+                  <h2 className="font-serif text-4xl md:text-5xl text-primary mb-6 leading-tight">
+                    Volunteer IT Program
+                  </h2>
+                  <div className="space-y-4 text-muted-foreground leading-relaxed text-lg mb-8">
+                    <p>
+                      Hands-on volunteering for people with an IT background — especially those
+                      who find that a lack of local experience holds them back in the Australian
+                      job market. Volunteers join a small development team and build genuine
+                      features that ship to our volunteer and workshop platform.
+                    </p>
+                    <p>
+                      This is not classroom-style training. Volunteers pick up real tickets, open
+                      pull requests, get code review, and see their work go live.
+                    </p>
+                  </div>
+
+                  <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-3">
+                    Current volunteer roles
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {['Frontend Developer', 'Backend Developer', 'DevOps / Cloud Engineer', 'QA & Test Engineer'].map((role) => (
+                      <span
+                        key={role}
+                        className="rounded-full border border-primary/20 text-primary px-4 py-1.5 text-sm"
+                      >
+                        {role}
+                      </span>
+                    ))}
+                  </div>
+
+                  <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-3">
+                    What volunteers gain
+                  </p>
+                  <ul className="space-y-2 mb-10">
+                    {[
+                      'Local project experience on a production system, with an Australian organisation',
+                      'A portfolio contribution — real features you can point to in interviews',
+                      'A written reference and volunteer certificate on completing the program',
+                      'Mentoring and code review — structured feedback on every contribution',
+                    ].map((item) => (
+                      <li key={item} className="text-sm text-muted-foreground flex items-start">
+                        <div className="w-1.5 h-1.5 rounded-full bg-accent mr-3 mt-2 shrink-0"></div>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <a
+                      href="mailto:hello@marrahub.com.au?subject=Volunteer%20IT%20Program%20application"
+                      className="inline-flex items-center justify-center gap-2 rounded-xl transition-all duration-300 font-medium active:scale-95 hover:scale-[1.02] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 px-8 py-4 text-lg"
+                    >
+                      <Mail size={20} />
+                      Apply by Email
+                    </a>
+                    <Button href="/contact" variant="outline" size="lg">
+                      Ask a Question
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-4">
+                    Email your CV with a short note about yourself and which role interests you.
+                    We'll arrange an informal chat — no formal interview process.
+                  </p>
+                </div>
+
+                {/* Practical details */}
+                <div className="lg:col-span-2 bg-primary text-primary-foreground p-10 md:p-14">
+                  <h3 className="font-serif text-2xl text-white mb-8">Practical Details</h3>
+                  <div className="space-y-7">
+                    <div className="flex items-start gap-4">
+                      <GraduationCap size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Eligibility</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Hold, or be currently studying towards, an IT certificate or bachelor's
+                          degree.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <Clock size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Commitment</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          From 15 hours per fortnight (approx. 5–10 hours a week), flexible around
+                          study and work.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <CalendarDays size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Duration</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Typically 3–6 months, adjusted to suit each volunteer.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <MapPin size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Location</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Remote-friendly; we're based in Caulfield South, Melbourne.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <Laptop size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">You'll Need</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Your own computer, an internet connection, and conversational English.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <HandHeart size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Type</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Volunteer (unpaid) role — no cost to participants.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
