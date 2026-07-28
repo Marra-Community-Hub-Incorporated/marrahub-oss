@@ -47,6 +47,159 @@ export function Programs() {
         </div>
       </section>
 
+      {/* Now Recruiting: Volunteer Social Media Manager */}
+      <section id="volunteer-social-media-manager" className="pt-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="rounded-3xl border border-primary/10 bg-card shadow-2xl shadow-primary/10 overflow-hidden">
+              <div className="grid lg:grid-cols-5">
+                {/* Role story */}
+                <div className="lg:col-span-3 p-10 md:p-14">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 text-secondary px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-6">
+                    <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                    Now recruiting · Volunteer role
+                  </span>
+                  <h2 className="font-serif text-4xl md:text-5xl text-primary mb-6 leading-tight">
+                    Volunteer Social Media Manager
+                  </h2>
+                  <div className="space-y-4 text-muted-foreground leading-relaxed text-lg mb-8">
+                    <p>
+                      Our volunteer developers built the platform that runs our programs. Now
+                      we're looking for the person who tells the story — MARRA's first Social
+                      Media Manager.
+                    </p>
+                    <p>
+                      You'll run our channels (LinkedIn first), promote the community workshops
+                      we'll be holding soon, and occasionally join us in Caulfield South to
+                      capture photos, stories, and content from the day.
+                    </p>
+                  </div>
+
+                  <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-3">
+                    What we hope you bring
+                  </p>
+                  <ul className="space-y-2 mb-8">
+                    {[
+                      'Working knowledge of social media marketing — content planning, writing, simple visuals',
+                      'A basic understanding of targeted / paid social, to put workshops in front of the right local audience',
+                      'The ability to occasionally attend workshops in person in Caulfield South / Glen Eira',
+                      'A warm, honest communication style and a genuine interest in community work',
+                    ].map((item) => (
+                      <li key={item} className="text-sm text-muted-foreground flex items-start">
+                        <div className="w-1.5 h-1.5 rounded-full bg-accent mr-3 mt-2 shrink-0"></div>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-3">
+                    What you gain
+                  </p>
+                  <ul className="space-y-2 mb-10">
+                    {[
+                      'Real campaigns for your portfolio, with an Australian organisation',
+                      'A written reference and volunteer certificate on completing the program',
+                      'A genuine say in the voice of a community hub being built from day one',
+                    ].map((item) => (
+                      <li key={item} className="text-sm text-muted-foreground flex items-start">
+                        <div className="w-1.5 h-1.5 rounded-full bg-accent mr-3 mt-2 shrink-0"></div>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <a
+                      href="mailto:hello@marrahub.com.au?subject=Volunteer%20Social%20Media%20Manager%20application"
+                      className="inline-flex items-center justify-center gap-2 rounded-xl transition-all duration-300 font-medium active:scale-95 hover:scale-[1.02] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 px-8 py-4 text-lg"
+                    >
+                      <Mail size={20} />
+                      Apply by Email
+                    </a>
+                    <Button href="/contact" variant="outline" size="lg">
+                      Ask a Question
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-4">
+                    Email a short note about yourself with your CV or profile links. We'll
+                    arrange an informal chat — no formal interview process.
+                  </p>
+                </div>
+
+                {/* Practical details */}
+                <div className="lg:col-span-2 bg-primary text-primary-foreground p-10 md:p-14">
+                  <h3 className="font-serif text-2xl text-white mb-8">Practical Details</h3>
+                  <div className="space-y-7">
+                    <div className="flex items-start gap-4">
+                      <GraduationCap size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Eligibility</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Confident creating content and running social channels. Marketing or
+                          communications study or experience is a plus, not a must.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <Clock size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Commitment</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Around 5–10 hours a week, flexible around study and work.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <CalendarDays size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Duration</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Typically 3–6 months, adjusted to suit each volunteer.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <MapPin size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Location</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Plan and post from anywhere; workshops are occasional and in person in
+                          Caulfield South, Melbourne.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <Laptop size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">You'll Need</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Your own computer, a phone camera, an internet connection, and
+                          conversational English.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <HandHeart size={22} className="text-accent mt-1 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Type</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Volunteer (unpaid) role — no cost to participants.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Now Running: Volunteer IT Program */}
       <section id="volunteer-it-program" className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,7 +215,7 @@ export function Programs() {
                 <div className="lg:col-span-3 p-10 md:p-14">
                   <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 text-secondary px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-6">
                     <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                    Now running · Applications open
+                    Now running · New intake soon
                   </span>
                   <h2 className="font-serif text-4xl md:text-5xl text-primary mb-6 leading-tight">
                     Volunteer IT Program
@@ -78,29 +231,10 @@ export function Programs() {
                       This is not classroom-style training. Volunteers pick up real tickets, open
                       pull requests, get code review, and see their work go live.
                     </p>
-                    <p>
-                      The program is now growing beyond code — our next volunteer role is all
-                      about telling the story of what we build and run.
-                    </p>
-                  </div>
-
-                  <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-3">
-                    Now recruiting
-                  </p>
-                  <div className="mb-6">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 border border-secondary/30 text-secondary px-4 py-1.5 text-sm font-semibold">
-                      <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                      Social Media Manager
-                    </span>
-                    <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
-                      Look after MARRA's social media — plan and publish posts, keep our channels
-                      active, and help share what our volunteers build. You'll also come along to
-                      our community workshops to capture photos, stories, and content from the day.
-                    </p>
                   </div>
 
                   <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground/70 mb-3">
-                    Developer roles — intake closed
+                    Volunteer roles — intake closed
                   </p>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {['Frontend Developer', 'Backend Developer', 'DevOps / Cloud Engineer', 'QA & Test Engineer'].map((role) => (
@@ -113,8 +247,8 @@ export function Programs() {
                     ))}
                   </div>
                   <p className="text-sm text-muted-foreground mb-8">
-                    Applications for developer roles are closed for now — a new intake will open
-                    soon. Keep an eye on this page or get in touch to hear when it does.
+                    Applications are closed for now — a new intake will open soon. Keep an eye on
+                    this page or get in touch to hear when it does.
                   </p>
 
                   <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-3">
@@ -123,9 +257,9 @@ export function Programs() {
                   <ul className="space-y-2 mb-10">
                     {[
                       'Local project experience on a production system, with an Australian organisation',
-                      'A portfolio contribution — real features and campaigns you can point to in interviews',
+                      'A portfolio contribution — real features you can point to in interviews',
                       'A written reference and volunteer certificate on completing the program',
-                      'Mentoring and review — structured feedback on every contribution',
+                      'Mentoring and code review — structured feedback on every contribution',
                     ].map((item) => (
                       <li key={item} className="text-sm text-muted-foreground flex items-start">
                         <div className="w-1.5 h-1.5 rounded-full bg-accent mr-3 mt-2 shrink-0"></div>
@@ -136,19 +270,19 @@ export function Programs() {
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <a
-                      href="mailto:hello@marrahub.com.au?subject=Volunteer%20IT%20Program%20application"
+                      href="mailto:hello@marrahub.com.au?subject=Volunteer%20IT%20Program%20next%20intake"
                       className="inline-flex items-center justify-center gap-2 rounded-xl transition-all duration-300 font-medium active:scale-95 hover:scale-[1.02] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 px-8 py-4 text-lg"
                     >
                       <Mail size={20} />
-                      Apply by Email
+                      Register for the Next Intake
                     </a>
                     <Button href="/contact" variant="outline" size="lg">
                       Ask a Question
                     </Button>
                   </div>
                   <p className="text-sm text-muted-foreground mt-4">
-                    Email your CV with a short note about yourself and which role interests you.
-                    We'll arrange an informal chat — no formal interview process.
+                    Email your CV with a short note about which role interests you, and we'll get
+                    in touch when the next intake opens.
                   </p>
                 </div>
 
@@ -161,9 +295,8 @@ export function Programs() {
                       <div>
                         <p className="font-semibold text-white mb-1">Eligibility</p>
                         <p className="text-sm text-primary-foreground/80 leading-relaxed">
-                          Social Media Manager: confident creating content and running social
-                          channels — marketing or communications study is a plus. Developer roles:
-                          hold, or be studying towards, an IT certificate or bachelor's degree.
+                          Hold, or be currently studying towards, an IT certificate or bachelor's
+                          degree.
                         </p>
                       </div>
                     </div>
@@ -191,9 +324,7 @@ export function Programs() {
                       <div>
                         <p className="font-semibold text-white mb-1">Location</p>
                         <p className="text-sm text-primary-foreground/80 leading-relaxed">
-                          Remote-friendly for planning and development work; the Social Media
-                          Manager occasionally joins workshops in person. We're based in
-                          Caulfield South, Melbourne.
+                          Remote-friendly; we're based in Caulfield South, Melbourne.
                         </p>
                       </div>
                     </div>
