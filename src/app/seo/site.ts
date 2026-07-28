@@ -61,9 +61,10 @@ export const pageSeoMap: Record<string, PageSeoMeta> = {
   '/programs': {
     title: 'Programs and Services | MARRA Community Hub',
     description:
-      'Our Volunteer IT Program is now running — hands-on experience for IT students and graduates. Explore this and the programs MARRA is building across family support, education, wellbeing, and community connection.',
+      'Our Volunteer IT Program is now running — currently recruiting a volunteer Social Media Manager, with a new developer intake opening soon. Explore the programs MARRA is building across family support, education, wellbeing, and community connection.',
     keywords: [
       'volunteer IT program Melbourne',
+      'volunteer social media manager Melbourne',
       'IT volunteering local experience',
       'community programs Glen Eira',
       'family support programs',

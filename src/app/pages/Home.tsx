@@ -123,12 +123,12 @@ export function Home() {
                   Now running
                 </span>
                 <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
-                  Volunteer IT Program — Applications Open
+                  Now Recruiting: Volunteer Social Media Manager
                 </h2>
                 <p className="text-primary-foreground/80 text-lg leading-relaxed max-w-2xl">
-                  Build real features on our volunteer platform, get mentoring and code review,
-                  and gain local, referenceable experience for your job search. Open to anyone
-                  holding, or currently studying towards, an IT certificate or bachelor's degree.
+                  Run MARRA's social media — plan and publish posts, share our community's
+                  stories, and capture the moments at our workshops. Applications for developer
+                  roles are closed for now, with a new intake opening soon.
                 </p>
               </div>
               <div className="shrink-0">

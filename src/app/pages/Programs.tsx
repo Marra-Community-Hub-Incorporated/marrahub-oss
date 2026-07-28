@@ -40,7 +40,8 @@ export function Programs() {
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
               The programs we want to build at MARRA are designed to foster connection, growth,
               and wellbeing through practical, community-shaped support. Our first program — the
-              Volunteer IT Program — is now running and open for applications.
+              Volunteer IT Program — is now running. We're currently recruiting a volunteer
+              Social Media Manager, and a new intake for developer roles will open soon.
             </p>
           </motion.div>
         </div>
@@ -77,21 +78,44 @@ export function Programs() {
                       This is not classroom-style training. Volunteers pick up real tickets, open
                       pull requests, get code review, and see their work go live.
                     </p>
+                    <p>
+                      The program is now growing beyond code — our next volunteer role is all
+                      about telling the story of what we build and run.
+                    </p>
                   </div>
 
                   <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-3">
-                    Current volunteer roles
+                    Now recruiting
                   </p>
-                  <div className="flex flex-wrap gap-2 mb-8">
+                  <div className="mb-6">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 border border-secondary/30 text-secondary px-4 py-1.5 text-sm font-semibold">
+                      <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                      Social Media Manager
+                    </span>
+                    <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
+                      Look after MARRA's social media — plan and publish posts, keep our channels
+                      active, and help share what our volunteers build. You'll also come along to
+                      our community workshops to capture photos, stories, and content from the day.
+                    </p>
+                  </div>
+
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground/70 mb-3">
+                    Developer roles — intake closed
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-3">
                     {['Frontend Developer', 'Backend Developer', 'DevOps / Cloud Engineer', 'QA & Test Engineer'].map((role) => (
                       <span
                         key={role}
-                        className="rounded-full border border-primary/20 text-primary px-4 py-1.5 text-sm"
+                        className="rounded-full border border-muted-foreground/20 text-muted-foreground/70 px-4 py-1.5 text-sm"
                       >
                         {role}
                       </span>
                     ))}
                   </div>
+                  <p className="text-sm text-muted-foreground mb-8">
+                    Applications for developer roles are closed for now — a new intake will open
+                    soon. Keep an eye on this page or get in touch to hear when it does.
+                  </p>
 
                   <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-3">
                     What volunteers gain
@@ -99,9 +123,9 @@ export function Programs() {
                   <ul className="space-y-2 mb-10">
                     {[
                       'Local project experience on a production system, with an Australian organisation',
-                      'A portfolio contribution — real features you can point to in interviews',
+                      'A portfolio contribution — real features and campaigns you can point to in interviews',
                       'A written reference and volunteer certificate on completing the program',
-                      'Mentoring and code review — structured feedback on every contribution',
+                      'Mentoring and review — structured feedback on every contribution',
                     ].map((item) => (
                       <li key={item} className="text-sm text-muted-foreground flex items-start">
                         <div className="w-1.5 h-1.5 rounded-full bg-accent mr-3 mt-2 shrink-0"></div>
@@ -137,8 +161,9 @@ export function Programs() {
                       <div>
                         <p className="font-semibold text-white mb-1">Eligibility</p>
                         <p className="text-sm text-primary-foreground/80 leading-relaxed">
-                          Hold, or be currently studying towards, an IT certificate or bachelor's
-                          degree.
+                          Social Media Manager: confident creating content and running social
+                          channels — marketing or communications study is a plus. Developer roles:
+                          hold, or be studying towards, an IT certificate or bachelor's degree.
                         </p>
                       </div>
                     </div>
@@ -166,7 +191,9 @@ export function Programs() {
                       <div>
                         <p className="font-semibold text-white mb-1">Location</p>
                         <p className="text-sm text-primary-foreground/80 leading-relaxed">
-                          Remote-friendly; we're based in Caulfield South, Melbourne.
+                          Remote-friendly for planning and development work; the Social Media
+                          Manager occasionally joins workshops in person. We're based in
+                          Caulfield South, Melbourne.
                         </p>
                       </div>
                     </div>
