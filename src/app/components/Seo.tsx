@@ -49,7 +49,7 @@ export function Seo() {
     const meta = getPageSeo(location.pathname);
     const siteUrl = siteConfig.siteUrl;
     const canonicalUrl = getAbsoluteUrl(meta.canonicalPath);
-    const imageUrl = getAbsoluteUrl(siteConfig.defaultImagePath);
+    const imageUrl = getAbsoluteUrl(meta.image?.path ?? siteConfig.defaultImagePath);
     const logoUrl = getAbsoluteUrl(siteConfig.logoPath);
     const robotsContent = meta.noindex
       ? 'noindex, nofollow'
@@ -76,12 +76,20 @@ export function Seo() {
     upsertMeta('meta[property="og:description"]', { property: 'og:description' }, meta.description);
     upsertMeta('meta[property="og:url"]', { property: 'og:url' }, canonicalUrl);
     upsertMeta('meta[property="og:image"]', { property: 'og:image' }, imageUrl);
-    upsertMeta('meta[property="og:image:width"]', { property: 'og:image:width' }, '1200');
-    upsertMeta('meta[property="og:image:height"]', { property: 'og:image:height' }, '630');
+    upsertMeta(
+      'meta[property="og:image:width"]',
+      { property: 'og:image:width' },
+      String(meta.image?.width ?? 1200),
+    );
+    upsertMeta(
+      'meta[property="og:image:height"]',
+      { property: 'og:image:height' },
+      String(meta.image?.height ?? 630),
+    );
     upsertMeta(
       'meta[property="og:image:alt"]',
       { property: 'og:image:alt' },
-      'MARRA Community Hub – Interactive community centre in Caulfield South',
+      meta.image?.alt ?? 'MARRA Community Hub – Interactive community centre in Caulfield South',
     );
 
     upsertMeta('meta[name="twitter:card"]', { name: 'twitter:card' }, 'summary_large_image');
@@ -169,6 +177,46 @@ export function Seo() {
         url: imageUrl,
       },
     });
+
+    // Event structured data for the launch meet-up only. Mirrored in
+    // scripts/seo-build.mjs for the prerendered HTML — keep both in sync.
+    if (meta.canonicalPath === '/launch') {
+      upsertJsonLd('event', {
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        name: 'MARRA Community Hub — Launch Meet-Up',
+        description: meta.description,
+        startDate: '2026-08-15T14:00:00+10:00',
+        endDate: '2026-08-15T18:00:00+10:00',
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        isAccessibleForFree: true,
+        image: imageUrl,
+        url: canonicalUrl,
+        location: {
+          '@type': 'Place',
+          name: 'Carnegie Library & Community Centre',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: 'Level 2, 7 Shepparson Avenue',
+            addressLocality: 'Carnegie',
+            addressRegion: 'VIC',
+            postalCode: '3163',
+            addressCountry: 'AU',
+          },
+        },
+        organizer: {
+          '@id': organizationId,
+        },
+        funder: {
+          '@type': 'GovernmentOrganization',
+          name: 'Glen Eira City Council',
+          url: 'https://www.gleneira.vic.gov.au/',
+        },
+      });
+    } else {
+      removeJsonLd('event');
+    }
 
     if (meta.canonicalPath === '/') {
       removeJsonLd('breadcrumbs');

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { Button } from '../components/Button';
 import { SectionHeader } from '../components/SectionHeader';
@@ -6,13 +7,16 @@ import { ProgramCard } from '../components/ProgramCard';
 import { ImpactCard } from '../components/ImpactCard';
 import { CTABanner } from '../components/CTABanner';
 import { featureFlags } from '../featureFlags';
-import { 
-  Users, 
-  Heart, 
-  BookOpen, 
+import {
+  Users,
+  Heart,
+  BookOpen,
   Sprout,
   HandHeart,
-  Shield
+  Shield,
+  Clock,
+  MapPin,
+  Play
 } from 'lucide-react';
 
 export function Home() {
@@ -103,6 +107,80 @@ export function Home() {
         </div>
       </section>
 
+      {/* Launch Event Announcement */}
+      <section className="pt-16 pb-4 bg-background relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="rounded-3xl shadow-2xl shadow-primary/10 relative overflow-hidden bg-primary text-primary-foreground"
+          >
+            <div className="absolute inset-0 bg-cultural-fusion pointer-events-none" aria-hidden="true"></div>
+            <div className="absolute inset-0 opacity-20 pointer-events-none" aria-hidden="true">
+              <div className="absolute -top-24 -left-24 w-64 h-64 bg-accent rounded-full blur-[100px]"></div>
+            </div>
+            <div className="relative z-10 grid lg:grid-cols-5">
+              <div className="lg:col-span-3 p-10 md:p-12 flex flex-col justify-center">
+                <span className="inline-flex items-center self-start rounded-full bg-white/10 ring-1 ring-accent/40 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-4">
+                  Our First Event · Sat 15 August
+                </span>
+                <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
+                  A New Digital Community — Launch Meet-Up
+                </h2>
+                <p className="text-primary-foreground/80 text-lg leading-relaxed max-w-2xl mb-6">
+                  Join our first community meet-up, supported by Glen Eira City Council. An
+                  afternoon of AI basics, a sewing workshop, board games, and good coffee —
+                  everyone is welcome.
+                </p>
+                <div className="flex flex-wrap gap-x-8 gap-y-3 text-primary-foreground/90 mb-8">
+                  <span className="flex items-center gap-2">
+                    <Clock size={18} className="text-accent" aria-hidden="true" />
+                    2:00pm – 6:00pm
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <MapPin size={18} className="text-accent" aria-hidden="true" />
+                    Carnegie Library &amp; Community Centre, Level 2
+                  </span>
+                </div>
+                <div>
+                  <Button
+                    href="/launch"
+                    variant="secondary"
+                    size="lg"
+                    className="w-full sm:w-auto shadow-xl shadow-black/10"
+                  >
+                    Event Details &amp; Invitation
+                  </Button>
+                </div>
+              </div>
+              <Link
+                to="/launch"
+                aria-label="Watch the launch event invitation video"
+                className="lg:col-span-2 relative group block min-h-[220px]"
+              >
+                <img
+                  src={`${import.meta.env.BASE_URL}media/launch/launch-wide-en-poster.jpg`}
+                  alt="Still from the launch invitation video showing the event details"
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover object-left"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/40 to-transparent lg:from-primary lg:via-primary/10 lg:to-transparent"></div>
+                {/* Fade the poster's right edge so its baked-in text isn't cut mid-word */}
+                <div className="hidden lg:block absolute inset-y-0 right-0 w-56 bg-gradient-to-l from-primary via-primary/70 to-transparent"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="w-16 h-16 rounded-full bg-white/90 text-primary flex items-center justify-center shadow-xl transition-transform duration-300 group-hover:scale-110">
+                    <Play size={26} className="ml-1" aria-hidden="true" />
+                  </span>
+                </div>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Volunteer IT Program Announcement */}
       <section className="pt-16 pb-4 bg-background relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -118,8 +196,7 @@ export function Home() {
             </div>
             <div className="relative z-10 flex flex-col lg:flex-row lg:items-center gap-8">
               <div className="flex-grow">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-4">
-                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                <span className="inline-flex items-center rounded-full bg-white/10 ring-1 ring-accent/40 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-4">
                   Now running
                 </span>
                 <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">

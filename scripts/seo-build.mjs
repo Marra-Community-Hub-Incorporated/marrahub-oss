@@ -4,6 +4,7 @@ import path from 'node:path';
 const distDir = path.resolve('dist');
 const routes = [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
+  { path: '/launch', changefreq: 'weekly', priority: '0.9' },
   { path: '/about', changefreq: 'monthly', priority: '0.8' },
   { path: '/programs', changefreq: 'weekly', priority: '0.9' },
   { path: '/impact', changefreq: 'monthly', priority: '0.8' },
@@ -52,6 +53,26 @@ const pageSeoMap = {
       'community support Glen Eira',
     ],
     pageType: 'WebPage',
+  },
+  '/launch': {
+    title: 'Launch Event — Saturday 15 August 2026 | MARRA Community Hub',
+    description:
+      "Join MARRA Community Hub's first community meet-up: Saturday 15 August 2026, 2–6pm at Carnegie Library & Community Centre. AI basics, a sewing workshop, board games, coffee and snacks — supported by Glen Eira City Council. Everyone is welcome.",
+    keywords: [
+      'MARRA launch event',
+      'community event Glen Eira',
+      'Carnegie Library community centre event',
+      'free community meet-up Melbourne',
+      'community hub launch Carnegie',
+      'things to do Glen Eira August 2026',
+    ],
+    pageType: 'WebPage',
+    image: {
+      path: '/media/launch/launch-wide-en-poster.jpg',
+      width: 1280,
+      height: 720,
+      alt: 'Invitation to the MARRA Community Hub launch meet-up on 15 August 2026 at Carnegie Library & Community Centre',
+    },
   },
   '/about': {
     title: 'About MARRA | Community Hub Vision, Values, and Story',
@@ -236,7 +257,11 @@ function buildSeoHead(routePath) {
   const canonicalPath = getCanonicalPath(routePath);
   const meta = pageSeoMap[canonicalPath] || pageSeoMap['/'];
   const canonicalUrl = getAbsoluteUrl(canonicalPath);
-  const imageUrl = getAbsoluteUrl(siteConfig.defaultImagePath);
+  const imageUrl = getAbsoluteUrl(meta.image?.path ?? siteConfig.defaultImagePath);
+  const imageWidth = meta.image?.width ?? 1200;
+  const imageHeight = meta.image?.height ?? 630;
+  const imageAlt =
+    meta.image?.alt ?? 'MARRA Community Hub – Interactive community centre in Caulfield South';
   const logoUrl = getAbsoluteUrl(siteConfig.logoPath);
   const robotsContent =
     'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
@@ -260,9 +285,9 @@ function buildSeoHead(routePath) {
     `    <meta property="og:description" content="${escapeHtml(meta.description)}" />`,
     `    <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />`,
     `    <meta property="og:image" content="${escapeHtml(imageUrl)}" />`,
-    '    <meta property="og:image:width" content="1200" />',
-    '    <meta property="og:image:height" content="630" />',
-    '    <meta property="og:image:alt" content="MARRA Community Hub – Interactive community centre in Caulfield South" />',
+    `    <meta property="og:image:width" content="${imageWidth}" />`,
+    `    <meta property="og:image:height" content="${imageHeight}" />`,
+    `    <meta property="og:image:alt" content="${escapeHtml(imageAlt)}" />`,
     '    <meta name="twitter:card" content="summary_large_image" />',
     `    <meta name="twitter:title" content="${escapeHtml(meta.title)}" />`,
     `    <meta name="twitter:description" content="${escapeHtml(meta.description)}" />`,
@@ -341,6 +366,46 @@ function buildSeoHead(routePath) {
         },
       }),
     );
+
+    // Event structured data for the launch meet-up only. Mirrored in
+    // src/app/components/Seo.tsx — keep both in sync.
+    if (canonicalPath === '/launch') {
+      lines.push(
+        jsonLdScript('event', {
+          '@context': 'https://schema.org',
+          '@type': 'Event',
+          name: 'MARRA Community Hub — Launch Meet-Up',
+          description: meta.description,
+          startDate: '2026-08-15T14:00:00+10:00',
+          endDate: '2026-08-15T18:00:00+10:00',
+          eventStatus: 'https://schema.org/EventScheduled',
+          eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+          isAccessibleForFree: true,
+          image: imageUrl,
+          url: canonicalUrl,
+          location: {
+            '@type': 'Place',
+            name: 'Carnegie Library & Community Centre',
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: 'Level 2, 7 Shepparson Avenue',
+              addressLocality: 'Carnegie',
+              addressRegion: 'VIC',
+              postalCode: '3163',
+              addressCountry: 'AU',
+            },
+          },
+          organizer: {
+            '@id': organizationId,
+          },
+          funder: {
+            '@type': 'GovernmentOrganization',
+            name: 'Glen Eira City Council',
+            url: 'https://www.gleneira.vic.gov.au/',
+          },
+        }),
+      );
+    }
 
     if (canonicalPath !== '/') {
       lines.push(

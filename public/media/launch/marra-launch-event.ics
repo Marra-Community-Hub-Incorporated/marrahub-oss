@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MARRA Community Hub//Launch Event//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:launch-2026-08-15@marrahub.com.au
+DTSTAMP:20260805T000000Z
+DTSTART:20260815T040000Z
+DTEND:20260815T080000Z
+SUMMARY:MARRA Community Hub — Launch Meet-Up
+DESCRIPTION:Our first community meet-up\, supported by Glen Eira City Council. An intro to AI basics\, a sewing workshop\, board games\, and coffee\, tea & snacks. Everyone is welcome — just bring a good mood. Details: https://marrahub.com.au/launch
+LOCATION:Carnegie Library & Community Centre\, Level 2\, 7 Shepparson Avenue\, Carnegie VIC 3163
+URL:https://marrahub.com.au/launch
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

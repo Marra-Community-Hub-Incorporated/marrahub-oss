@@ -5,6 +5,13 @@ export interface PageSeoMeta {
   description: string;
   keywords: string[];
   pageType: SeoPageType;
+  /** Optional page-specific share image; falls back to siteConfig.defaultImagePath. */
+  image?: {
+    path: string;
+    width: number;
+    height: number;
+    alt: string;
+  };
 }
 
 export const siteConfig = {
@@ -44,6 +51,26 @@ export const pageSeoMap: Record<string, PageSeoMeta> = {
       'community support Glen Eira',
     ],
     pageType: 'WebPage',
+  },
+  '/launch': {
+    title: 'Launch Event — Saturday 15 August 2026 | MARRA Community Hub',
+    description:
+      "Join MARRA Community Hub's first community meet-up: Saturday 15 August 2026, 2–6pm at Carnegie Library & Community Centre. AI basics, a sewing workshop, board games, coffee and snacks — supported by Glen Eira City Council. Everyone is welcome.",
+    keywords: [
+      'MARRA launch event',
+      'community event Glen Eira',
+      'Carnegie Library community centre event',
+      'free community meet-up Melbourne',
+      'community hub launch Carnegie',
+      'things to do Glen Eira August 2026',
+    ],
+    pageType: 'WebPage',
+    image: {
+      path: '/media/launch/launch-wide-en-poster.jpg',
+      width: 1280,
+      height: 720,
+      alt: 'Invitation to the MARRA Community Hub launch meet-up on 15 August 2026 at Carnegie Library & Community Centre',
+    },
   },
   '/about': {
     title: 'About MARRA | Community Hub Vision, Values, and Story',
@@ -144,7 +171,9 @@ export function getAbsoluteUrl(path: string) {
   return new URL(path, `${siteConfig.siteUrl}/`).toString();
 }
 
-export function getPageSeo(pathname: string) {
+export function getPageSeo(
+  pathname: string,
+): PageSeoMeta & { canonicalPath: string; noindex: boolean } {
   const canonicalPath = getCanonicalPath(pathname);
   const meta = pageSeoMap[canonicalPath];
 

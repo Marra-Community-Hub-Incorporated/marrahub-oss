@@ -22,6 +22,7 @@ export const router = createBrowserRouter([
     Component: Layout,
     children: [
       { index: true, lazy: async () => ({ Component: (await import('./pages/Home')).Home }) },
+      { path: 'launch', lazy: async () => ({ Component: (await import('./pages/LaunchEvent')).LaunchEvent }) },
       { path: 'about', lazy: async () => ({ Component: (await import('./pages/About')).About }) },
       { path: 'programs', lazy: async () => ({ Component: (await import('./pages/Programs')).Programs }) },
       { path: 'impact', lazy: async () => ({ Component: (await import('./pages/Impact')).Impact }) },
