@@ -78,6 +78,10 @@ export function useTurnstile(siteKey: string): UseTurnstileResult {
     let isMounted = true;
 
     const setup = async () => {
+      if (!siteKey) {
+        return;
+      }
+
       try {
         await ensureTurnstileScript();
         if (!isMounted || !window.turnstile || !containerRef.current || widgetIdRef.current) {

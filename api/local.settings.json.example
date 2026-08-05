@@ -8,8 +8,8 @@
     "CLIENT_ID": "<app-registration-application-client-id>",
     "CLIENT_SECRET": "<app-registration-client-secret-value>",
 
-    "GRAPH_SENDER": "hello@marrahub.com.au",
-    "NOTIFY_RECIPIENT": "volodymyr.gor@marrahub.com.au",
+    "GRAPH_SENDER": "volunteer@example.org",
+    "NOTIFY_RECIPIENT": "volunteer-coordinator@example.org",
 
     "TURNSTILE_SECRET": "<cloudflare-turnstile-secret-key>",
     "ALLOWED_ORIGINS": "https://marrahub.com.au,http://localhost:5173",

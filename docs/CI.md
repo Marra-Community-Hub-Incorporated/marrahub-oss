@@ -13,10 +13,10 @@ nothing broken or leaky gets there.
 | **API checks** (`npm ci` + `node --check`) | ✅ should be required | The Azure Function failing to parse / deps not installing |
 | Dependency audit (`npm audit`) | ℹ️ informational | Surfaces vulnerable deps without blocking unrelated PRs |
 
-Public values (the Turnstile **site** key, the Azure Function URL, the site URL)
-are not secrets — they ship in the browser bundle. The gitleaks allowlist in
-`.gitleaks.toml` exempts the known public Turnstile site key so it isn't a false
-positive; everything else stays scanned.
+Public browser values such as Turnstile **site** keys, provider endpoints and
+the site URL are not secrets, but this OSS repo keeps production-specific values
+out of source control. Real values belong in the hosting/provider dashboards;
+everything in the repo stays scanned.
 
 ## Make the checks actually block `main` (one-time)
 
@@ -30,7 +30,7 @@ for `main`:
 
 Or via CLI (needs admin):
 ```bash
-gh api -X PUT repos/Marra-Community-Hub-Incorporated/marrahub/branches/main/protection \
+gh api -X PUT repos/Marra-Community-Hub-Incorporated/marrahub-oss/branches/main/protection \
   -H "Accept: application/vnd.github+json" \
   -f 'required_status_checks[strict]=true' \
   -f 'required_status_checks[checks][][context]=Secret scan (gitleaks)' \

@@ -87,11 +87,11 @@ export function VolunteerAgreementPage() {
       });
       return;
     }
-    if (turnstile.error) {
+    if (volunteerAgreementConfig.turnstileSiteKey && turnstile.error) {
       setFormStatus({ state: 'error', message: turnstile.error });
       return;
     }
-    if (!turnstile.token) {
+    if (volunteerAgreementConfig.turnstileSiteKey && !turnstile.token) {
       setFormStatus({
         state: 'error',
         message: 'Please complete the security check before submitting.',
@@ -407,14 +407,15 @@ export function VolunteerAgreementPage() {
                 </div>
               </div>
 
-              {/* Turnstile */}
-              <div className="space-y-2">
-                <div ref={turnstile.containerRef} className="min-h-[65px]" />
-                <p className="text-xs text-muted-foreground">
-                  This form is protected by Cloudflare Turnstile to reduce spam and automated
-                  submissions.
-                </p>
-              </div>
+              {volunteerAgreementConfig.turnstileSiteKey && (
+                <div className="space-y-2">
+                  <div ref={turnstile.containerRef} className="min-h-[65px]" />
+                  <p className="text-xs text-muted-foreground">
+                    This form is protected by Cloudflare Turnstile to reduce spam and automated
+                    submissions.
+                  </p>
+                </div>
+              )}
 
               {formStatus.state !== 'idle' && (
                 <div

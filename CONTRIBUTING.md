@@ -8,8 +8,8 @@ community project and contributions of all sizes are welcome.
 Prerequisites: **Node.js 18+** and npm.
 
 ```bash
-git clone https://github.com/Marra-Community-Hub-Incorporated/marrahub.git
-cd marrahub
+git clone https://github.com/Marra-Community-Hub-Incorporated/marrahub-oss.git
+cd marrahub-oss
 npm install
 npm run dev
 ```
@@ -43,9 +43,9 @@ so please work on a branch and use pull requests.
 
 ## Security & secrets
 
-- **Never commit secrets.** The Formspree endpoint and Turnstile site key are
-  public frontend values by design; their secret counterparts stay in the
-  provider dashboards only.
+- **Never commit secrets.** Provider endpoints and Turnstile site keys are
+  browser-visible public values, but keep real production values in deployment
+  settings rather than source control.
 - Anything prefixed `VITE_` is compiled into the public client bundle — don't
   put secrets there.
 

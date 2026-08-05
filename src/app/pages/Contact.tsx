@@ -4,8 +4,8 @@ import { SectionHeader } from '../components/SectionHeader';
 import { Button } from '../components/Button';
 import { MapPin, Phone, Mail, Clock, Accessibility } from 'lucide-react';
 
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xreavvnv';
-const TURNSTILE_SITE_KEY = '0x4AAAAAACksijQmW93tasP6';
+const FORMSPREE_ENDPOINT = (import.meta.env.VITE_FORMSPREE_ENDPOINT as string | undefined) ?? '';
+const TURNSTILE_SITE_KEY = (import.meta.env.VITE_CONTACT_TURNSTILE_SITE_KEY as string | undefined) ?? '';
 const TURNSTILE_SCRIPT_ID = 'cf-turnstile-script';
 
 interface TurnstileApi {
@@ -91,6 +91,10 @@ export function Contact() {
     let isMounted = true;
 
     const setupTurnstile = async () => {
+      if (!TURNSTILE_SITE_KEY) {
+        return;
+      }
+
       try {
         await ensureTurnstileScript();
 
@@ -165,7 +169,15 @@ export function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!turnstileToken) {
+    if (!FORMSPREE_ENDPOINT) {
+      setFormStatus({
+        state: 'error',
+        message: 'The contact form is not configured yet. Please use the email link on this page.',
+      });
+      return;
+    }
+
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
       setFormStatus({
         state: 'error',
         message: 'Please complete the security check before sending your message.',
@@ -453,12 +465,14 @@ export function Contact() {
                   </p>
                 </div>
 
-                <div className="space-y-2">
-                  <div ref={turnstileContainerRef} className="min-h-[65px]" />
-                  <p className="text-xs text-muted-foreground">
-                    This form is protected by Cloudflare Turnstile to reduce spam and automated submissions.
-                  </p>
-                </div>
+                {TURNSTILE_SITE_KEY && (
+                  <div className="space-y-2">
+                    <div ref={turnstileContainerRef} className="min-h-[65px]" />
+                    <p className="text-xs text-muted-foreground">
+                      This form is protected by Cloudflare Turnstile to reduce spam and automated submissions.
+                    </p>
+                  </div>
+                )}
 
                 {formStatus.state !== 'idle' && (
                   <div
