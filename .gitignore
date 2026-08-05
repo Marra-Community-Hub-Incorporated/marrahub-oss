@@ -16,7 +16,6 @@ dist-ssr/
 # Editor
 .vscode/*
 !.vscode/extensions.json
-!.vscode/TASKS.md
 .idea
 .DS_Store
 *.suo

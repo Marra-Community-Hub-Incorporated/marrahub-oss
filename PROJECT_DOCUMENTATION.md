@@ -49,9 +49,9 @@ npm start
 Copy example files only when you need local integration testing:
 
 ```bash
-copy .env.example .env.local
-copy .env.production.example .env.production
-copy api\local.settings.json.example api\local.settings.json
+cp .env.example .env.local
+cp .env.production.example .env.production
+cp api/local.settings.json.example api/local.settings.json
 ```
 
 Fill local files with your own development values. Do not commit those files.
@@ -62,7 +62,7 @@ Website environment variables:
 
 | Variable | Purpose |
 |---|---|
-| `VITE_SITE_URL` | Canonical site origin for SEO metadata and sitemap generation |
+| `VITE_SITE_URL` | Reserved for environment-specific tooling. Note: the SEO metadata and sitemap use the `siteUrl` hardcoded in `src/app/seo/site.ts` **and** `scripts/seo-build.mjs` — edit both together |
 | `VITE_FORMSPREE_ENDPOINT` | Optional contact form endpoint |
 | `VITE_CONTACT_TURNSTILE_SITE_KEY` | Optional public Turnstile site key for contact form |
 | `VITE_VOLUNTEER_API_URL` | Optional volunteer agreement backend endpoint |
