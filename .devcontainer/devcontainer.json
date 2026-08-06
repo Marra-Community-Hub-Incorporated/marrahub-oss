@@ -1,0 +1,15 @@
+{
+  "name": "Marra Hub website (marrahub-website)",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "postCreateCommand": "npm install -g azure-functions-core-tools@4 --unsafe-perm true && npm install && (cd api && npm install)",
+  "forwardPorts": [5173, 7071],
+  "portsAttributes": {
+    "5173": { "label": "Site (Vite)", "onAutoForward": "openPreview" },
+    "7071": { "label": "Volunteer-agreement API (optional, Azure Functions)" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+    }
+  }
+}
