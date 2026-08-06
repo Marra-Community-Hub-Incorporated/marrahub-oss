@@ -73,6 +73,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/discover" className="text-primary-foreground/75 hover:text-white transition-colors">
+                  Discover the Hub
+                </Link>
+              </li>
+              <li>
                 <Link to="/impact" className="text-primary-foreground/75 hover:text-white transition-colors">
                   Community Impact
                 </Link>

@@ -82,7 +82,7 @@ watch:
 
   ```bash
   npm run build
-  node -e 'const fs=require("fs"),c=require("crypto");const m=fs.readFileSync("dist/index.html","utf8").match(/<script>([\s\S]*?)<\/script>/);console.log("sha256-"+c.createHash("sha256").update(m[1],"utf8").digest("base64"))'
+  node -e 'const fs=require("fs"),c=require("crypto");const m=fs.readFileSync("dist/client/index.html","utf8").match(/<script>([\s\S]*?)<\/script>/);console.log("sha256-"+c.createHash("sha256").update(m[1],"utf8").digest("base64"))'
   ```
 
 ## Reporting issues

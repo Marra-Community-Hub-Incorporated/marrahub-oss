@@ -1,12 +1,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const distDir = path.resolve('dist');
+// The Cloudflare Vite plugin builds the client SPA into dist/client (and the
+// Worker into its own dist/<name> alongside it) now that the site has a
+// worker/index.ts entry point for the Discover API proxy.
+const distDir = path.resolve('dist/client');
 const routes = [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
   { path: '/launch', changefreq: 'weekly', priority: '0.9' },
   { path: '/about', changefreq: 'monthly', priority: '0.8' },
   { path: '/programs', changefreq: 'weekly', priority: '0.9' },
+  { path: '/discover', changefreq: 'daily', priority: '0.8' },
   { path: '/impact', changefreq: 'monthly', priority: '0.8' },
   { path: '/governance', changefreq: 'monthly', priority: '0.7' },
   { path: '/contact', changefreq: 'monthly', priority: '0.9' },
@@ -100,6 +104,19 @@ const pageSeoMap = {
       'youth development Caulfield South',
       'wellbeing programs community hub',
       'MARRA services',
+    ],
+    pageType: 'CollectionPage',
+  },
+  '/discover': {
+    title: 'Discover the Hub | Workshops, Free Food & Volunteering',
+    description:
+      'Browse live workshops, free food giveaways and volunteering opportunities from community organisations on the MARRA Hub platform, then register on their page.',
+    keywords: [
+      'discover MARRA hub',
+      'community workshops Glen Eira',
+      'free food Caulfield South',
+      'volunteer opportunities Melbourne',
+      'community directory Glen Eira',
     ],
     pageType: 'CollectionPage',
   },

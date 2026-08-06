@@ -101,6 +101,19 @@ export const pageSeoMap: Record<string, PageSeoMeta> = {
     ],
     pageType: 'CollectionPage',
   },
+  '/discover': {
+    title: 'Discover the Hub | Workshops, Free Food & Volunteering',
+    description:
+      'Browse live workshops, free food giveaways and volunteering opportunities from community organisations on the MARRA Hub platform, then register on their page.',
+    keywords: [
+      'discover MARRA hub',
+      'community workshops Glen Eira',
+      'free food Caulfield South',
+      'volunteer opportunities Melbourne',
+      'community directory Glen Eira',
+    ],
+    pageType: 'CollectionPage',
+  },
   '/impact': {
     title: 'Community Impact | MARRA Community Hub',
     description:

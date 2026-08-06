@@ -21,6 +21,7 @@ export function Header() {
     { name: 'Launch Event', href: '/launch' },
     { name: 'About', href: '/about' },
     { name: 'Programs', href: '/programs' },
+    { name: 'Discover', href: '/discover' },
     { name: 'Impact', href: '/impact' },
     { name: 'Governance', href: '/governance' },
     // The Volunteer page is only listed when the volunteer flow is enabled

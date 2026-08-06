@@ -25,6 +25,7 @@ export const router = createBrowserRouter([
       { path: 'launch', lazy: async () => ({ Component: (await import('./pages/LaunchEvent')).LaunchEvent }) },
       { path: 'about', lazy: async () => ({ Component: (await import('./pages/About')).About }) },
       { path: 'programs', lazy: async () => ({ Component: (await import('./pages/Programs')).Programs }) },
+      { path: 'discover', lazy: async () => ({ Component: (await import('./pages/Discover')).Discover }) },
       { path: 'impact', lazy: async () => ({ Component: (await import('./pages/Impact')).Impact }) },
       { path: 'governance', lazy: async () => ({ Component: (await import('./pages/Governance')).Governance }) },
       { path: 'contact', lazy: async () => ({ Component: (await import('./pages/Contact')).Contact }) },

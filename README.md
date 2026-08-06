@@ -35,7 +35,7 @@ npm run dev        # dev server with hot reload
 | Command           | What it does                                          |
 | ----------------- | ----------------------------------------------------- |
 | `npm run dev`     | Start the Vite dev server                             |
-| `npm run build`   | Production build to `dist/` + generate SEO metadata   |
+| `npm run build`   | Production build to `dist/client/` + generate SEO metadata |
 | `npm run preview` | Serve the production build locally to sanity-check it |
 
 ## Deployment
@@ -43,7 +43,10 @@ npm run dev        # dev server with hot reload
 Hosted on **Cloudflare Pages**, which **auto-deploys on every push to `main`**.
 
 - Build command: `npm run build`
-- Output directory: `dist`
+- Output directory: `dist/client` (the site now also ships a small Worker —
+  see [worker/index.ts](./worker/index.ts) — built separately into `dist/marrahub/`;
+  `npm run deploy` / `wrangler deploy` picks up both automatically via the
+  generated `wrangler.json`)
 - Production URL is set in [.env.production](./.env.production) (used for SEO
   metadata and sitemap generation)
 
