@@ -32,6 +32,7 @@ build/
 # Environment
 .env
 .env.local
+.env.production
 .env.development.local
 .env.test.local
 .env.production.local
@@ -57,3 +58,4 @@ ds-bundle/
 .dev.vars*
 !.dev.vars.example
 !.env.example
+!.env.production.example

@@ -112,7 +112,7 @@ The signed PDF should arrive in your `NOTIFY_RECIPIENT` inbox.
    az login
    az group create -n marra-rg -l australiasoutheast
    az storage account create -n marrafuncstore$RANDOM -g marra-rg -l australiasoutheast --sku Standard_LRS
-   az functionapp create -n marra-volunteer-api -g marra-rg \
+   az functionapp create -n <your-function-app> -g marra-rg \
      --consumption-plan-location australiasoutheast \
      --runtime node --runtime-version 20 --functions-version 4 \
      --storage-account <the-storage-account-name-from-above>
@@ -120,18 +120,18 @@ The signed PDF should arrive in your `NOTIFY_RECIPIENT` inbox.
    (Or create it in the Portal: **Create resource → Function App → Node 20**.)
 2. Push the settings to Azure (so the cloud app has your secrets):
    ```bash
-   az functionapp config appsettings set -n marra-volunteer-api -g marra-rg --settings \
+   az functionapp config appsettings set -n <your-function-app> -g marra-rg --settings \
      TENANT_ID=... CLIENT_ID=... CLIENT_SECRET=... \
-     GRAPH_SENDER=hello@marrahub.com.au NOTIFY_RECIPIENT=you@marrahub.com.au \
+     GRAPH_SENDER=volunteer@example.org NOTIFY_RECIPIENT=volunteer-coordinator@example.org \
      TURNSTILE_SECRET=... ALLOWED_ORIGINS=https://marrahub.com.au \
      SHAREPOINT_ENABLED=false
    ```
 3. Deploy the code:
    ```bash
    cd api
-   func azure functionapp publish marra-volunteer-api
+   func azure functionapp publish <your-function-app>
    ```
-   It prints your URL, e.g. `https://marra-volunteer-api.azurewebsites.net/api/volunteer-agreement`.
+   It prints your URL, e.g. `https://<your-function-app>.azurewebsites.net/api/volunteer-agreement`.
 
 ---
 
@@ -142,13 +142,13 @@ The signed PDF should arrive in your `NOTIFY_RECIPIENT` inbox.
    `TURNSTILE_SECRET` (Step 4.2). The widget's *site* key already lives in the frontend.
 2. In **Cloudflare Pages** (the website project) → **Settings → Environment variables**, add:
    ```
-   VITE_VOLUNTEER_API_URL = https://marra-volunteer-api.azurewebsites.net/api/volunteer-agreement
+   VITE_VOLUNTEER_API_URL = https://<your-function-app>.azurewebsites.net/api/volunteer-agreement
    ```
    then redeploy.
 3. **CSP** — the site's `public/_headers` Content-Security-Policy must allow the
    browser to POST to the function. Add your function host to `connect-src`:
    ```
-   connect-src 'self' https://formspree.io https://challenges.cloudflare.com https://marra-volunteer-api.azurewebsites.net;
+   connect-src 'self' https://formspree.io https://challenges.cloudflare.com https://<your-function-app>.azurewebsites.net;
    ```
 
 ---

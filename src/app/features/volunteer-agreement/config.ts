@@ -17,10 +17,11 @@ export const volunteerAgreementConfig = {
     (import.meta.env.VITE_VOLUNTEER_API_URL as string | undefined) ??
     'http://localhost:7071/api/volunteer-agreement',
 
-  // Public Turnstile site key. Defaults to the existing MARRA key.
+  // Public Turnstile site key. Configure per environment; no real key is kept
+  // in this public repository.
   turnstileSiteKey:
     (import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined) ??
-    '0x4AAAAAACksijQmW93tasP6',
+    '',
 
   // Bump this whenever the agreement text changes, so each signed record
   // captures exactly which version the volunteer agreed to.

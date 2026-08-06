@@ -7,14 +7,9 @@
 useDefault = true
 
 [allowlist]
-description = "Intentionally-public values and placeholder example files"
-# NOTE: .env.production is deliberately NOT allowlisted here — it stays scanned,
-# so if a real secret is ever added to it, gitleaks still catches it.
+description = "Placeholder example files"
 paths = [
   '''\.env\.example$''',
+  '''\.env\.production\.example$''',
   '''api/local\.settings\.json\.example$''',
-]
-regexes = [
-  # Cloudflare Turnstile SITE key — public by design (embedded in the widget).
-  '''0x4AAAAAACksijQmW93tasP6''',
 ]

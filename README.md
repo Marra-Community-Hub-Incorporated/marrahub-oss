@@ -23,7 +23,7 @@ A React + Vite single-page website focused on:
 - Vite 6 + TypeScript
 - Tailwind CSS 4
 - Motion (animations) · Lucide (icons)
-- Contact form via Formspree, spam protection via Cloudflare Turnstile
+- Optional contact form via Formspree, spam protection via Cloudflare Turnstile
 
 ## Development
 
@@ -46,8 +46,8 @@ Hosted on **Cloudflare Pages**, which **auto-deploys on every push to `main`**.
 
 - Build command: `npm run build`
 - Output directory: `dist`
-- Production URL is set in [.env.production](./.env.production) (used for SEO
-  metadata and sitemap generation)
+- Production URL and provider endpoints are set in your hosting environment.
+  Use [.env.production.example](./.env.production.example) as the template.
 
 Security and cache headers are defined in [`public/_headers`](./public/_headers)
 (CSP, HSTS, clickjacking protection, plus long-lived caching for hashed assets).
@@ -77,9 +77,10 @@ scripts/
 ## Security notes
 
 - No private API secrets are stored in this repository.
-- The Formspree endpoint and Cloudflare Turnstile **site key** are public
-  frontend values by design. Secret keys live only in the provider dashboards
-  and must never be committed.
+- Provider endpoints and Cloudflare Turnstile **site keys** are public browser
+  values, but this OSS repo keeps production-specific values as placeholders so
+  volunteers do not need production access. Secret keys live only in provider
+  dashboards and must never be committed.
 - Anything prefixed `VITE_` is **baked into the public client bundle** — never
   put a secret in a `VITE_` variable.
 - The Content-Security-Policy in `public/_headers` allows the inline
