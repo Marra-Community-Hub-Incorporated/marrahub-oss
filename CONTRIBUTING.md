@@ -26,6 +26,8 @@ needed.
    - `npm run build` — make sure the production build passes
    - `npm run preview` — sanity-check the built output
 3. Open a pull request against `main` with a short description of what and why.
+   For visual changes, consider deploying a free Cloudflare clone of the site so
+   reviewers can see it live — see [`docs/PREVIEW_DEPLOYS.md`](./docs/PREVIEW_DEPLOYS.md).
 
 Pushing to `main` triggers an automatic production deploy via Cloudflare Pages,
 so please work on a branch and use pull requests.
