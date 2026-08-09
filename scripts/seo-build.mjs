@@ -400,6 +400,11 @@ function buildSeoHead(routePath) {
           isAccessibleForFree: true,
           image: imageUrl,
           url: canonicalUrl,
+          performer: {
+            '@type': 'Organization',
+            '@id': organizationId,
+            name: siteConfig.name,
+          },
           location: {
             '@type': 'Place',
             name: 'Carnegie Library & Community Centre',
@@ -411,6 +416,14 @@ function buildSeoHead(routePath) {
               postalCode: '3163',
               addressCountry: 'AU',
             },
+          },
+          offers: {
+            '@type': 'Offer',
+            url: canonicalUrl,
+            price: '0',
+            priceCurrency: 'AUD',
+            availability: 'https://schema.org/InStock',
+            validFrom: '2026-08-09T00:00:00+10:00',
           },
           organizer: {
             '@id': organizationId,

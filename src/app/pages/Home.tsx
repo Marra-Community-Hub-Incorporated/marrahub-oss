@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { Button } from '../components/Button';
 import { SectionHeader } from '../components/SectionHeader';
 import { ProgramCard } from '../components/ProgramCard';
@@ -16,14 +16,211 @@ import {
   Shield,
   Clock,
   MapPin,
-  Play
+  Play,
+  CalendarDays,
+  ExternalLink,
+  X
 } from 'lucide-react';
 
-export function Home() {
-  const heroBackgroundUrl = `${import.meta.env.BASE_URL}media/hero-background.png`;
+const HUB_ORG_URL = 'https://hub.marrahub.com.au/o/marra-community-hub-inc';
+
+const launchEvent = {
+  dateLabel: 'Saturday, 15 August 2026',
+  timeLabel: '2:00pm - 6:00pm',
+  venueLabel: 'Carnegie Library & Community Centre',
+  venueDetail: 'Level 2, 7 Shepparson Avenue, Carnegie',
+  title: 'MARRA Launch Meet-Up',
+  href: '/launch',
+};
+
+const homeEventPopupStorageKey = 'marrahub.homeEventPopupDismissed';
+
+function shouldShowHomeEventPopup() {
+  try {
+    return window.sessionStorage.getItem(homeEventPopupStorageKey) !== 'true';
+  } catch {
+    return true;
+  }
+}
+
+function EventNoticeBanner() {
+  return (
+    <section className="bg-primary text-primary-foreground border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <span className="inline-flex items-center self-start rounded-full bg-white/10 ring-1 ring-accent/40 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
+              First Event
+            </span>
+            <p className="text-sm md:text-base text-primary-foreground/90">
+              <span className="font-semibold text-white">{launchEvent.title}</span>
+              <span className="mx-2 text-accent">|</span>
+              {launchEvent.dateLabel}, {launchEvent.timeLabel}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link
+              to={launchEvent.href}
+              className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-accent hover:text-white transition-colors"
+            >
+              See event details
+              <Play size={14} aria-hidden="true" />
+            </Link>
+            <a
+              href={HUB_ORG_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-primary-foreground/85 hover:text-white transition-colors"
+            >
+              Open Hub page
+              <ExternalLink size={14} aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+interface EventPopupProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+function EventPopup({ open, onClose }: EventPopupProps) {
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose, open]);
 
   return (
-    <div className="min-h-screen">
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[80] flex items-center justify-center px-4 py-6 bg-primary/60 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="home-event-popup-title"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.98 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-5/6 sm:w-full sm:max-w-2xl max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden rounded-3xl bg-background shadow-2xl shadow-black/25 border border-white/20"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute right-8 sm:right-4 top-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary shadow-lg transition-colors hover:bg-white"
+              aria-label="Close event announcement"
+            >
+              <X size={20} aria-hidden="true" />
+            </button>
+
+            <div className="relative min-h-[180px] bg-primary text-primary-foreground">
+              <div className="absolute inset-0 bg-cultural-fusion" aria-hidden="true"></div>
+              <img
+                src={`${import.meta.env.BASE_URL}media/launch/launch-wide-en-poster.jpg`}
+                alt=""
+                aria-hidden="true"
+                loading="eager"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover opacity-45"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary/30"></div>
+              <div className="relative z-10 p-8 pr-16 md:p-10">
+                <span className="inline-flex items-center rounded-full bg-white/10 ring-1 ring-accent/40 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white mb-4">
+                  New community event
+                </span>
+                <h2 id="home-event-popup-title" className="font-serif text-3xl sm:text-4xl md:text-5xl text-white leading-tight break-words">
+                  A New Digital Community
+                </h2>
+              </div>
+            </div>
+
+            <div className="p-8 md:p-10">
+              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                Join MARRA's first meet-up for AI basics, a sewing workshop, board games,
+                coffee, tea, and snacks. Entry is free and everyone is welcome.
+              </p>
+
+              <div className="grid sm:grid-cols-3 gap-3 mb-8">
+                <div className="rounded-2xl bg-muted/50 p-4">
+                  <CalendarDays className="text-secondary mb-2" size={22} aria-hidden="true" />
+                  <p className="font-semibold text-foreground">{launchEvent.dateLabel}</p>
+                </div>
+                <div className="rounded-2xl bg-muted/50 p-4">
+                  <Clock className="text-secondary mb-2" size={22} aria-hidden="true" />
+                  <p className="font-semibold text-foreground">{launchEvent.timeLabel}</p>
+                </div>
+                <div className="rounded-2xl bg-muted/50 p-4">
+                  <MapPin className="text-secondary mb-2" size={22} aria-hidden="true" />
+                  <p className="font-semibold text-foreground">{launchEvent.venueLabel}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{launchEvent.venueDetail}</p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button href={launchEvent.href} variant="primary" size="lg" className="w-full sm:w-auto">
+                  Event Details & Invitation
+                </Button>
+                <Button
+                  href={HUB_ORG_URL}
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto border-primary/20"
+                >
+                  Open Hub Page
+                </Button>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="inline-flex items-center justify-center rounded-xl px-8 py-4 text-lg font-medium text-primary border-2 border-primary/20 transition-colors hover:bg-primary/5"
+                >
+                  Maybe Later
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+export function Home() {
+  const [eventPopupOpen, setEventPopupOpen] = useState(shouldShowHomeEventPopup);
+  const heroBackgroundUrl = `${import.meta.env.BASE_URL}media/hero-background.png`;
+  const closeEventPopup = () => {
+    setEventPopupOpen(false);
+    try {
+      window.sessionStorage.setItem(homeEventPopupStorageKey, 'true');
+    } catch {
+      // Dismissal is still valid even if sessionStorage is unavailable.
+    }
+  };
+
+  return (
+    <div className="min-h-screen overflow-x-hidden">
+      <EventPopup open={eventPopupOpen} onClose={closeEventPopup} />
+      <EventNoticeBanner />
+
       {/* 
           Hero Section: 'The Shared Journey'
           Redesigned with a high-quality background image and signature curved bottom.
