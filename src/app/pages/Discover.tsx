@@ -85,19 +85,28 @@ export function Discover() {
   useEffect(() => {
     setState({ kind: 'loading' });
     const section = SECTION_BY_TAB[tab];
+    // Abort superseded requests: without this, a slow response for an old
+    // query can land after a newer one and overwrite it.
+    const controller = new AbortController();
     const timer = setTimeout(async () => {
       try {
         const params = new URLSearchParams();
         if (q.trim()) params.set('q', q.trim());
         const qs = params.toString();
-        const res = await fetch(`/api/hub/${section}${qs ? `?${qs}` : ''}`);
+        const res = await fetch(`/api/hub/${section}${qs ? `?${qs}` : ''}`, {
+          signal: controller.signal,
+        });
         if (!res.ok) throw new Error(String(res.status));
         setState({ kind: 'ready', items: (await res.json()) as unknown[] });
-      } catch {
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
         setState({ kind: 'error' });
       }
     }, 250); // debounce typing
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [q, tab]);
 
   return (
@@ -153,7 +162,7 @@ export function Discover() {
                 key={key}
                 type="button"
                 onClick={() => setTab(key)}
-                aria-current={tab === key ? 'page' : undefined}
+                aria-pressed={tab === key}
                 className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   tab === key
                     ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'

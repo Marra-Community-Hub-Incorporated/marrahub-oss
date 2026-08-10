@@ -31,7 +31,13 @@ const launchEvent = {
   venueDetail: 'Level 2, 7 Shepparson Avenue, Carnegie',
   title: 'MARRA Launch Meet-Up',
   href: '/launch',
+  // Keep in sync with timeLabel: the promo hides itself once the event ends.
+  endsAtIso: '2026-08-15T18:00:00+10:00',
 };
+
+function launchEventHasEnded() {
+  return Date.now() >= new Date(launchEvent.endsAtIso).getTime();
+}
 
 const homeEventPopupStorageKey = 'marrahub.homeEventPopupDismissed';
 
@@ -88,19 +94,57 @@ interface EventPopupProps {
 }
 
 function EventPopup({ open, onClose }: EventPopupProps) {
+  const panelRef = React.useRef<HTMLDivElement>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     if (!open) {
       return;
     }
 
+    // The popup opens on page load, so a keyboard or screen-reader user
+    // must land inside it: move focus in, keep Tab cycling within the
+    // panel, lock the page behind it, and put focus back on close.
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    closeButtonRef.current?.focus();
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
+        return;
+      }
+      if (event.key !== 'Tab' || !panelRef.current) {
+        return;
+      }
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (event.shiftKey && (active === first || !panelRef.current.contains(active))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (active === last || !panelRef.current.contains(active))) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previouslyFocused?.focus();
+    };
   }, [onClose, open]);
 
   return (
@@ -111,20 +155,22 @@ function EventPopup({ open, onClose }: EventPopupProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[80] flex items-center justify-center px-4 py-6 bg-primary/60 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="home-event-popup-title"
           onClick={onClose}
         >
           <motion.div
+            ref={panelRef}
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="relative w-5/6 sm:w-full sm:max-w-2xl max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden rounded-3xl bg-background shadow-2xl shadow-black/25 border border-white/20"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="home-event-popup-title"
             onClick={(event) => event.stopPropagation()}
           >
             <button
+              ref={closeButtonRef}
               type="button"
               onClick={onClose}
               className="absolute right-8 sm:right-4 top-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary shadow-lg transition-colors hover:bg-white"
@@ -205,7 +251,10 @@ function EventPopup({ open, onClose }: EventPopupProps) {
 }
 
 export function Home() {
-  const [eventPopupOpen, setEventPopupOpen] = useState(shouldShowHomeEventPopup);
+  const eventPromoActive = !launchEventHasEnded();
+  const [eventPopupOpen, setEventPopupOpen] = useState(
+    () => eventPromoActive && shouldShowHomeEventPopup(),
+  );
   const heroBackgroundUrl = `${import.meta.env.BASE_URL}media/hero-background.png`;
   const closeEventPopup = () => {
     setEventPopupOpen(false);
@@ -219,7 +268,7 @@ export function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <EventPopup open={eventPopupOpen} onClose={closeEventPopup} />
-      <EventNoticeBanner />
+      {eventPromoActive && <EventNoticeBanner />}
 
       {/* 
           Hero Section: 'The Shared Journey'
