@@ -376,7 +376,7 @@ export function Contact() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg"
                   />
                 </div>
 
@@ -391,7 +391,7 @@ export function Contact() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg"
                   />
                 </div>
 
@@ -405,7 +405,7 @@ export function Contact() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg"
                   />
                 </div>
 
@@ -419,7 +419,7 @@ export function Contact() {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg"
                   >
                     <option value="">Select a subject...</option>
                     <option value="programs">Program Information</option>
@@ -442,7 +442,7 @@ export function Contact() {
                     onChange={handleChange}
                     required
                     rows={5}
-                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg resize-none"
                   ></textarea>
                 </div>
 

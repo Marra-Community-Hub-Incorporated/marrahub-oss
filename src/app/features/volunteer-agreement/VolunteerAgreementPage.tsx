@@ -11,7 +11,7 @@ import { submitVolunteerAgreement } from './submitAgreement';
 import { useTurnstile } from './useTurnstile';
 
 const inputClasses =
-  'w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary';
+  'w-full px-4 py-3 bg-input-background border border-border rounded-lg';
 
 const initialForm = {
   fullName: '',
@@ -369,7 +369,7 @@ export function VolunteerAgreementPage() {
                       resetStatusIfNeeded();
                       setAgreed(e.target.checked);
                     }}
-                    className="mt-1 h-5 w-5 flex-shrink-0 rounded border-border text-primary focus:ring-2 focus:ring-primary accent-primary"
+                    className="mt-1 h-5 w-5 flex-shrink-0 rounded border-border text-primary accent-primary"
                   />
                   <span className="text-sm text-muted-foreground leading-relaxed">
                     I have read, understood and agree to the terms of this Volunteer Agreement. I

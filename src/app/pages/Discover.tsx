@@ -142,7 +142,7 @@ export function Discover() {
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Search by suburb, postcode, organisation or topic…"
                 aria-label="Search the directory"
-                className="w-full rounded-full border border-border bg-card py-3 pl-11 pr-5 text-foreground outline-none transition focus:border-primary/50 focus:ring-4 focus:ring-primary/10"
+                className="w-full rounded-full border border-border bg-card py-3 pl-11 pr-5 text-foreground transition"
               />
             </div>
           </div>

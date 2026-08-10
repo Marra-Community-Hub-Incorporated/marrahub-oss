@@ -279,7 +279,7 @@ export function Home() {
                 href={featureFlags.volunteer ? '/volunteer' : '/contact'}
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto h-16 px-10 text-lg bg-white/10 hover:bg-white/20 border-white/40 text-white backdrop-blur-md rounded-2xl transition-all hover:scale-105 active:scale-95 ring-offset-primary focus-visible:ring-2 focus-visible:ring-white"
+                className="w-full sm:w-auto h-16 px-10 text-lg bg-white/10 hover:bg-white/20 border-white/40 text-white backdrop-blur-md rounded-2xl transition-all hover:scale-105 active:scale-95 focus-visible:outline-white"
               >
                 {featureFlags.volunteer ? 'Become a Volunteer' : 'Get in touch'}
               </Button>
