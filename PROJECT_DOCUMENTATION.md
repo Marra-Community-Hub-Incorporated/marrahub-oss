@@ -350,6 +350,36 @@ There are **two independent submission paths**, plus a shared anti-spam layer:
 
 State is **local and ephemeral** — React `useState`/`useRef` within components. There is no global store (no Redux/Zustand/Context data store), no client-side persistence, and no data fetching/caching layer. Forms hold their own state; the volunteer feature tracks `formData`, `agreed`, `signatureImage`, and a small `formStatus` state machine (`idle → submitting → success | error`). Routing state is React Router's; SEO is applied as a side effect on `location.pathname` change.
 
+### 7.5 Accessibility and keyboard interaction
+
+Keyboard interaction is one of the key component contracts. Interactive controls should remain reachable without a pointer, modal focus should not escape to the page behind it, and composite widgets use the expected keyboard navigation pattern.
+
+| Component / pattern | Key | Expected behaviour |
+|---|---|---|
+| Skip to main content | `Tab` | Skip link as the first keyboard-accessible control on initial page entry. |
+| Skip to main content | `Enter` | Moves focus to the main page content. |
+| Event announcement dialog (`Home.tsx`) | `Tab` | Moves forward through focusable controls and wraps from the last control back to the first. |
+| Event announcement dialog (`Home.tsx`) | `Shift + Tab` | Moves backward through focusable controls and wraps from the first control to the last. |
+| Event announcement dialog (`Home.tsx`) | `Escape` | Closes the dialog. |
+| Event announcement dialog (`Home.tsx`) | `Enter` / `Space` | Activates the focused button or link using its native keyboard behaviour. |
+| Mobile navigation (`Header.tsx`) | `Enter` / `Space` | Opens or closes the mobile navigation from the menu button. |
+| Mobile navigation (`Header.tsx`) | `Tab` / `Shift + Tab` | Moves through the navigation links using the normal document tab order. |
+| Mobile navigation (`Header.tsx`) | `Escape` | Closes the open mobile navigation and returns focus to the menu button that opened it. |
+| Discover directory tabs (`Discover.tsx`) | `Tab` | Enters the tab group on the currently selected tab. The next `Tab` leaves the tab group rather than visiting every tab. |
+| Discover directory tabs (`Discover.tsx`) | `ArrowRight` | Moves focus to and selects the next tab, wrapping from the last tab to the first. |
+| Discover directory tabs (`Discover.tsx`) | `ArrowLeft` | Moves focus to and selects the previous tab, wrapping from the first tab to the last. |
+| Discover directory tabs (`Discover.tsx`) | `Home` | Moves focus to and selects the first tab. |
+| Discover directory tabs (`Discover.tsx`) | `End` | Moves focus to and selects the last tab. |
+
+**Focus-management rules:**
+
+- On client-side route changes, focus is moved to the newly rendered main content so keyboard and screen-reader users receive an orientation cue. This route-change focus must not override an open modal that already owns focus (`src/app/Layout.tsx`).
+- The Home event announcement is a page-load dialog. When it opens, focus moves to its close button; while open, focus remains within the dialog; when it closes, the element that held focus before the dialog opened is restored when available (`src/app/pages/Home.tsx`).
+- The mobile navigation menu button exposes its open state with `aria-expanded` and is associated with the mobile navigation region through `aria-controls` (`src/app/components/Header.tsx`).
+- The Discover directory uses a roving-tabindex pattern: only the selected tab participates in the normal tab sequence (`tabIndex=0`); the remaining tabs use `tabIndex=-1` and are reached with arrow keys (`src/app/pages/Discover.tsx`).
+- The Discover results region is a single `role="tabpanel"` labelled by the active tab (`aria-labelledby`), and each tab points at it with `aria-controls`, so assistive tech can associate the tab with the content it switches (`src/app/pages/Discover.tsx`).
+- The site-wide navigation links themselves remain ordinary links. Arrow-key navigation is reserved for composite widgets such as the Discover tab group.
+
 ---
 
 ## 8. Database

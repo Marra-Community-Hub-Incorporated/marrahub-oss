@@ -7,6 +7,7 @@ import { featureFlags } from '../featureFlags';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const menuButtonRef = React.useRef<HTMLButtonElement>(null);
   const location = useLocation();
   const logoUrl = `${import.meta.env.BASE_URL}media/favicon/favicon.png`;
 
@@ -15,6 +16,26 @@ export function Header() {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMobileMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileMenuOpen]);
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -86,10 +107,13 @@ export function Header() {
 
           {/* Mobile menu button */}
           <button
+            ref={menuButtonRef}
             type="button"
             className="md:hidden p-2 rounded-xl text-foreground hover:bg-primary/5 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
@@ -99,6 +123,7 @@ export function Header() {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
+              id="mobile-navigation"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}

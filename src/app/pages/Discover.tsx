@@ -81,6 +81,37 @@ export function Discover() {
   const [tab, setTab] = useState<Tab>('workshops');
   const [q, setQ] = useState('');
   const [state, setState] = useState<State>({ kind: 'loading' });
+  const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
+
+  const handleTabKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
+    let nextIndex: number | null = null;
+
+    switch (event.key) {
+      case 'ArrowRight':
+        nextIndex = (index + 1) % TABS.length;
+        break;
+      case 'ArrowLeft':
+        nextIndex = (index - 1 + TABS.length) % TABS.length;
+        break;
+      case 'Home':
+        nextIndex = 0;
+        break;
+      case 'End':
+        nextIndex = TABS.length - 1;
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+
+    const nextTab = TABS[nextIndex];
+    setTab(nextTab.key);
+    tabRefs.current[nextIndex]?.focus();
+  };
 
   useEffect(() => {
     setState({ kind: 'loading' });
@@ -156,13 +187,26 @@ export function Discover() {
             </div>
           </div>
 
-          <nav aria-label="Directory sections" className="flex flex-wrap justify-center gap-2 mb-12">
-            {TABS.map(({ key, label, icon: Icon }) => (
+          <div
+            role="tablist"
+            aria-label="Directory sections"
+            aria-orientation="horizontal"
+            className="flex flex-wrap justify-center gap-2 mb-12"
+          >
+            {TABS.map(({ key, label, icon: Icon }, index) => (
               <button
                 key={key}
+                ref={(element) => {
+                  tabRefs.current[index] = element;
+                }}
                 type="button"
+                role="tab"
+                id={`directory-tab-${key}`}
+                aria-selected={tab === key}
+                aria-controls={`directory-panel-${key}`}
+                tabIndex={tab === key ? 0 : -1}
                 onClick={() => setTab(key)}
-                aria-pressed={tab === key}
+                onKeyDown={(event) => handleTabKeyDown(event, index)}
                 className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   tab === key
                     ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
@@ -172,48 +216,54 @@ export function Discover() {
                 <Icon size={15} /> {label}
               </button>
             ))}
-          </nav>
+          </div>
 
-          {state.kind === 'loading' && (
-            <p className="py-16 text-center text-muted-foreground">Looking around…</p>
-          )}
+          <div
+            role="tabpanel"
+            id={`directory-panel-${tab}`}
+            aria-labelledby={`directory-tab-${tab}`}
+          >
+            {state.kind === 'loading' && (
+              <p className="py-16 text-center text-muted-foreground">Looking around…</p>
+            )}
 
-          {state.kind === 'error' && (
-            <div className="mx-auto max-w-md rounded-2xl border border-secondary/20 bg-secondary/5 px-6 py-8 text-center text-secondary">
-              We couldn't load the directory just now — try again in a moment, or browse it
-              directly on{' '}
-              <a href={HUB_SITE_URL} target="_blank" rel="noopener noreferrer" className="underline">
-                the Hub
-              </a>
-              .
-            </div>
-          )}
-
-          {state.kind === 'ready' && state.items.length === 0 && (
-            <div className="mx-auto max-w-md rounded-2xl border border-border bg-card px-6 py-12 text-center">
-              <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-primary">
-                <Compass size={18} />
+            {state.kind === 'error' && (
+              <div className="mx-auto max-w-md rounded-2xl border border-secondary/20 bg-secondary/5 px-6 py-8 text-center text-secondary">
+                We couldn't load the directory just now — try again in a moment, or browse it
+                directly on{' '}
+                <a href={HUB_SITE_URL} target="_blank" rel="noopener noreferrer" className="underline">
+                  the Hub
+                </a>
+                .
               </div>
-              <h3 className="text-xl font-semibold mb-2">
-                {q.trim() ? 'Nothing matches that search' : 'Nothing here just yet'}
-              </h3>
-              <p className="text-muted-foreground">
-                {q.trim()
-                  ? 'Try a different suburb or a broader word.'
-                  : 'Organisations publish new things all the time — check back soon.'}
-              </p>
-            </div>
-          )}
+            )}
 
-          {state.kind === 'ready' && state.items.length > 0 && tab === 'workshops' && (
-            <WorkshopsGrid items={state.items as DiscoverWorkshop[]} />
-          )}
-          {state.kind === 'ready' && state.items.length > 0 && tab === 'food' && (
-            <FoodGrid items={state.items as DiscoverFood[]} />
-          )}
-          {state.kind === 'ready' && state.items.length > 0 && tab === 'volunteer' && (
-            <VolunteerGrid items={state.items as DiscoverOrg[]} />
-          )}
+            {state.kind === 'ready' && state.items.length === 0 && (
+              <div className="mx-auto max-w-md rounded-2xl border border-border bg-card px-6 py-12 text-center">
+                <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-primary">
+                  <Compass size={18} />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">
+                  {q.trim() ? 'Nothing matches that search' : 'Nothing here just yet'}
+                </h3>
+                <p className="text-muted-foreground">
+                  {q.trim()
+                    ? 'Try a different suburb or a broader word.'
+                    : 'Organisations publish new things all the time — check back soon.'}
+                </p>
+              </div>
+            )}
+
+            {state.kind === 'ready' && state.items.length > 0 && tab === 'workshops' && (
+              <WorkshopsGrid items={state.items as DiscoverWorkshop[]} />
+            )}
+            {state.kind === 'ready' && state.items.length > 0 && tab === 'food' && (
+              <FoodGrid items={state.items as DiscoverFood[]} />
+            )}
+            {state.kind === 'ready' && state.items.length > 0 && tab === 'volunteer' && (
+              <VolunteerGrid items={state.items as DiscoverOrg[]} />
+            )}
+          </div>
         </div>
       </section>
 
