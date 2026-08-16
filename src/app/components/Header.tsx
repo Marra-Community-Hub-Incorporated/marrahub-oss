@@ -84,6 +84,7 @@ export function Header() {
               <Link
                 key={item.name}
                 to={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                   isActive(item.href)
                     ? 'text-primary bg-primary/5'
@@ -130,6 +131,7 @@ export function Header() {
                   <Link
                     key={item.name}
                     to={item.href}
+                    aria-current={isActive(item.href) ? 'page' : undefined}
                     className={`block px-4 py-3 rounded-xl transition-all ${
                       isActive(item.href)
                         ? 'text-primary bg-primary/5 font-semibold'
