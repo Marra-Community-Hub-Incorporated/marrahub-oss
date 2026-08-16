@@ -54,15 +54,6 @@ export function Footer() {
             <ColumnHeading>Quick Links</ColumnHeading>
             <ul className="space-y-3">
               <li>
-                <Link
-                  to="/launch"
-                  className="inline-flex items-center gap-2 text-accent hover:text-white transition-colors"
-                >
-                  <CalendarDays size={16} aria-hidden="true" />
-                  Launch Event — 15 August
-                </Link>
-              </li>
-              <li>
                 <Link to="/about" className="text-primary-foreground/75 hover:text-white transition-colors">
                   About MARRA
                 </Link>
@@ -94,6 +85,15 @@ export function Footer() {
                   </Link>
                 </li>
               )}
+              <li>
+                <Link
+                  to="/launch"
+                  className="inline-flex items-center gap-2 text-primary-foreground/75 hover:text-white transition-colors"
+                >
+                  <CalendarDays size={16} aria-hidden="true" />
+                  Our First Meet-Up
+                </Link>
+              </li>
             </ul>
           </div>
 

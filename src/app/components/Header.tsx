@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router';
-import { Menu, Sparkles, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './Button';
 import { featureFlags } from '../featureFlags';
@@ -39,7 +39,6 @@ export function Header() {
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Launch Event', href: '/launch' },
     { name: 'About', href: '/about' },
     { name: 'Programs', href: '/programs' },
     { name: 'Discover', href: '/discover' },
@@ -91,10 +90,6 @@ export function Header() {
                     : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
                 }`}
               >
-                {/* The launch event is time-sensitive — a small spark draws the eye to it */}
-                {item.href === '/launch' && (
-                  <Sparkles size={13} className="inline-block text-secondary mr-1.5 -mt-0.5" aria-hidden="true" />
-                )}
                 {item.name}
               </Link>
             ))}

@@ -53,23 +53,23 @@ export const pageSeoMap: Record<string, PageSeoMeta> = {
     pageType: 'WebPage',
   },
   '/launch': {
-    title: 'Launch Event — Saturday 15 August 2026 | MARRA Community Hub',
+    title: 'Our First Meet-Up — 15 August 2026 | MARRA Community Hub',
     description:
-      "Join MARRA Community Hub's first community meet-up: Saturday 15 August 2026, 2–6pm at Carnegie Library & Community Centre. AI basics, a sewing workshop, board games, coffee and snacks — supported by Glen Eira City Council. Everyone is welcome.",
+      "A look back at MARRA Community Hub's first community meet-up: Saturday 15 August 2026, 2–6pm at Carnegie Library & Community Centre. AI basics, a sewing workshop, board games, coffee and snacks — supported by Glen Eira City Council.",
     keywords: [
-      'MARRA launch event',
+      'MARRA first meet-up',
+      'MARRA past events',
       'community event Glen Eira',
       'Carnegie Library community centre event',
       'free community meet-up Melbourne',
-      'community hub launch Carnegie',
-      'things to do Glen Eira August 2026',
+      'community hub Carnegie',
     ],
     pageType: 'WebPage',
     image: {
       path: '/media/launch/launch-wide-en-poster.jpg',
       width: 1280,
       height: 720,
-      alt: 'Invitation to the MARRA Community Hub launch meet-up on 15 August 2026 at Carnegie Library & Community Centre',
+      alt: "Still from the invitation to MARRA Community Hub's first meet-up on 15 August 2026 at Carnegie Library & Community Centre",
     },
   },
   '/about': {

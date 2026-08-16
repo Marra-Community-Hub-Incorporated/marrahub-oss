@@ -178,13 +178,13 @@ export function Seo() {
       },
     });
 
-    // Event structured data for the launch meet-up only. Mirrored in
+    // Event structured data for our first meet-up (now a past event). Mirrored in
     // scripts/seo-build.mjs for the prerendered HTML — keep both in sync.
     if (meta.canonicalPath === '/launch') {
       upsertJsonLd('event', {
         '@context': 'https://schema.org',
         '@type': 'Event',
-        name: 'MARRA Community Hub — Launch Meet-Up',
+        name: 'MARRA Community Hub — First Community Meet-Up',
         description: meta.description,
         startDate: '2026-08-15T14:00:00+10:00',
         endDate: '2026-08-15T18:00:00+10:00',

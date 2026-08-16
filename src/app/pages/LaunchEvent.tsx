@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Button } from '../components/Button';
 import { SectionHeader } from '../components/SectionHeader';
 import { CTABanner } from '../components/CTABanner';
 import {
@@ -13,10 +12,8 @@ import {
   Coffee,
   Smile,
   Play,
+  Camera,
 } from 'lucide-react';
-
-const MAPS_URL =
-  'https://www.google.com/maps/search/?api=1&query=Carnegie+Library+%26+Community+Centre%2C+7+Shepparson+Avenue%2C+Carnegie+VIC+3163';
 
 type VideoLang = 'en' | 'uk';
 
@@ -29,19 +26,26 @@ const activities = [
   {
     icon: Scissors,
     title: 'Sewing Workshop',
-    description: 'Hands-on and beginner-friendly. Come stitch something small and take it home.',
+    description: 'Hands-on and beginner-friendly. People stitched something small and took it home.',
   },
   {
     icon: Dices,
     title: 'Board Games',
-    description: 'The easiest way to meet new people is over a table. Pick a game and join in.',
+    description: 'The easiest way to meet new people is over a table — and the tables stayed full.',
   },
   {
     icon: Coffee,
     title: 'Coffee, Tea & Snacks',
-    description: 'On us, all afternoon. Grab a cup, find a seat, and make yourself at home.',
+    description: 'On us, all afternoon. A cup, a seat, and plenty of conversation.',
   },
 ];
+
+/**
+ * Photos from the day. Drop the files into `public/media/launch/photos/` and add
+ * an entry here — the gallery appears automatically once this list isn't empty,
+ * and until then the section shows a "photos coming soon" note instead.
+ */
+const photos: { file: string; alt: string }[] = [];
 
 export function LaunchEvent() {
   const [lang, setLang] = useState<VideoLang>('en');
@@ -93,7 +97,7 @@ export function LaunchEvent() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="inline-flex items-center rounded-full bg-white/10 ring-1 ring-accent/40 backdrop-blur-md px-6 py-2.5 text-xs font-bold uppercase tracking-[0.2em] text-white mb-8">
-              Our first event · Everyone is welcome
+              Past event · 15 August 2026
             </span>
 
             <h1 className="font-serif font-semibold text-white leading-[1.1] tracking-tight text-4xl md:text-6xl lg:text-7xl mb-6">
@@ -101,8 +105,8 @@ export function LaunchEvent() {
             </h1>
 
             <p className="text-lg md:text-2xl text-primary-foreground/90 leading-relaxed max-w-2xl mx-auto font-light text-balance mb-12">
-              Our first meet-up, supported by Glen Eira City Council — come and meet the
-              community behind MARRA.
+              Our first meet-up, supported by Glen Eira City Council. Thank you to everyone who
+              came along and said hello — this is a look back at the day.
             </p>
 
             {/* Key facts, styled like the glassy cards in the invitation video */}
@@ -116,7 +120,7 @@ export function LaunchEvent() {
                 </span>
                 <div>
                   <p className="font-semibold text-white">Saturday, 15 August 2026</p>
-                  <p className="text-sm text-primary-foreground/75">Save the date</p>
+                  <p className="text-sm text-primary-foreground/75">Our first event</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 rounded-2xl bg-gradient-to-br from-white/[0.14] to-white/[0.06] backdrop-blur-md ring-1 ring-white/15 shadow-lg shadow-black/10 px-6 py-4 text-left transition-colors hover:ring-accent/40">
@@ -128,7 +132,7 @@ export function LaunchEvent() {
                 </span>
                 <div>
                   <p className="font-semibold text-white">2:00pm – 6:00pm</p>
-                  <p className="text-sm text-primary-foreground/75">Drop in any time</p>
+                  <p className="text-sm text-primary-foreground/75">Four hours, drop-in</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 rounded-2xl bg-gradient-to-br from-white/[0.14] to-white/[0.06] backdrop-blur-md ring-1 ring-white/15 shadow-lg shadow-black/10 px-6 py-4 text-left transition-colors hover:ring-accent/40">
@@ -147,19 +151,18 @@ export function LaunchEvent() {
 
             <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
               <a
-                href="#watch"
+                href="#photos"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl transition-all duration-300 font-medium active:scale-95 hover:scale-105 bg-secondary text-white hover:bg-secondary/90 h-14 px-9 text-lg shadow-xl w-full sm:w-auto"
+              >
+                <Camera size={20} aria-hidden="true" />
+                Photos from the Day
+              </a>
+              <a
+                href="#watch"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl transition-all duration-300 font-medium active:scale-95 hover:scale-105 bg-white/10 hover:bg-white/20 border-2 border-white/40 text-white backdrop-blur-md h-14 px-9 text-lg w-full sm:w-auto"
               >
                 <Play size={20} aria-hidden="true" />
                 Watch the Invitation
-              </a>
-              <a
-                href={`${import.meta.env.BASE_URL}media/launch/marra-launch-event.ics`}
-                download
-                className="inline-flex items-center justify-center gap-2 rounded-2xl transition-all duration-300 font-medium active:scale-95 hover:scale-105 bg-white/10 hover:bg-white/20 border-2 border-white/40 text-white backdrop-blur-md h-14 px-9 text-lg w-full sm:w-auto"
-              >
-                <CalendarDays size={20} aria-hidden="true" />
-                Add to Calendar
               </a>
             </div>
           </motion.div>
@@ -182,13 +185,63 @@ export function LaunchEvent() {
         </div>
       </section>
 
+      {/* Photos from the day */}
+      <section id="photos" className="py-24 bg-background scroll-mt-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            subtitle="Photos"
+            title="A Look Back at the Day"
+            description="A room full of new faces, board games, sewing, and a lot of coffee."
+          />
+
+          {photos.length > 0 ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {photos.map((photo, index) => (
+                <motion.figure
+                  key={photo.file}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: (index % 3) * 0.1 }}
+                  className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+                >
+                  <img
+                    src={media(`photos/${photo.file}`)}
+                    alt={photo.alt}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full aspect-[4/3] object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                </motion.figure>
+              ))}
+            </div>
+          ) : (
+            /* Deliberately not scroll-revealed: this placeholder is the only thing
+               in its section, so a missed reveal would leave the section blank. */
+            <div className="rounded-2xl border border-dashed border-primary/25 bg-muted/20 px-8 py-16 text-center">
+              <span
+                className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/5 text-primary"
+                aria-hidden="true"
+              >
+                <Camera size={30} />
+              </span>
+              <h3 className="font-serif text-2xl text-foreground mb-3">Photos are on their way</h3>
+              <p className="text-muted-foreground text-lg leading-relaxed max-w-xl mx-auto">
+                We're sorting through the pictures from the afternoon and will add them here
+                shortly. Check back soon.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Invitation videos */}
-      <section id="watch" className="py-24 bg-background scroll-mt-24">
+      <section id="watch" className="py-24 bg-muted/20 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             subtitle="Press Play"
-            title="Watch the Invitation"
-            description="Thirty seconds shy of everything you need to know — made with love, in both of our community's languages."
+            title="The Invitation We Sent"
+            description="Thirty seconds shy of everything you needed to know — made with love, in both of our community's languages."
           />
 
           <div className="flex justify-center mb-12">{languageToggle}</div>
@@ -218,7 +271,7 @@ export function LaunchEvent() {
                 Your browser does not support embedded videos.
               </video>
               <p className="text-center text-muted-foreground mt-5">
-                The full invitation — date, place, and what's on.
+                The full invitation — date, place, and what was on.
               </p>
             </motion.div>
 
@@ -246,20 +299,20 @@ export function LaunchEvent() {
                 Your browser does not support embedded videos.
               </video>
               <p className="text-center text-muted-foreground mt-5 text-sm">
-                The story version — made for sharing. Send it to a friend who should come along.
+                The story version — made for sharing, and the one that brought most people along.
               </p>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* What's on */}
-      <section className="py-24 bg-muted/20">
+      {/* What was on */}
+      <section className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            subtitle="What's On"
+            subtitle="What Was On"
             title="An Afternoon of Good Company"
-            description="Four hours, four corners of the room, and no schedule to keep — wander between whatever takes your fancy."
+            description="Four hours, four corners of the room, and no schedule to keep — people wandered between whatever took their fancy."
           />
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -290,15 +343,15 @@ export function LaunchEvent() {
           >
             <Smile className="text-secondary shrink-0" size={28} aria-hidden="true" />
             <p className="text-lg text-foreground">
-              Entry is free and nothing needs booking —{' '}
-              <span className="font-semibold text-primary">just bring a good mood.</span>
+              Entry was free and nothing needed booking —{' '}
+              <span className="font-semibold text-primary">and that's how we'll keep it.</span>
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Getting there */}
-      <section className="py-24 bg-background">
+      {/* Where it happened */}
+      <section className="py-24 bg-muted/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -308,25 +361,20 @@ export function LaunchEvent() {
               transition={{ duration: 0.6 }}
             >
               <SectionHeader
-                subtitle="Getting There"
+                subtitle="Where It Happened"
                 title="Carnegie Library & Community Centre"
                 align="left"
               />
               <div className="space-y-4 text-muted-foreground leading-relaxed text-lg">
                 <p>
-                  We're upstairs on <strong className="text-primary font-semibold">Level 2</strong> at
-                  7 Shepparson Avenue, Carnegie — right in the heart of Carnegie, a short walk
+                  We were upstairs on <strong className="text-primary font-semibold">Level 2</strong>{' '}
+                  at 7 Shepparson Avenue, Carnegie — right in the heart of Carnegie, a short walk
                   from Koornang Road's shops and public transport.
                 </p>
                 <p>
-                  Look for the MARRA signs when you arrive, or just follow the sound of board
-                  games and the smell of coffee.
+                  Thank you to the team at the centre for making the room feel like ours for the
+                  afternoon.
                 </p>
-              </div>
-              <div className="mt-8">
-                <Button href={MAPS_URL} variant="primary" size="lg">
-                  Open in Google Maps
-                </Button>
               </div>
             </motion.div>
 
@@ -340,7 +388,7 @@ export function LaunchEvent() {
               <div className="bg-card rounded-xl p-6 border border-border flex items-start gap-4">
                 <MapPin className="text-secondary shrink-0 mt-1" size={24} aria-hidden="true" />
                 <div>
-                  <h4 className="font-semibold text-lg mb-1">The Address</h4>
+                  <h4 className="font-semibold text-lg mb-1">The Venue</h4>
                   <p className="text-muted-foreground">
                     Level 2, 7 Shepparson Avenue
                     <br />
@@ -351,19 +399,20 @@ export function LaunchEvent() {
               <div className="bg-card rounded-xl p-6 border border-border flex items-start gap-4">
                 <Clock className="text-secondary shrink-0 mt-1" size={24} aria-hidden="true" />
                 <div>
-                  <h4 className="font-semibold text-lg mb-1">Come Any Time</h4>
+                  <h4 className="font-semibold text-lg mb-1">The Afternoon</h4>
                   <p className="text-muted-foreground">
-                    Doors are open from 2:00pm to 6:00pm. Stay for twenty minutes or the whole
-                    afternoon — both are perfect.
+                    Doors were open from 2:00pm to 6:00pm, and people came and went the whole
+                    time — exactly as we'd hoped.
                   </p>
                 </div>
               </div>
               <div className="bg-card rounded-xl p-6 border border-border flex items-start gap-4">
                 <Smile className="text-secondary shrink-0 mt-1" size={24} aria-hidden="true" />
                 <div>
-                  <h4 className="font-semibold text-lg mb-1">Bring Your Friends</h4>
+                  <h4 className="font-semibold text-lg mb-1">More to Come</h4>
                   <p className="text-muted-foreground">
-                    We'd love to meet them. The more the merrier — everyone is welcome.
+                    This was our first meet-up, not our last. We'll announce the next one here and
+                    on our socials.
                   </p>
                 </div>
               </div>
@@ -392,7 +441,7 @@ export function LaunchEvent() {
               className="mx-auto w-full max-w-[420px] h-auto"
             />
             <p className="text-muted-foreground text-lg leading-relaxed mt-8">
-              Our launch meet-up is proudly supported by Glen Eira City Council — thank you for
+              Our first meet-up was proudly supported by Glen Eira City Council — thank you for
               helping a new community take its first step.
             </p>
           </motion.div>
@@ -403,8 +452,8 @@ export function LaunchEvent() {
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CTABanner
-            title="Come and Say Hello"
-            description="Whether you're curious about MARRA, new to the area, or just up for board games and a cuppa — we'd love to see you there on 15 August."
+            title="Missed It? There'll Be More"
+            description="This was our first meet-up and we're already thinking about the next one. Get in touch and we'll let you know when it's on."
             primaryButtonText="Get in Touch"
             primaryButtonHref="/contact"
             secondaryButtonText="Explore Our Programs"

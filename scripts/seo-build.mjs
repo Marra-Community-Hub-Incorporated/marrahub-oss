@@ -7,7 +7,7 @@ import path from 'node:path';
 const distDir = path.resolve('dist/client');
 const routes = [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
-  { path: '/launch', changefreq: 'weekly', priority: '0.9' },
+  { path: '/launch', changefreq: 'monthly', priority: '0.5' },
   { path: '/about', changefreq: 'monthly', priority: '0.8' },
   { path: '/programs', changefreq: 'weekly', priority: '0.9' },
   { path: '/discover', changefreq: 'daily', priority: '0.8' },
@@ -59,23 +59,23 @@ const pageSeoMap = {
     pageType: 'WebPage',
   },
   '/launch': {
-    title: 'Launch Event — Saturday 15 August 2026 | MARRA Community Hub',
+    title: 'Our First Meet-Up — 15 August 2026 | MARRA Community Hub',
     description:
-      "Join MARRA Community Hub's first community meet-up: Saturday 15 August 2026, 2–6pm at Carnegie Library & Community Centre. AI basics, a sewing workshop, board games, coffee and snacks — supported by Glen Eira City Council. Everyone is welcome.",
+      "A look back at MARRA Community Hub's first community meet-up: Saturday 15 August 2026, 2–6pm at Carnegie Library & Community Centre. AI basics, a sewing workshop, board games, coffee and snacks — supported by Glen Eira City Council.",
     keywords: [
-      'MARRA launch event',
+      'MARRA first meet-up',
+      'MARRA past events',
       'community event Glen Eira',
       'Carnegie Library community centre event',
       'free community meet-up Melbourne',
-      'community hub launch Carnegie',
-      'things to do Glen Eira August 2026',
+      'community hub Carnegie',
     ],
     pageType: 'WebPage',
     image: {
       path: '/media/launch/launch-wide-en-poster.jpg',
       width: 1280,
       height: 720,
-      alt: 'Invitation to the MARRA Community Hub launch meet-up on 15 August 2026 at Carnegie Library & Community Centre',
+      alt: "Still from the invitation to MARRA Community Hub's first meet-up on 15 August 2026 at Carnegie Library & Community Centre",
     },
   },
   '/about': {
@@ -384,14 +384,14 @@ function buildSeoHead(routePath) {
       }),
     );
 
-    // Event structured data for the launch meet-up only. Mirrored in
+    // Event structured data for our first meet-up (now a past event). Mirrored in
     // src/app/components/Seo.tsx — keep both in sync.
     if (canonicalPath === '/launch') {
       lines.push(
         jsonLdScript('event', {
           '@context': 'https://schema.org',
           '@type': 'Event',
-          name: 'MARRA Community Hub — Launch Meet-Up',
+          name: 'MARRA Community Hub — First Community Meet-Up',
           description: meta.description,
           startDate: '2026-08-15T14:00:00+10:00',
           endDate: '2026-08-15T18:00:00+10:00',
