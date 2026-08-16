@@ -18,13 +18,32 @@ Or open the folder in VS Code / a GitHub Codespace and "Reopen in Container" —
 there's a `.devcontainer/` config with Node + npm preinstalled, no local setup
 needed.
 
+## Your first contribution
+
+New here? Start with an issue labelled
+[**good first issue**](https://github.com/Marra-Community-Hub-Incorporated/marrahub/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+no%3Aassignee)
+that nobody is assigned to. They're small on purpose — enough to walk you
+through setup, branch, PR and review once before you take on something larger.
+
+**Comment on the issue before you start** and we'll assign it to you, so two
+people don't quietly build the same thing. A partial fix is welcome too: say in
+the PR which part you did and which part is left, and we'll take it from there.
+
+If setup doesn't work, that's a bug in this document — open an issue saying
+where it broke.
+
 ## Making changes
 
 1. Create a branch off `main` (e.g. `fix/contact-typo` or `feat/events-page`).
 2. Make your change and check it locally:
    - `npm run dev` — verify it works and looks right in the browser
+   - `npm run typecheck` — TypeScript, both the site and the Worker
+   - `npm run lint` — ESLint
    - `npm run build` — make sure the production build passes
-   - `npm run preview` — sanity-check the built output
+   - `npm run preview` — sanity-check the built output on Wrangler
+
+   CI runs typecheck, lint and build, so running those three before you push
+   saves a round trip. `npm run format` fixes most style complaints for you.
 3. Open a pull request against `main` with a short description of what and why.
    For visual changes, consider deploying a free Cloudflare clone of the site so
    reviewers can see it live — see [`docs/PREVIEW_DEPLOYS.md`](./docs/PREVIEW_DEPLOYS.md).
@@ -62,6 +81,20 @@ including for admins:
   the same way.
 - Keep the component layer lean; we removed the unused scaffolding component
   library, so only add dependencies you actually use.
+
+### Adding a page? The SEO map lives in two files
+
+Per-page titles, descriptions, canonical URLs and social images are defined
+**twice**, and the two copies have to agree:
+
+- `src/app/seo/site.ts` — read by the app at runtime.
+- `scripts/seo-build.mjs` — read by the post-build step that writes the static
+  meta tags, JSON-LD and `sitemap.xml`.
+
+Editing only one is the easiest mistake to make here, and nothing fails loudly
+when you do: the build passes, the page renders, and the tags are just wrong.
+Add your route to both, then run `npm run build` and check `dist/` for the
+meta tags and the sitemap entry.
 
 ## Security & secrets
 

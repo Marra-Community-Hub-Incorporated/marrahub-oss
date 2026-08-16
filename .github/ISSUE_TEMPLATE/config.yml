@@ -1,0 +1,13 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security or privacy problem
+    url: https://marrahub.com.au/.well-known/security.txt
+    about: >-
+      Don't open a public issue. Email hello@marrahub.com.au and we'll handle
+      it privately.
+  - name: New here and looking for something to work on
+    url: https://github.com/Marra-Community-Hub-Incorporated/marrahub/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+no%3Aassignee
+    about: Unassigned "good first issue" tickets, sized for a first contribution.
+  - name: Setting up the project locally
+    url: https://github.com/Marra-Community-Hub-Incorporated/marrahub/blob/main/CONTRIBUTING.md
+    about: Node 18+, npm install, npm run dev. That's the whole setup.
