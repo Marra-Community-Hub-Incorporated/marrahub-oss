@@ -9,6 +9,8 @@ export interface PageSeoMeta {
 
 export const siteConfig = {
   name: 'MARRA Community Centre',
+  /** Registered entity name as held by the ACNC/ABR — not a display name. */
+  legalName: 'Marra Community Hub Incorporated',
   alternateName: 'MARRA Community Hub',
   shortName: 'MARRA',
   siteUrl: 'https://marrahub.com.au',
