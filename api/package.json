@@ -5,9 +5,11 @@
   "main": "src/functions/*.js",
   "scripts": {
     "start": "func start",
+    "test": "node --test test/*.test.js",
     "deploy": "func azure functionapp publish $FUNCTION_APP_NAME"
   },
   "dependencies": {
+    "@azure/data-tables": "^13.3.1",
     "@azure/functions": "^4.5.0"
   },
   "engines": {

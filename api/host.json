@@ -1,5 +1,8 @@
 {
   "version": "2.0",
+  "extensions": {
+    "http": { "maxRequestBodySize": 9437184 }
+  },
   "logging": {
     "applicationInsights": {
       "samplingSettings": {
