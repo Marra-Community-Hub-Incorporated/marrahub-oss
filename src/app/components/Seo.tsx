@@ -116,6 +116,9 @@ export function Seo() {
       '@type': 'NGO',
       '@id': organizationId,
       name: siteConfig.name,
+      // The registered entity, distinct from the brand name above. External
+      // verifications match against this, so it has to be the ACNC/ABR string.
+      legalName: siteConfig.legalName,
       alternateName: siteConfig.alternateName,
       description: siteConfig.description,
       url: siteUrl,

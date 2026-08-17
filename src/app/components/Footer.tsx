@@ -180,7 +180,9 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-primary-foreground/60 text-sm">
-              © {new Date().getFullYear()} MARRA Community Centre. ABN: 79178583024. All rights reserved.
+              {/* Registered legal entity name — must match the ACNC/ABR record
+                  exactly, since it is what external verifications check. */}
+              © {new Date().getFullYear()} Marra Community Hub Incorporated · ABN 79 178 583 024 · Caulfield South VIC 3162
             </p>
             <p className="text-primary-foreground/60 text-sm">
               Acknowledgement: We acknowledge the Traditional Owners of the land and pay our respects to Elders past and present.

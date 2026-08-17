@@ -22,6 +22,8 @@ const seoHeadEnd = '<!-- SEO_HEAD_END -->';
 
 const siteConfig = {
   name: 'MARRA Community Centre',
+  // Registered entity name as held by the ACNC/ABR — not a display name.
+  legalName: 'Marra Community Hub Incorporated',
   alternateName: 'MARRA Community Hub',
   shortName: 'MARRA',
   siteUrl: 'https://marrahub.com.au',
@@ -323,6 +325,8 @@ function buildSeoHead(routePath) {
         '@type': 'NGO',
         '@id': organizationId,
         name: siteConfig.name,
+        // External verifications match the registered entity, not the brand.
+        legalName: siteConfig.legalName,
         alternateName: siteConfig.alternateName,
         description: siteConfig.description,
         url: siteUrl,
