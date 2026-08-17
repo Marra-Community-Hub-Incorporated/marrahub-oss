@@ -90,9 +90,10 @@ export const pageSeoMap: Record<string, PageSeoMeta> = {
   '/programs': {
     title: 'Programs and Services | MARRA Community Hub',
     description:
-      'Our Volunteer IT Program is now running — currently recruiting a volunteer Social Media Manager, with a new developer intake opening soon. Explore the programs MARRA is building across family support, education, wellbeing, and community connection.',
+      'Our Volunteer IT Program is now running — currently recruiting a volunteer Grant Writer and a volunteer Social Media Manager, with a new developer intake opening soon. Explore the programs MARRA is building across family support, education, wellbeing, and community connection.',
     keywords: [
       'volunteer IT program Melbourne',
+      'volunteer grant writer Melbourne',
       'volunteer social media manager Melbourne',
       'IT volunteering local experience',
       'community programs Glen Eira',
@@ -104,11 +105,13 @@ export const pageSeoMap: Record<string, PageSeoMeta> = {
     pageType: 'CollectionPage',
   },
   '/discover': {
-    title: 'Discover the Hub | Workshops, Free Food & Volunteering',
+    title: "What's On in Glen Eira | Workshops, Free Food & Volunteering",
     description:
-      'Browse live workshops, free food giveaways and volunteering opportunities from community organisations on the MARRA Hub platform, then register on their page.',
+      'Browse workshops, classes, free food and volunteering across Glen Eira — listings from the MARRA Hub platform alongside events gathered from local libraries, neighbourhood houses and community centres.',
     keywords: [
       'discover MARRA hub',
+      "what's on Glen Eira",
+      'community events Caulfield South',
       'community workshops Glen Eira',
       'free food Caulfield South',
       'volunteer opportunities Melbourne',

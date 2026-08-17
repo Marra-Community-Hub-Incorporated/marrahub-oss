@@ -7,48 +7,26 @@ import {
   HeartHandshake,
   MapPin,
   Search,
+  Ticket,
   Users,
   UtensilsCrossed,
 } from 'lucide-react';
 import { SectionHeader } from '../components/SectionHeader';
 import { CTABanner } from '../components/CTABanner';
 import { Button } from '../components/Button';
+import {
+  HUB_SITE_URL,
+  formatWhen,
+  listingUrl,
+  type DiscoverFood,
+  type DiscoverOrg,
+  type DiscoverWorkshop,
+} from '../lib/hubDirectory';
 
 // The Discover directory lives on the Hub platform (hub.marrahub.com.au). This
 // page previews it here so a visitor doesn't have to already know the Hub
-// exists — every card links out to the org's Hub page to register or apply.
-const HUB_SITE_URL = 'https://hub.marrahub.com.au';
-
-interface DiscoverWorkshop {
-  id: string;
-  title: string;
-  description: string;
-  startsAt: string;
-  location: string;
-  postcode: string;
-  spotsRemaining: number;
-  organizationName: string;
-  organizationSlug: string;
-}
-
-interface DiscoverFood {
-  id: string;
-  title: string;
-  description: string;
-  startsAt: string;
-  location: string;
-  spotsRemaining: number;
-  organizationName: string;
-  organizationSlug: string;
-}
-
-interface DiscoverOrg {
-  name: string;
-  slug: string;
-  description: string;
-  upcomingWorkshops: number;
-  upcomingFoodEvents: number;
-}
+// exists — cards link to the org's Hub page to register, or to the
+// organisation's own page for listings we gathered from elsewhere.
 
 const TABS = [
   { key: 'workshops', label: 'Workshops', icon: CalendarDays },
@@ -62,18 +40,6 @@ const SECTION_BY_TAB: Record<Tab, 'workshops' | 'food' | 'orgs'> = {
   food: 'food',
   volunteer: 'orgs',
 };
-
-function formatWhen(iso: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return '';
-  return date.toLocaleString('en-AU', {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    hour: 'numeric',
-    minute: '2-digit',
-  });
-}
 
 type State = { kind: 'loading' } | { kind: 'ready'; items: unknown[] } | { kind: 'error' };
 
@@ -156,9 +122,9 @@ export function Discover() {
             </span>
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">Discover the Hub</h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
-              Live workshops, free food giveaways and volunteering opportunities from every
-              community organisation on the MARRA Hub platform — browse here, then head to the
-              Hub to register.
+              Workshops, classes, free food and volunteering across Glen Eira, in one place —
+              listings published on the MARRA Hub platform alongside events we've gathered from
+              local libraries, neighbourhood houses and community centres.
             </p>
           </motion.div>
         </div>
@@ -170,7 +136,7 @@ export function Discover() {
           <SectionHeader
             subtitle="Right now, near you"
             title="Browse what's on"
-            description="One search box, three ways to help. Everything shown here is live on the Hub."
+            description="One search box, three ways in. Search by suburb, postcode, organisation or topic."
           />
 
           <div className="max-w-xl mx-auto mb-8">
@@ -272,7 +238,7 @@ export function Discover() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CTABanner
             title="See it all on the Hub"
-            description="Register for a workshop, reserve a food giveaway or apply to volunteer — every listing here links straight to the organisation's page on the MARRA Hub platform."
+            description="Register for a workshop, reserve a food giveaway or apply to volunteer — each listing links straight to the organisation running it, whether that's their Hub page or their own website."
             primaryButtonText="Open the Hub"
             primaryButtonHref={HUB_SITE_URL}
             secondaryButtonText="View Programs"
@@ -288,7 +254,11 @@ function WorkshopsGrid({ items }: { items: DiscoverWorkshop[] }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((w, index) => {
-        const full = w.spotsRemaining <= 0;
+        // Listings gathered from an organisation's own website carry no
+        // capacity data — spotsRemaining is always 0 for them, so reading it
+        // as "full" would mark every gathered event as unavailable.
+        const external = Boolean(w.isExternalListing);
+        const full = !external && w.spotsRemaining <= 0;
         return (
           <motion.article
             key={w.id}
@@ -317,19 +287,35 @@ function WorkshopsGrid({ items }: { items: DiscoverWorkshop[] }) {
                 <MapPin size={15} /> {w.location || 'TBC'}
                 {w.postcode && <span>· {w.postcode}</span>}
               </span>
-              <span className="flex items-center gap-2">
-                <Users size={15} />
-                {full ? 'Full' : `${w.spotsRemaining} spot${w.spotsRemaining === 1 ? '' : 's'} left`}
-              </span>
+              {external ? (
+                w.costNote ? (
+                  <span className="flex items-center gap-2">
+                    <Ticket size={15} /> {w.costNote}
+                  </span>
+                ) : null
+              ) : (
+                <span className="flex items-center gap-2">
+                  <Users size={15} />
+                  {full
+                    ? 'Full'
+                    : `${w.spotsRemaining} spot${w.spotsRemaining === 1 ? '' : 's'} left`}
+                </span>
+              )}
             </div>
             <Button
-              href={`${HUB_SITE_URL}/o/${w.organizationSlug}`}
+              href={listingUrl(w)}
               variant={full ? 'outline' : 'primary'}
               size="sm"
               className="mt-5 w-full"
             >
-              {full ? 'See the organisation' : 'Register on the Hub'} <ArrowUpRight size={15} />
+              {external ? 'View event details' : full ? 'See the organisation' : 'Register on the Hub'}{' '}
+              <ArrowUpRight size={15} />
             </Button>
+            {external && (
+              <p className="mt-2 text-center text-xs text-muted-foreground">
+                Listed by {w.organizationName} — opens their website
+              </p>
+            )}
           </motion.article>
         );
       })}
@@ -341,7 +327,8 @@ function FoodGrid({ items }: { items: DiscoverFood[] }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((f, index) => {
-        const gone = f.spotsRemaining <= 0;
+        const external = Boolean(f.isExternalListing);
+        const gone = !external && f.spotsRemaining <= 0;
         return (
           <motion.article
             key={f.id}
@@ -371,18 +358,21 @@ function FoodGrid({ items }: { items: DiscoverFood[] }) {
                   <MapPin size={15} /> {f.location}
                 </span>
               )}
-              <span className="flex items-center gap-2">
-                <UtensilsCrossed size={15} />
-                {gone ? 'All portions taken' : `${f.spotsRemaining} left`}
-              </span>
+              {!external && (
+                <span className="flex items-center gap-2">
+                  <UtensilsCrossed size={15} />
+                  {gone ? 'All portions taken' : `${f.spotsRemaining} left`}
+                </span>
+              )}
             </div>
             <Button
-              href={`${HUB_SITE_URL}/o/${f.organizationSlug}`}
+              href={listingUrl(f)}
               variant={gone ? 'outline' : 'primary'}
               size="sm"
               className="mt-5 w-full"
             >
-              {gone ? 'See the organisation' : 'Reserve on the Hub'} <ArrowUpRight size={15} />
+              {external ? 'View details' : gone ? 'See the organisation' : 'Reserve on the Hub'}{' '}
+              <ArrowUpRight size={15} />
             </Button>
           </motion.article>
         );

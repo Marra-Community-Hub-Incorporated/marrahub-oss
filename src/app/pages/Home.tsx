@@ -6,6 +6,7 @@ import { SectionHeader } from '../components/SectionHeader';
 import { ProgramCard } from '../components/ProgramCard';
 import { ImpactCard } from '../components/ImpactCard';
 import { CTABanner } from '../components/CTABanner';
+import { WhatsOnPreview } from '../components/WhatsOnPreview';
 import { featureFlags } from '../featureFlags';
 import {
   Users,
@@ -372,12 +373,12 @@ export function Home() {
                   Now running
                 </span>
                 <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
-                  Now Recruiting: Volunteer Social Media Manager
+                  Now Recruiting: Grant Writer & Social Media Manager
                 </h2>
                 <p className="text-primary-foreground/80 text-lg leading-relaxed max-w-2xl">
-                  Run MARRA's social media — plan and publish posts, share our community's
-                  stories, and capture the moments at our workshops. Applications for developer
-                  roles are closed for now, with a new intake opening soon.
+                  Two volunteer roles are open. Help us win the grants that fund our programs, or
+                  run MARRA's social media and share our community's stories. Applications for
+                  developer roles are closed for now, with a new intake opening soon.
                 </p>
               </div>
               <div className="shrink-0">
@@ -394,6 +395,9 @@ export function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* What's on near you — live preview of the Discover directory */}
+      <WhatsOnPreview />
 
       {/* Why MARRA Section */}
       <section className="py-24 bg-background relative z-10">
