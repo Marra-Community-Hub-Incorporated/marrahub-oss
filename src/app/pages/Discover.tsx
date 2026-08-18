@@ -47,6 +47,8 @@ export function Discover() {
   const [tab, setTab] = useState<Tab>('workshops');
   const [q, setQ] = useState('');
   const [state, setState] = useState<State>({ kind: 'loading' });
+  const [statusMessage, setStatusMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
 
   const handleTabKeyDown = (
@@ -79,177 +81,236 @@ export function Discover() {
     tabRefs.current[nextIndex]?.focus();
   };
 
-  useEffect(() => {
-    setState({ kind: 'loading' });
-    const section = SECTION_BY_TAB[tab];
-    // Abort superseded requests: without this, a slow response for an old
-    // query can land after a newer one and overwrite it.
-    const controller = new AbortController();
-    const timer = setTimeout(async () => {
-      try {
-        const params = new URLSearchParams();
-        if (q.trim()) params.set('q', q.trim());
-        const qs = params.toString();
-        const res = await fetch(`/api/hub/${section}${qs ? `?${qs}` : ''}`, {
-          signal: controller.signal,
-        });
-        if (!res.ok) throw new Error(String(res.status));
-        setState({ kind: 'ready', items: (await res.json()) as unknown[] });
-      } catch (err) {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
-        setState({ kind: 'error' });
-      }
-    }, 250); // debounce typing
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-  }, [q, tab]);
+    useEffect(() => {
+      setState({ kind: 'loading' });
+      setStatusMessage('');
+      setErrorMessage('');
 
-  return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="page-hero-background bg-primary text-primary-foreground py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-4xl"
-          >
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-6">
-              <Compass size={14} /> Community directory
-            </span>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">Discover the Hub</h1>
-            <p className="text-xl text-primary-foreground/90 leading-relaxed">
-              Workshops, classes, free food and volunteering across Glen Eira, in one place —
-              listings published on the MARRA Hub platform alongside events we've gathered from
-              local libraries, neighbourhood houses and community centres.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      const section = SECTION_BY_TAB[tab];
+      const activeTabLabel =
+        TABS.find(({ key }) => key === tab)?.label.toLowerCase() ?? 'items';
 
-      {/* Directory */}
-      <section className="py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            subtitle="Right now, near you"
-            title="Browse what's on"
-            description="One search box, three ways in. Search by suburb, postcode, organisation or topic."
-          />
+      const controller = new AbortController();
 
-          <div className="max-w-xl mx-auto mb-8">
-            <div className="relative">
-              <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="search"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Search by suburb, postcode, organisation or topic…"
-                aria-label="Search the directory"
-                className="w-full rounded-full border border-border bg-card py-3 pl-11 pr-5 text-foreground transition"
+      const timer = setTimeout(async () => {
+        setStatusMessage(`Loading ${activeTabLabel}.`);
+
+        try {
+          const params = new URLSearchParams();
+          const trimmedQuery = q.trim();
+
+          if (trimmedQuery) {
+            params.set('q', trimmedQuery);
+          }
+
+          const qs = params.toString();
+
+          const res = await fetch(`/api/hub/${section}${qs ? `?${qs}` : ''}`, {
+            signal: controller.signal,
+          });
+
+          if (!res.ok) {
+            throw new Error(String(res.status));
+          }
+
+          const items = (await res.json()) as unknown[];
+
+          setState({ kind: 'ready', items });
+
+          setStatusMessage(
+            `${items.length} result${items.length === 1 ? '' : 's'} found${
+              trimmedQuery ? ` for ${trimmedQuery}` : ''
+            } in ${activeTabLabel}.`,
+          );
+        } catch (err) {
+          if (err instanceof DOMException && err.name === 'AbortError') {
+            return;
+          }
+
+          setState({ kind: 'error' });
+          setStatusMessage('');
+          setErrorMessage(
+            `We couldn't load ${activeTabLabel} results. Please try again.`,
+          );
+        }
+      }, 250); // debounce typing
+
+      return () => {
+        clearTimeout(timer);
+        controller.abort();
+      };
+      }, [q, tab]);
+
+      return (
+        <div className="min-h-screen">
+          {/* Hero Section */}
+          <section className="page-hero-background bg-primary text-primary-foreground py-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="max-w-4xl"
+              >
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-6">
+                  <Compass size={14} /> Community directory
+                </span>
+
+                <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+                  Discover the Hub
+                </h1>
+
+                <p className="text-xl text-primary-foreground/90 leading-relaxed">
+                  Workshops, classes, free food and volunteering across Glen Eira, in one place —
+                  listings published on the MARRA Hub platform alongside events we've gathered from
+                  local libraries, neighbourhood houses and community centres.
+                </p>
+              </motion.div>
+            </div>
+          </section>
+
+          {/* Directory */}
+          <section className="py-20 bg-background">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <SectionHeader
+                subtitle="Right now, near you"
+                title="Browse what's on"
+                description="One search box, three ways in. Search by suburb, postcode, organisation or topic."
+              />
+
+              <div className="sr-only">
+                <div role="status" aria-live="polite" aria-atomic="true">
+                  {statusMessage}
+                </div>
+
+                <div role="alert" aria-atomic="true">
+                  {errorMessage}
+                </div>
+              </div>
+
+              <div className="max-w-xl mx-auto mb-8">
+                <div className="relative">
+                  <Search
+                    size={16}
+                    className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  />
+
+                  <input
+                    type="search"
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    placeholder="Search by suburb, postcode, organisation or topic…"
+                    aria-label="Search the directory"
+                    className="w-full rounded-full border border-border bg-card py-3 pl-11 pr-5 text-foreground transition"
+                  />
+                </div>
+              </div>
+
+              <div
+                role="tablist"
+                aria-label="Directory sections"
+                aria-orientation="horizontal"
+                className="flex flex-wrap justify-center gap-2 mb-12"
+              >
+                {TABS.map(({ key, label, icon: Icon }, index) => (
+                  <button
+                    key={key}
+                    ref={(element) => {
+                      tabRefs.current[index] = element;
+                    }}
+                    type="button"
+                    role="tab"
+                    id={`directory-tab-${key}`}
+                    aria-selected={tab === key}
+                    aria-controls={`directory-panel-${key}`}
+                    tabIndex={tab === key ? 0 : -1}
+                    onClick={() => setTab(key)}
+                    onKeyDown={(event) => handleTabKeyDown(event, index)}
+                    className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                      tab === key
+                        ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+                        : 'border border-border bg-card text-muted-foreground hover:text-primary'
+                    }`}
+                  >
+                    <Icon size={15} /> {label}
+                  </button>
+                ))}
+              </div>
+
+              <div
+                role="tabpanel"
+                id={`directory-panel-${tab}`}
+                aria-labelledby={`directory-tab-${tab}`}
+              >
+                {state.kind === 'loading' && (
+                  <p className="py-16 text-center text-muted-foreground">Looking around…</p>
+                )}
+
+                {state.kind === 'error' && (
+                  <div className="mx-auto max-w-md rounded-2xl border border-secondary/20 bg-secondary/5 px-6 py-8 text-center text-secondary">
+                    We couldn't load the directory just now — try again in a moment, or browse it
+                    directly on{' '}
+                    <a
+                      href={HUB_SITE_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline"
+                    >
+                      the Hub
+                    </a>
+                    .
+                  </div>
+                )}
+
+                {state.kind === 'ready' && state.items.length === 0 && (
+                  <div className="mx-auto max-w-md rounded-2xl border border-border bg-card px-6 py-12 text-center">
+                    <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-primary">
+                      <Compass size={18} />
+                    </div>
+
+                    <h3 className="text-xl font-semibold mb-2">
+                      {q.trim() ? 'Nothing matches that search' : 'Nothing here just yet'}
+                    </h3>
+
+                    <p className="text-muted-foreground">
+                      {q.trim()
+                        ? 'Try a different suburb or a broader word.'
+                        : 'Organisations publish new things all the time — check back soon.'}
+                    </p>
+                  </div>
+                )}
+
+                {state.kind === 'ready' && state.items.length > 0 && tab === 'workshops' && (
+                  <WorkshopsGrid items={state.items as DiscoverWorkshop[]} />
+                )}
+
+                {state.kind === 'ready' && state.items.length > 0 && tab === 'food' && (
+                  <FoodGrid items={state.items as DiscoverFood[]} />
+                )}
+
+                {state.kind === 'ready' && state.items.length > 0 && tab === 'volunteer' && (
+                  <VolunteerGrid items={state.items as DiscoverOrg[]} />
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* CTA Section */}
+          <section className="py-20 bg-card">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <CTABanner
+                title="See it all on the Hub"
+                description="Register for a workshop, reserve a food giveaway or apply to volunteer — each listing links straight to the organisation running it, whether that's their Hub page or their own website."
+                primaryButtonText="Open the Hub"
+                primaryButtonHref={HUB_SITE_URL}
+                secondaryButtonText="View Programs"
+                secondaryButtonHref="/programs"
               />
             </div>
-          </div>
-
-          <div
-            role="tablist"
-            aria-label="Directory sections"
-            aria-orientation="horizontal"
-            className="flex flex-wrap justify-center gap-2 mb-12"
-          >
-            {TABS.map(({ key, label, icon: Icon }, index) => (
-              <button
-                key={key}
-                ref={(element) => {
-                  tabRefs.current[index] = element;
-                }}
-                type="button"
-                role="tab"
-                id={`directory-tab-${key}`}
-                aria-selected={tab === key}
-                aria-controls={`directory-panel-${key}`}
-                tabIndex={tab === key ? 0 : -1}
-                onClick={() => setTab(key)}
-                onKeyDown={(event) => handleTabKeyDown(event, index)}
-                className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  tab === key
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
-                    : 'border border-border bg-card text-muted-foreground hover:text-primary'
-                }`}
-              >
-                <Icon size={15} /> {label}
-              </button>
-            ))}
-          </div>
-
-          <div
-            role="tabpanel"
-            id={`directory-panel-${tab}`}
-            aria-labelledby={`directory-tab-${tab}`}
-          >
-            {state.kind === 'loading' && (
-              <p className="py-16 text-center text-muted-foreground">Looking around…</p>
-            )}
-
-            {state.kind === 'error' && (
-              <div className="mx-auto max-w-md rounded-2xl border border-secondary/20 bg-secondary/5 px-6 py-8 text-center text-secondary">
-                We couldn't load the directory just now — try again in a moment, or browse it
-                directly on{' '}
-                <a href={HUB_SITE_URL} target="_blank" rel="noopener noreferrer" className="underline">
-                  the Hub
-                </a>
-                .
-              </div>
-            )}
-
-            {state.kind === 'ready' && state.items.length === 0 && (
-              <div className="mx-auto max-w-md rounded-2xl border border-border bg-card px-6 py-12 text-center">
-                <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-primary">
-                  <Compass size={18} />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">
-                  {q.trim() ? 'Nothing matches that search' : 'Nothing here just yet'}
-                </h3>
-                <p className="text-muted-foreground">
-                  {q.trim()
-                    ? 'Try a different suburb or a broader word.'
-                    : 'Organisations publish new things all the time — check back soon.'}
-                </p>
-              </div>
-            )}
-
-            {state.kind === 'ready' && state.items.length > 0 && tab === 'workshops' && (
-              <WorkshopsGrid items={state.items as DiscoverWorkshop[]} />
-            )}
-            {state.kind === 'ready' && state.items.length > 0 && tab === 'food' && (
-              <FoodGrid items={state.items as DiscoverFood[]} />
-            )}
-            {state.kind === 'ready' && state.items.length > 0 && tab === 'volunteer' && (
-              <VolunteerGrid items={state.items as DiscoverOrg[]} />
-            )}
-          </div>
+          </section>
         </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <CTABanner
-            title="See it all on the Hub"
-            description="Register for a workshop, reserve a food giveaway or apply to volunteer — each listing links straight to the organisation running it, whether that's their Hub page or their own website."
-            primaryButtonText="Open the Hub"
-            primaryButtonHref={HUB_SITE_URL}
-            secondaryButtonText="View Programs"
-            secondaryButtonHref="/programs"
-          />
-        </div>
-      </section>
-    </div>
-  );
-}
-
+      );
+    }
 function WorkshopsGrid({ items }: { items: DiscoverWorkshop[] }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
