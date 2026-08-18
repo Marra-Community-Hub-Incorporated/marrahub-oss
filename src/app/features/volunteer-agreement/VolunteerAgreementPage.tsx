@@ -24,8 +24,24 @@ const initialForm = {
   signedName: '',
 };
 
+// Every field the volunteer must fill in, in the order they appear on the page.
+// Kept as one list so validation, the error summary and the focus-the-first-
+// problem behaviour below can never drift apart from the markup.
+const REQUIRED_FIELDS: ReadonlyArray<keyof typeof initialForm> = [
+  'fullName',
+  'email',
+  'phone',
+  'area',
+  'emergencyContact',
+  'dietary',
+  'signedName',
+];
+
 export function VolunteerAgreementPage() {
   const [formData, setFormData] = useState(initialForm);
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<keyof typeof initialForm, string>>
+  >({});
   const [agreed, setAgreed] = useState(false);
   const [signatureImage, setSignatureImage] = useState<string | null>(null);
   const [formStatus, setFormStatus] = useState<{
@@ -33,6 +49,7 @@ export function VolunteerAgreementPage() {
     message: string;
   }>({ state: 'idle', message: '' });
 
+  const formRef = useRef<HTMLFormElement | null>(null);
   const signaturePadRef = useRef<SignaturePadHandle | null>(null);
   const turnstile = useTurnstile(volunteerAgreementConfig.turnstileSiteKey);
 
@@ -53,6 +70,34 @@ export function VolunteerAgreementPage() {
     year: 'numeric',
   });
 
+  const validateField = (name: keyof typeof initialForm, value: string) => {
+    const trimmedValue = value.trim();
+
+    if (REQUIRED_FIELDS.includes(name) && !trimmedValue) {
+      return 'This field is required.';
+    }
+
+    if (name === 'email' && trimmedValue && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue)) {
+      return 'Please enter a valid email address.';
+    }
+
+    return '';
+  };
+
+  const validateForm = () => {
+    const errors: Partial<Record<keyof typeof initialForm, string>> = {};
+
+    REQUIRED_FIELDS.forEach((name) => {
+      const error = validateField(name, formData[name]);
+
+      if (error) {
+        errors[name] = error;
+      }
+    });
+
+    return errors;
+  };
+
   const resetStatusIfNeeded = () => {
     if (formStatus.state === 'error') {
       setFormStatus({ state: 'idle', message: '' });
@@ -63,15 +108,65 @@ export function VolunteerAgreementPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ) => {
     resetStatusIfNeeded();
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    const name = e.target.name as keyof typeof initialForm;
+    const value = e.target.value;
+
+    setFormData((current) => ({ ...current, [name]: value }));
+
+    if (fieldErrors[name]) {
+      const error = validateField(name, value);
+
+      setFieldErrors((current) => {
+        const next = { ...current };
+
+        if (error) {
+          next[name] = error;
+        } else {
+          delete next[name];
+        }
+
+        return next;
+      });
+    }
   };
 
   const handleSignatureChange = useCallback((dataUrl: string | null) => {
     setSignatureImage(dataUrl);
   }, []);
 
+  // Telling someone their form is wrong is only half of it — they also need to
+  // land on the problem. Without this, a keyboard or screen-reader user hears
+  // "please correct the highlighted fields" and is left at the submit button
+  // with no idea which of the seven fields to go back to.
+  const focusFirstInvalidField = (errors: Partial<Record<keyof typeof initialForm, string>>) => {
+    const firstInvalid = REQUIRED_FIELDS.find((name) => errors[name]);
+
+    if (!firstInvalid) {
+      return;
+    }
+
+    const element = formRef.current?.elements.namedItem(firstInvalid);
+
+    if (element instanceof HTMLElement) {
+      element.focus();
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const errors = validateForm();
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      setFormStatus({
+        state: 'error',
+        message: 'Please correct the highlighted fields before submitting.',
+      });
+      focusFirstInvalidField(errors);
+      return;
+    }
 
     if (!agreed) {
       setFormStatus({
@@ -214,7 +309,7 @@ export function VolunteerAgreementPage() {
             transition={{ duration: 0.5 }}
             className="bg-card rounded-xl border border-border p-6 md:p-8"
           >
-            <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-8" noValidate>
               {/* Volunteer details */}
               <div>
                 <h2 className="text-2xl font-bold mb-6">Your details</h2>
@@ -231,8 +326,16 @@ export function VolunteerAgreementPage() {
                       onChange={handleChange}
                       required
                       autoComplete="name"
+                      aria-invalid={Boolean(fieldErrors.fullName)}
+                      aria-describedby={fieldErrors.fullName ? 'fullName-error' : undefined}
                       className={inputClasses}
                     />
+
+                    {fieldErrors.fullName && (
+                      <p id="fullName-error" className="mt-2 text-sm text-destructive">
+                        {fieldErrors.fullName}
+                      </p>
+                    )}
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-6">
@@ -248,8 +351,16 @@ export function VolunteerAgreementPage() {
                         onChange={handleChange}
                         required
                         autoComplete="email"
+                        aria-invalid={Boolean(fieldErrors.email)}
+                        aria-describedby={fieldErrors.email ? 'email-error' : undefined}
                         className={inputClasses}
                       />
+
+                      {fieldErrors.email && (
+                        <p id="email-error" className="mt-2 text-sm text-destructive">
+                          {fieldErrors.email}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label htmlFor="phone" className="block mb-2 text-foreground">
@@ -263,8 +374,16 @@ export function VolunteerAgreementPage() {
                         onChange={handleChange}
                         required
                         autoComplete="tel"
+                        aria-invalid={Boolean(fieldErrors.phone)}
+                        aria-describedby={fieldErrors.phone ? 'phone-error' : undefined}
                         className={inputClasses}
                       />
+
+                      {fieldErrors.phone && (
+                        <p id="phone-error" className="mt-2 text-sm text-destructive">
+                          {fieldErrors.phone}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -278,6 +397,8 @@ export function VolunteerAgreementPage() {
                       value={formData.area}
                       onChange={handleChange}
                       required
+                      aria-invalid={Boolean(fieldErrors.area)}
+                      aria-describedby={fieldErrors.area ? 'area-error' : undefined}
                       className={inputClasses}
                     >
                       <option value="">Select an area...</option>
@@ -287,6 +408,12 @@ export function VolunteerAgreementPage() {
                         </option>
                       ))}
                     </select>
+
+                    {fieldErrors.area && (
+                      <p id="area-error" className="mt-2 text-sm text-destructive">
+                        {fieldErrors.area}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -301,8 +428,18 @@ export function VolunteerAgreementPage() {
                       onChange={handleChange}
                       required
                       placeholder="Name — 04XX XXX XXX"
+                      aria-invalid={Boolean(fieldErrors.emergencyContact)}
+                      aria-describedby={
+                        fieldErrors.emergencyContact ? 'emergencyContact-error' : undefined
+                      }
                       className={inputClasses}
                     />
+
+                    {fieldErrors.emergencyContact && (
+                      <p id="emergencyContact-error" className="mt-2 text-sm text-destructive">
+                        {fieldErrors.emergencyContact}
+                      </p>
+                    )}
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-6">
@@ -316,6 +453,8 @@ export function VolunteerAgreementPage() {
                         value={formData.dietary}
                         onChange={handleChange}
                         required
+                        aria-invalid={Boolean(fieldErrors.dietary)}
+                        aria-describedby={fieldErrors.dietary ? 'dietary-error' : undefined}
                         className={inputClasses}
                       >
                         <option value="">Select a preference...</option>
@@ -325,6 +464,12 @@ export function VolunteerAgreementPage() {
                           </option>
                         ))}
                       </select>
+
+                      {fieldErrors.dietary && (
+                        <p id="dietary-error" className="mt-2 text-sm text-destructive">
+                          {fieldErrors.dietary}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label htmlFor="allergies" className="block mb-2 text-foreground">
@@ -390,8 +535,16 @@ export function VolunteerAgreementPage() {
                       onChange={handleChange}
                       required
                       autoComplete="name"
+                      aria-invalid={Boolean(fieldErrors.signedName)}
+                      aria-describedby={fieldErrors.signedName ? 'signedName-error' : undefined}
                       className={inputClasses}
                     />
+
+                    {fieldErrors.signedName && (
+                      <p id="signedName-error" className="mt-2 text-sm text-destructive">
+                        {fieldErrors.signedName}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <span className="block mb-2 text-foreground">Date</span>
