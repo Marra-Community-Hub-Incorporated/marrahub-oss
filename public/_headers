@@ -16,7 +16,13 @@
   #  - Volunteer agreement POST to the Azure Function (connect-src)
   #  - Unsplash images used on Home/About; data: covers inline SVG backgrounds
   #  - the inline SPA-redirect script is allowed by its exact sha256 hash
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-rdWUeyG6djYe/2N/vnB02WmPRGARqBsBQ0zzzQ5+lGk=' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com; font-src 'self' data:; connect-src 'self' https://formspree.io https://challenges.cloudflare.com https://marra-volunteer-form-api-drb5ekbahgfdhtc6.australiaeast-01.azurewebsites.net; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  #  - Cloudflare Web Analytics: the beacon is served from
+  #    static.cloudflareinsights.com and reports to cloudflareinsights.com. Both
+  #    were absent, so when the zone injected the beacon the policy blocked it
+  #    and the site collected no field data at all — no Core Web Vitals, no
+  #    pageviews. Enabling Web Analytics on the zone without these two entries
+  #    silently collects nothing.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-rdWUeyG6djYe/2N/vnB02WmPRGARqBsBQ0zzzQ5+lGk=' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com; font-src 'self' data:; connect-src 'self' https://formspree.io https://challenges.cloudflare.com https://cloudflareinsights.com https://marra-volunteer-form-api-drb5ekbahgfdhtc6.australiaeast-01.azurewebsites.net; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
 
 # ── Cache rules ──────────────────────────────────────────────────────────────
 # Vite emits content-hashed filenames into /assets/, so they can be cached
