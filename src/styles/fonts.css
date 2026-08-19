@@ -1,0 +1,49 @@
+/*
+ * This file existed and was empty. theme.css has named "Ibarra Real Nova" as the
+ * serif and "Inter" as the sans since the design tokens were written, but no
+ * @font-face was ever shipped — so every visitor has been reading Georgia and
+ * whatever system-ui resolves to, and the intended typography had never actually
+ * appeared on the site.
+ *
+ * Only the serif is served. It carries the brand: every heading uses it, as does
+ * the "arra" wordmark beside the logo, and Georgia is a generic stand-in that
+ * undersells it. The sans is deliberately left as the system stack — system-ui
+ * already resolves to SF Pro on macOS/iOS and Segoe UI on Windows, both fine for
+ * body text, so shipping Inter would have been the largest download for the least
+ * visible difference.
+ *
+ * One variable file per subset covers weights 400-700, which is the whole range
+ * the app asks for (font-medium through font-bold).
+ *
+ * Licence: SIL Open Font License 1.1 — see public/fonts/OFL.txt. Self-hosted
+ * rather than loaded from fonts.gstatic.com, so the page makes no third-party
+ * request, needs no CSP change, and cannot be slowed by someone else's CDN.
+ *
+ * The filenames carry the upstream version (v30) because public/ files are not
+ * content-hashed, and public/_headers caches them as immutable — a future font
+ * update must land under a new filename.
+ */
+
+/* latin-ext — only fetched when the page actually uses these codepoints */
+@font-face {
+  font-family: 'Ibarra Real Nova';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/ibarra-real-nova-v30-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin — the file virtually every visitor loads */
+@font-face {
+  font-family: 'Ibarra Real Nova';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/ibarra-real-nova-v30-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}

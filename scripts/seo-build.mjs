@@ -379,6 +379,14 @@ function buildSeoHead(routePath, { is404 = false } = {}) {
 
   const heroImage = is404 ? undefined : heroImageByRoute[canonicalPath];
 
+  // Every page's headings are set in the serif, so it is always on the critical
+  // path. Preloading it means the swap from Georgia happens before first paint
+  // rather than visibly reflowing after it. Only the latin subset — latin-ext is
+  // fetched on demand by unicode-range.
+  lines.push(
+    '    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/ibarra-real-nova-v30-latin.woff2" />',
+  );
+
   if (heroImage) {
     lines.push(
       `    <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="${escapeHtml(heroImage)}" />`,
