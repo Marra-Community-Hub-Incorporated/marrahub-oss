@@ -93,11 +93,22 @@
       }
     </script>
     <!-- SEO_HEAD_END -->
-    <link rel="icon" type="image/png" sizes="48x48" href="/media/favicon/favicon.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/media/favicon/favicon.png" />
+    <!--
+      Icons. Google Search probes /favicon.ico at the document root, so that
+      file must exist as a real icon: the SPA asset fallback would otherwise
+      answer with index.html at 200 and Search falls back to a generic globe.
+      Each declared size below points at a file that is actually that size.
+    -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/media/favicon/favicon-96x96.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/media/favicon/web-app-manifest-192x192.png"
+    />
     <link rel="icon" type="image/png" sizes="512x512" href="/media/favicon/favicon.png" />
-    <link rel="icon" href="/media/favicon/favicon.ico" sizes="any" />
-    <link rel="apple-touch-icon" href="/media/favicon/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/media/favicon/apple-touch-icon.png" />
     <link rel="manifest" href="/media/favicon/site.webmanifest" />
   </head>
   <body>
