@@ -34,7 +34,7 @@ export const siteConfig = {
   abn: '79178583024',
   logoPath: '/media/favicon/favicon.png',
   faviconPath: '/media/favicon/favicon.png',
-  defaultImagePath: '/media/Seo_Prev.png',
+  defaultImagePath: '/media/Seo_Prev.jpg',
 } as const;
 
 // Mirrored in scripts/seo-build.mjs (which can't import this TS module) —

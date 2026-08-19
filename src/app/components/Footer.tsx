@@ -15,7 +15,7 @@ function ColumnHeading({ children }: { children: React.ReactNode }) {
 }
 
 export function Footer() {
-  const logoUrl = `${import.meta.env.BASE_URL}media/favicon/favicon.png`;
+  const logoUrl = `${import.meta.env.BASE_URL}media/marra-wordmark.webp`;
 
   return (
     <footer className="relative bg-primary text-primary-foreground mt-20 overflow-hidden">
