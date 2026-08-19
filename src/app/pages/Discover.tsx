@@ -24,6 +24,7 @@ import {
   type DiscoverWorkshop,
 } from '../lib/hubDirectory';
 import { snapshotItemsFor } from '../lib/discoverInitialData';
+import { eventPath } from '../lib/eventSlug';
 
 // The Discover directory lives on the Hub platform (hub.marrahub.com.au). This
 // page previews it here so a visitor doesn't have to already know the Hub
@@ -325,18 +326,26 @@ function WorkshopsGrid({ items }: { items: DiscoverWorkshop[] }) {
                 </span>
               )}
             </div>
+            {/*
+              Links to MARRA's own page for the listing when one exists. Every card
+              used to send the visitor straight to the source site, so the
+              directory had no crawlable URL of its own for any of its 30 listings
+              and handed every click and all link equity to the source domain —
+              which for 15 of them is a generic classes page listing everything
+              that organisation runs, not the event you clicked.
+            */}
             <Button
-              href={listingUrl(w)}
+              href={eventPath(w) ?? listingUrl(w)}
               variant={full ? 'outline' : 'primary'}
               size="sm"
               className="mt-5 w-full"
             >
-              {external ? 'View event details' : full ? 'See the organisation' : 'Register on the Hub'}{' '}
+              {full ? 'See the organisation' : 'View event details'}{' '}
               <ArrowUpRight size={15} aria-hidden="true" />
             </Button>
             {external && (
               <p className="mt-2 text-center text-xs text-muted-foreground">
-                Listed by {w.organizationName} — opens their website
+                Listed by {w.organizationName}
               </p>
             )}
           </motion.article>

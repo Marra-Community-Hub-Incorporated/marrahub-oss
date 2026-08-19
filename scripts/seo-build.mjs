@@ -42,6 +42,8 @@ const {
   getPageSeo,
   render,
   DISCOVER_DATA_ELEMENT_ID,
+  setServerDiscoverSnapshot,
+  assignUniqueEventPaths,
 } = await import(pathToFileURL(ssrEntryPath).href);
 
 // The Hub's public Discover directory, captured at build time so /discover ships
@@ -102,6 +104,18 @@ async function fetchDiscoverSnapshot() {
 }
 
 const discoverSnapshot = await fetchDiscoverSnapshot();
+
+// getPageSeo derives each listing page's title and description from the snapshot,
+// and buildSeoHead runs independently of render() — so hand the snapshot over
+// before generating any head, not just before rendering.
+setServerDiscoverSnapshot(discoverSnapshot);
+
+// One page per upcoming listing. Both the URL and the ordering come from the same
+// helper the app uses, so a link rendered on /discover always resolves to a file
+// that exists.
+const eventPages = discoverSnapshot
+  ? assignUniqueEventPaths([...discoverSnapshot.workshops, ...discoverSnapshot.food])
+  : [];
 
 function parseEnvFile(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -288,6 +302,28 @@ function eventJsonLdFor(item) {
 
 const HUB_SITE_URL_FOR_LISTINGS = 'https://hub.marrahub.com.au';
 
+/**
+ * Markup for a page about exactly one listing. Google's event experience "only
+ * supports pages that focus on a single event", which is precisely what the
+ * /discover list page cannot be and what these pages are.
+ */
+function singleEventJsonLd(item, absoluteUrl) {
+  const event = eventJsonLdFor(item);
+  if (!event) return null;
+
+  return {
+    ...event,
+    '@context': 'https://schema.org',
+    // The page about the event, not the source listing. These pages are
+    // self-canonical: MARRA is the publisher of this aggregated view, and the
+    // organiser is credited and linked in the body.
+    url: absoluteUrl,
+    ...(item.isExternalListing && (item.registrationUrl || item.sourceUrl)
+      ? { isSimilarTo: item.registrationUrl || item.sourceUrl }
+      : {}),
+  };
+}
+
 function upcomingEventJsonLd() {
   if (!discoverSnapshot) return [];
 
@@ -377,7 +413,10 @@ function buildSeoHead(routePath, { is404 = false } = {}) {
     `    <meta name="twitter:image" content="${escapeHtml(imageUrl)}" />`,
   ];
 
-  const heroImage = is404 ? undefined : heroImageByRoute[canonicalPath];
+  const heroImage = is404
+    ? undefined
+    : (heroImageByRoute[canonicalPath] ??
+      (canonicalPath.startsWith('/whats-on/') ? '/media/bkg-pg.webp' : undefined));
 
   if (heroImage) {
     lines.push(
@@ -527,6 +566,15 @@ function buildSeoHead(routePath, { is404 = false } = {}) {
       );
     }
 
+    if (canonicalPath.startsWith('/whats-on/')) {
+      const match = eventPages.find((entry) => entry.path === canonicalPath);
+      const graph = match ? singleEventJsonLd(match.item, canonicalUrl) : null;
+
+      if (graph) {
+        lines.push(jsonLdScript('event', graph));
+      }
+    }
+
     if (canonicalPath === '/discover') {
       const events = upcomingEventJsonLd();
 
@@ -590,13 +638,17 @@ function injectAppHtml(html, appHtml) {
 // build a spinner where the HTML has events and discard the prerendered DOM.
 const snapshotRoutes = new Set(['/', '/discover']);
 
+function needsSnapshot(routePath) {
+  return snapshotRoutes.has(routePath) || routePath.startsWith('/whats-on/');
+}
+
 /**
  * A `type="application/json"` data block, not an inline script assignment:
  * script-src in public/_headers allows only 'self' plus one hashed inline
  * script, and a JSON block is inert so the policy never applies to it.
  */
 function injectDiscoverSnapshot(html, routePath) {
-  if (!discoverSnapshot || !snapshotRoutes.has(routePath)) return html;
+  if (!discoverSnapshot || !needsSnapshot(routePath)) return html;
 
   const serialized = JSON.stringify(discoverSnapshot)
     .replace(/</g, '\\u003c')
@@ -661,6 +713,36 @@ for (const route of routes) {
   fs.writeFileSync(path.join(routeDirectory, 'index.html'), routeHtml, 'utf8');
 }
 
+// One file per upcoming listing. These are what make an individual event
+// findable: /discover is a single URL standing in for every listing on it, and
+// Google's event rich results only apply to a page about one event.
+let eventPageCount = 0;
+
+for (const { path: eventRoutePath } of eventPages) {
+  const result = await render(eventRoutePath, { discover: discoverSnapshot });
+
+  if (!result.html || result.status !== 200) {
+    console.warn(
+      `SEO build: ${eventRoutePath} rendered status ${result.status}; skipping. ` +
+        'The route in routeConfig.tsx and the slug in lib/eventSlug.ts have diverged.',
+    );
+    continue;
+  }
+
+  const eventHtml = injectDiscoverSnapshot(
+    injectAppHtml(
+      upsertSeoHeadBlock(indexHtmlTemplate, buildSeoHead(eventRoutePath)),
+      result.html,
+    ),
+    eventRoutePath,
+  );
+
+  const eventDirectory = path.join(distDir, eventRoutePath.replace(/^\/+/, ''));
+  fs.mkdirSync(eventDirectory, { recursive: true });
+  fs.writeFileSync(path.join(eventDirectory, 'index.html'), eventHtml, 'utf8');
+  eventPageCount += 1;
+}
+
 // The 404 page is a real prerendered document now, served by Cloudflare with a
 // 404 status (assets.not_found_handling = "404-page" in wrangler.jsonc). The old
 // public/404.html was a GitHub-Pages-era "?/" redirect shim that the Worker made
@@ -689,7 +771,8 @@ if (redirectRules.length > 0) {
 }
 
 console.log(
-  `SEO build: prerendered ${prerenderedCount} pages + 404.html, ${redirectRules.length} redirect rule(s).`,
+  `SEO build: prerendered ${prerenderedCount} pages + ${eventPageCount} listing pages + ` +
+    `404.html, ${redirectRules.length} redirect rule(s).`,
 );
 
 if (!siteUrl) {
@@ -716,6 +799,17 @@ const xmlLines = [
       '  </url>',
     ];
   }),
+  // The listing pages. Without these the sitemap described 8 URLs while the site
+  // published dozens, and the ones carrying the actual event content were the
+  // ones left out. No changefreq: a listing's details do not change on a
+  // schedule, and claiming one Google can see is false costs more than it buys.
+  ...eventPages.flatMap(({ path: eventRoutePath }) => [
+    '  <url>',
+    `    <loc>${new URL(eventRoutePath, `${siteUrl}/`).toString()}</loc>`,
+    `    <lastmod>${buildDate}</lastmod>`,
+    '    <priority>0.6</priority>',
+    '  </url>',
+  ]),
   '</urlset>',
 ];
 

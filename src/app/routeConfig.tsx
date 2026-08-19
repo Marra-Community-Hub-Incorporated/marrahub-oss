@@ -62,6 +62,16 @@ export const routeConfig: RouteObject[] = [
           Component: (await import('./pages/Discover')).Discover,
         }),
       },
+      // One page per listing in the Discover directory. The URL is derived in
+      // lib/eventSlug.ts, and scripts/seo-build.mjs prerenders one file per
+      // upcoming listing from the same derivation, so a link on /discover and the
+      // file written for it cannot disagree.
+      {
+        path: 'whats-on/:orgSlug/:eventSlug',
+        lazy: async () => ({
+          Component: (await import('./pages/EventDetail')).EventDetail,
+        }),
+      },
       {
         path: 'impact',
         lazy: async () => ({

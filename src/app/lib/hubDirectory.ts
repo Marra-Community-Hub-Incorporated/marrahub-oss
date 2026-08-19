@@ -15,6 +15,13 @@ export interface DiscoverWorkshop {
   startsAt: string;
   /** How long it runs. The API sends this; nothing used to read it. */
   durationMinutes?: number;
+  /**
+   * Venue coordinates, null when the listing has no address at all. Also sent by
+   * the API and also previously undeclared — the event page uses them for a map
+   * link, and the Event markup for schema.org geo.
+   */
+  latitude?: number | null;
+  longitude?: number | null;
   location: string;
   postcode: string;
   spotsRemaining: number;
