@@ -116,7 +116,7 @@ export function LaunchEvent() {
                   className="w-11 h-11 rounded-xl bg-accent/15 ring-1 ring-accent/40 text-accent flex items-center justify-center shrink-0"
                   aria-hidden="true"
                 >
-                  <CalendarDays size={22} />
+                  <CalendarDays size={22} aria-hidden="true" />
                 </span>
                 <div>
                   <p className="font-semibold text-white">Saturday, 15 August 2026</p>
@@ -128,7 +128,7 @@ export function LaunchEvent() {
                   className="w-11 h-11 rounded-xl bg-accent/15 ring-1 ring-accent/40 text-accent flex items-center justify-center shrink-0"
                   aria-hidden="true"
                 >
-                  <Clock size={22} />
+                  <Clock size={22} aria-hidden="true" />
                 </span>
                 <div>
                   <p className="font-semibold text-white">2:00pm – 6:00pm</p>
@@ -140,7 +140,7 @@ export function LaunchEvent() {
                   className="w-11 h-11 rounded-xl bg-accent/15 ring-1 ring-accent/40 text-accent flex items-center justify-center shrink-0"
                   aria-hidden="true"
                 >
-                  <MapPin size={22} />
+                  <MapPin size={22} aria-hidden="true" />
                 </span>
                 <div>
                   <p className="font-semibold text-white">Carnegie Library &amp; Community Centre</p>
@@ -172,6 +172,7 @@ export function LaunchEvent() {
         <div className="absolute bottom-[-1px] left-0 w-full leading-[0] z-10 pointer-events-none">
           <svg
             viewBox="0 0 1440 120"
+            aria-hidden="true"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className="w-full h-auto"
@@ -223,7 +224,7 @@ export function LaunchEvent() {
                 className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/5 text-primary"
                 aria-hidden="true"
               >
-                <Camera size={30} />
+                <Camera size={30} aria-hidden="true" />
               </span>
               <h3 className="font-serif text-2xl text-foreground mb-3">Photos are on their way</h3>
               <p className="text-muted-foreground text-lg leading-relaxed max-w-xl mx-auto">

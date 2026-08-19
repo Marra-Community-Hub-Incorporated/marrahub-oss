@@ -15,7 +15,10 @@ export interface PageSeoMeta {
 }
 
 export const siteConfig = {
-  name: 'MARRA Community Centre',
+  // The name the site actually brands itself with, and what Google should show
+  // for the entity. It read 'MARRA Community Centre' — a string that appears
+  // nowhere in the UI and is not the registered name either (see legalName).
+  name: 'MARRA Community Hub',
   /** Registered entity name as held by the ACNC/ABR — not a display name. */
   legalName: 'Marra Community Hub Incorporated',
   alternateName: 'MARRA Community Hub',
@@ -32,6 +35,14 @@ export const siteConfig = {
   region: 'VIC',
   country: 'AU',
   abn: '79178583024',
+  /**
+   * Public registers that identify this exact entity, for Organization.sameAs.
+   * Verified to resolve and to name "Marra Community Hub Incorporated", ABN
+   * active from 12 Feb 2026. ACNC is deliberately absent: its charity profiles
+   * have no stable URL derivable from an ABN, and an unverified link in
+   * structured data is worse than a missing one.
+   */
+  sameAs: ['https://abr.business.gov.au/ABN/View?abn=79178583024'],
   logoPath: '/media/favicon/favicon.png',
   faviconPath: '/media/favicon/favicon.png',
   defaultImagePath: '/media/Seo_Prev.jpg',

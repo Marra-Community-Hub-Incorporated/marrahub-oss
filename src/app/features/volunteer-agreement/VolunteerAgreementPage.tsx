@@ -250,7 +250,7 @@ export function VolunteerAgreementPage() {
               transition={{ duration: 0.5 }}
             >
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 className="text-primary" size={36} />
+                <CheckCircle2 className="text-primary" size={36} aria-hidden="true" />
               </div>
               <h1 className="text-3xl md:text-4xl font-bold mb-4">You're all set!</h1>
               <p className="text-lg text-muted-foreground mb-8">{formStatus.message}</p>
@@ -276,7 +276,7 @@ export function VolunteerAgreementPage() {
             className="max-w-4xl"
           >
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium mb-6">
-              <HeartHandshake size={18} />
+              <HeartHandshake size={18} aria-hidden="true" />
               Become a MARRA volunteer
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">Volunteer Agreement</h1>
@@ -492,7 +492,7 @@ export function VolunteerAgreementPage() {
               {/* Acknowledgement & signature */}
               <div className="border-t border-border pt-8">
                 <div className="flex items-center gap-2 mb-6">
-                  <ShieldCheck className="text-primary" size={22} />
+                  <ShieldCheck className="text-primary" size={22} aria-hidden="true" />
                   <h2 className="text-2xl font-bold">Acknowledgement &amp; signature</h2>
                 </div>
 
@@ -502,7 +502,7 @@ export function VolunteerAgreementPage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 mb-6 rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-primary font-medium transition-colors hover:bg-muted/50"
                 >
-                  <FileText size={18} />
+                  <FileText size={18} aria-hidden="true" />
                   Read the full Volunteer Agreement
                 </a>
 

@@ -111,7 +111,7 @@ export function Header() {
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-navigation"
           >
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            {mobileMenuOpen ? <X size={28} aria-hidden="true" /> : <Menu size={28} aria-hidden="true" />}
           </button>
         </div>
 
