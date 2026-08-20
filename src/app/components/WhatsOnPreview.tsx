@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, CalendarDays, MapPin, Ticket } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
@@ -8,6 +8,7 @@ import {
   suburbFrom,
   type DiscoverWorkshop,
 } from '../lib/hubDirectory';
+import { snapshotItemsFor } from '../lib/discoverInitialData';
 
 /**
  * Homepage preview of the Discover directory. Reads the same
@@ -30,9 +31,23 @@ const STATIC_DESCRIPTION =
   "Workshops, classes and community events from local libraries, neighbourhood houses and community centres — gathered into one place so you can see what's on without checking a dozen websites.";
 
 export function WhatsOnPreview() {
-  const [state, setState] = useState<State>({ kind: 'loading' });
+  // Seeded from the build-time Discover snapshot for the same reason the
+  // Discover page is: the homepage's "what's on" section is the first thing a
+  // crawler reads about MARRA's events, and a client-only fetch left it empty.
+  const [state, setState] = useState<State>(() => {
+    const seeded = snapshotItemsFor('workshops', '') as DiscoverWorkshop[] | null;
+    return seeded ? { kind: 'ready', items: seeded } : { kind: 'loading' };
+  });
+  const isShowingSnapshot = useRef(snapshotItemsFor('workshops', '') !== null);
 
   useEffect(() => {
+    // Already holding the snapshot: refetching on mount would only replace it
+    // with the same listings, so leave the good first paint alone.
+    if (isShowingSnapshot.current) {
+      isShowingSnapshot.current = false;
+      return;
+    }
+
     const controller = new AbortController();
 
     (async () => {
@@ -63,9 +78,14 @@ export function WhatsOnPreview() {
 
   // Only claim numbers we actually have. Anything else falls back to the
   // static pitch, so an empty or unreachable directory never reads as "0".
+  //
+  // The area is worded loosely on purpose. The feed is not confined to Glen
+  // Eira — of the 30 listings live when this was written, 7 were in Malvern East
+  // (Stonnington) and 2 in Albert Park (Port Phillip) — so pinning an exact
+  // count to "across Glen Eira" stated something the data did not support.
   const hasCounts = items.length > 0 && organisationCount > 0;
   const description = hasCounts
-    ? `${items.length} workshops, classes and community events coming up across Glen Eira, from ${organisationCount} local organisations — gathered into one place so you can see what's on without checking a dozen websites.`
+    ? `${items.length} workshops, classes and community events coming up around Glen Eira and neighbouring suburbs, from ${organisationCount} local organisations — gathered into one place so you can see what's on without checking a dozen websites.`
     : STATIC_DESCRIPTION;
 
   return (

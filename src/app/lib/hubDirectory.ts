@@ -102,3 +102,19 @@ export function listingUrl(item: {
   }
   return `${HUB_SITE_URL}/o/${item.organizationSlug}`;
 }
+
+/**
+ * Slugs the Hub exposes through its public orgs feed that are not real
+ * organisations. "public" is its internal Public Intake tenant: it carries no
+ * description and no events, and it was being rendered on the Volunteer tab as
+ * though it were somewhere a person could go and volunteer, linking through to
+ * hub.marrahub.com.au/o/public.
+ *
+ * The Hub should not publish it at all — this is a guard on the consuming side,
+ * not the fix.
+ */
+const INTERNAL_ORG_SLUGS = new Set(['public']);
+
+export function isPublicFacingOrg(org: { slug: string }) {
+  return !INTERNAL_ORG_SLUGS.has(org.slug);
+}

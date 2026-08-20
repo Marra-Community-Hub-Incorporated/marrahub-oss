@@ -11,7 +11,7 @@
     "url": "https://github.com/Marra-Community-Hub-Incorporated/marrahub.git"
   },
   "scripts": {
-    "build": "vite build && node scripts/seo-build.mjs",
+    "build": "vite build && vite build --config vite.ssr.config.ts && node scripts/seo-build.mjs",
     "dev": "vite",
     "preview": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy",

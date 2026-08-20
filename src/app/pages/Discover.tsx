@@ -17,11 +17,13 @@ import { Button } from '../components/Button';
 import {
   HUB_SITE_URL,
   formatWhen,
+  isPublicFacingOrg,
   listingUrl,
   type DiscoverFood,
   type DiscoverOrg,
   type DiscoverWorkshop,
 } from '../lib/hubDirectory';
+import { snapshotItemsFor } from '../lib/discoverInitialData';
 
 // The Discover directory lives on the Hub platform (hub.marrahub.com.au). This
 // page previews it here so a visitor doesn't have to already know the Hub
@@ -46,7 +48,20 @@ type State = { kind: 'loading' } | { kind: 'ready'; items: unknown[] } | { kind:
 export function Discover() {
   const [tab, setTab] = useState<Tab>('workshops');
   const [q, setQ] = useState('');
-  const [state, setState] = useState<State>({ kind: 'loading' });
+  // Start from the listings baked in at build time when there are any, so the
+  // first paint (and the prerendered HTML behind it) shows real events rather
+  // than a spinner. React hydrates against this, so it has to be the same value
+  // the build rendered — hence the lazy initialiser reading the same snapshot.
+  const [state, setState] = useState<State>(() => {
+    const seeded = snapshotItemsFor(SECTION_BY_TAB.workshops, '');
+    return seeded ? { kind: 'ready', items: seeded } : { kind: 'loading' };
+  });
+  // True while the state still holds the build-time snapshot. The fetch effect
+  // skips its first run in that case: refetching immediately would flip a
+  // populated list back to `loading` and throw away a good first paint.
+  const isShowingSnapshot = React.useRef(
+    snapshotItemsFor(SECTION_BY_TAB.workshops, '') !== null,
+  );
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
 
   const handleTabKeyDown = (
@@ -80,6 +95,11 @@ export function Discover() {
   };
 
   useEffect(() => {
+    if (isShowingSnapshot.current) {
+      isShowingSnapshot.current = false;
+      return;
+    }
+
     setState({ kind: 'loading' });
     const section = SECTION_BY_TAB[tab];
     // Abort superseded requests: without this, a slow response for an old
@@ -122,7 +142,8 @@ export function Discover() {
             </span>
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">Discover the Hub</h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
-              Workshops, classes, free food and volunteering across Glen Eira, in one place —
+              Workshops, classes, free food and volunteering around Glen Eira and neighbouring
+              suburbs, in one place —
               listings published on the MARRA Hub platform alongside events we've gathered from
               local libraries, neighbourhood houses and community centres.
             </p>
@@ -227,7 +248,9 @@ export function Discover() {
               <FoodGrid items={state.items as DiscoverFood[]} />
             )}
             {state.kind === 'ready' && state.items.length > 0 && tab === 'volunteer' && (
-              <VolunteerGrid items={state.items as DiscoverOrg[]} />
+              <VolunteerGrid
+                items={(state.items as DiscoverOrg[]).filter(isPublicFacingOrg)}
+              />
             )}
           </div>
         </div>
