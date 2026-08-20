@@ -98,7 +98,7 @@ export function RecruitingRoleCard({
                 href={applyHref}
                 className="inline-flex items-center justify-center gap-2 rounded-xl transition-all duration-300 font-medium active:scale-95 hover:scale-[1.02] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 px-8 py-4 text-lg"
               >
-                <Mail size={20} />
+                <Mail size={20} aria-hidden="true" />
                 {applyLabel}
               </a>
               <Button href="/contact" variant="outline" size="lg">
@@ -116,7 +116,7 @@ export function RecruitingRoleCard({
             <div className="space-y-7">
               {details.map(({ icon: Icon, label, text }) => (
                 <div key={label} className="flex items-start gap-4">
-                  <Icon size={22} className="text-accent mt-1 shrink-0" />
+                  <Icon size={22} aria-hidden="true" className="text-accent mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-white mb-1">{label}</p>
                     <p className="text-sm text-primary-foreground/80 leading-relaxed">

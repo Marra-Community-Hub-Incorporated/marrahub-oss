@@ -120,10 +120,20 @@ export function Contact() {
             }
 
             setTurnstileToken('');
-            setFormStatus({
-              state: 'error',
-              message: 'Security verification expired. Please complete it again before sending.',
-            });
+            // Not while a send is in flight. A Turnstile token has a short life
+            // and can expire mid-request; overwriting the status here replaced
+            // "Sending your message..." with an error and re-enabled the Send
+            // button while the POST was still running, so a message that then
+            // succeeded had already reported itself as failed.
+            setFormStatus((currentStatus) =>
+              currentStatus.state === 'submitting'
+                ? currentStatus
+                : {
+                    state: 'error',
+                    message:
+                      'Security verification expired. Please complete it again before sending.',
+                  },
+            );
           },
           'error-callback': () => {
             if (!isMounted) {
@@ -131,10 +141,15 @@ export function Contact() {
             }
 
             setTurnstileToken('');
-            setFormStatus({
-              state: 'error',
-              message: 'Security verification could not be loaded. Please refresh and try again.',
-            });
+            setFormStatus((currentStatus) =>
+              currentStatus.state === 'submitting'
+                ? currentStatus
+                : {
+                    state: 'error',
+                    message:
+                      'Security verification could not be loaded. Please refresh and try again.',
+                  },
+            );
           },
         });
       } catch {
@@ -278,7 +293,7 @@ export function Contact() {
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="text-primary" size={24} />
+                    <MapPin className="text-primary" size={24} aria-hidden="true" />
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Location</h3>
@@ -294,7 +309,7 @@ export function Contact() {
 
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Phone className="text-primary" size={24} />
+                    <Phone className="text-primary" size={24} aria-hidden="true" />
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Phone</h3>
@@ -311,7 +326,7 @@ export function Contact() {
 
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Mail className="text-primary" size={24} />
+                    <Mail className="text-primary" size={24} aria-hidden="true" />
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Email</h3>
@@ -326,7 +341,7 @@ export function Contact() {
 
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Clock className="text-primary" size={24} />
+                    <Clock className="text-primary" size={24} aria-hidden="true" />
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Centre Hours</h3>
@@ -508,7 +523,7 @@ export function Contact() {
               className="bg-card rounded-xl p-6 border border-border"
             >
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Accessibility className="text-primary" size={24} />
+                <Accessibility className="text-primary" size={24} aria-hidden="true" />
               </div>
               <h3 className="font-semibold mb-3">Physical Accessibility</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -527,7 +542,7 @@ export function Contact() {
               className="bg-card rounded-xl p-6 border border-border"
             >
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Mail className="text-primary" size={24} />
+                <Mail className="text-primary" size={24} aria-hidden="true" />
               </div>
               <h3 className="font-semibold mb-3">Communication Support</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -546,7 +561,7 @@ export function Contact() {
               className="bg-card rounded-xl p-6 border border-border"
             >
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Clock className="text-primary" size={24} />
+                <Clock className="text-primary" size={24} aria-hidden="true" />
               </div>
               <h3 className="font-semibold mb-3">Flexible Support</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">

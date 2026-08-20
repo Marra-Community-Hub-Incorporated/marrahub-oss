@@ -251,7 +251,7 @@ export function Programs() {
                       href="mailto:hello@marrahub.com.au?subject=Volunteer%20IT%20Program%20next%20intake"
                       className="inline-flex items-center justify-center gap-2 rounded-xl transition-all duration-300 font-medium active:scale-95 hover:scale-[1.02] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 px-8 py-4 text-lg"
                     >
-                      <Mail size={20} />
+                      <Mail size={20} aria-hidden="true" />
                       Register for the Next Intake
                     </a>
                     <Button href="/contact" variant="outline" size="lg">
@@ -269,7 +269,7 @@ export function Programs() {
                   <h3 className="font-serif text-2xl text-white mb-8">Practical Details</h3>
                   <div className="space-y-7">
                     <div className="flex items-start gap-4">
-                      <GraduationCap size={22} className="text-accent mt-1 shrink-0" />
+                      <GraduationCap size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
                       <div>
                         <p className="font-semibold text-white mb-1">Eligibility</p>
                         <p className="text-sm text-primary-foreground/80 leading-relaxed">
@@ -279,7 +279,7 @@ export function Programs() {
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <Clock size={22} className="text-accent mt-1 shrink-0" />
+                      <Clock size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
                       <div>
                         <p className="font-semibold text-white mb-1">Commitment</p>
                         <p className="text-sm text-primary-foreground/80 leading-relaxed">
@@ -289,7 +289,7 @@ export function Programs() {
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <CalendarDays size={22} className="text-accent mt-1 shrink-0" />
+                      <CalendarDays size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
                       <div>
                         <p className="font-semibold text-white mb-1">Duration</p>
                         <p className="text-sm text-primary-foreground/80 leading-relaxed">
@@ -298,7 +298,7 @@ export function Programs() {
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <MapPin size={22} className="text-accent mt-1 shrink-0" />
+                      <MapPin size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
                       <div>
                         <p className="font-semibold text-white mb-1">Location</p>
                         <p className="text-sm text-primary-foreground/80 leading-relaxed">
@@ -307,7 +307,7 @@ export function Programs() {
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <Laptop size={22} className="text-accent mt-1 shrink-0" />
+                      <Laptop size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
                       <div>
                         <p className="font-semibold text-white mb-1">You'll Need</p>
                         <p className="text-sm text-primary-foreground/80 leading-relaxed">
@@ -316,7 +316,7 @@ export function Programs() {
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <HandHeart size={22} className="text-accent mt-1 shrink-0" />
+                      <HandHeart size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
                       <div>
                         <p className="font-semibold text-white mb-1">Type</p>
                         <p className="text-sm text-primary-foreground/80 leading-relaxed">

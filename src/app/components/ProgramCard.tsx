@@ -15,7 +15,7 @@ export function ProgramCard({ icon: Icon, title, description, outcomes }: Progra
       <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-12 -mt-12 transition-transform group-hover:scale-150 duration-500"></div>
       
       <div className="w-16 h-16 rounded-xl bg-primary/5 flex items-center justify-center mb-8 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-        <Icon size={32} className="text-primary group-hover:text-white transition-colors" />
+        <Icon size={32} aria-hidden="true" className="text-primary group-hover:text-white transition-colors" />
       </div>
       
       <h3 className="text-2xl font-serif font-semibold text-primary mb-4 leading-tight">

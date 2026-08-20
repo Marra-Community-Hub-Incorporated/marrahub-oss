@@ -16,12 +16,15 @@ import { CTABanner } from '../components/CTABanner';
 import { Button } from '../components/Button';
 import {
   HUB_SITE_URL,
-  formatWhen,
+  formatWhenRange,
+  isPublicFacingOrg,
   listingUrl,
   type DiscoverFood,
   type DiscoverOrg,
   type DiscoverWorkshop,
 } from '../lib/hubDirectory';
+import { snapshotItemsFor } from '../lib/discoverInitialData';
+import { eventPath } from '../lib/eventSlug';
 
 // The Discover directory lives on the Hub platform (hub.marrahub.com.au). This
 // page previews it here so a visitor doesn't have to already know the Hub
@@ -46,9 +49,29 @@ type State = { kind: 'loading' } | { kind: 'ready'; items: unknown[] } | { kind:
 export function Discover() {
   const [tab, setTab] = useState<Tab>('workshops');
   const [q, setQ] = useState('');
-  const [state, setState] = useState<State>({ kind: 'loading' });
-  const [statusMessage, setStatusMessage] = useState('');
+  // Listings baked in at build time, when there are any, so the first paint (and
+  // the prerendered HTML behind it) shows real events rather than a spinner.
+  // React hydrates against this, so it has to be the same value the build
+  // rendered — hence the lazy initialiser reading the same snapshot.
+  const seededWorkshops = snapshotItemsFor(SECTION_BY_TAB.workshops, '');
+  const [state, setState] = useState<State>(() =>
+    seededWorkshops ? { kind: 'ready', items: seededWorkshops } : { kind: 'loading' },
+  );
+  // Seeded to match the listings above, because the fetch effect — which is what
+  // announces results — is skipped when the snapshot already supplied this view.
+  // Without this the live region would say nothing about the listings a
+  // screen-reader user is looking at on first load. Initial live-region content
+  // is not announced on mount, so this is silent and simply tells the truth.
+  const [statusMessage, setStatusMessage] = useState(() =>
+    seededWorkshops
+      ? `${seededWorkshops.length} result${seededWorkshops.length === 1 ? '' : 's'} found in workshops.`
+      : '',
+  );
   const [errorMessage, setErrorMessage] = useState('');
+  // True while the state still holds the build-time snapshot. The fetch effect
+  // skips its first run in that case: refetching immediately would flip a
+  // populated list back to `loading` and throw away a good first paint.
+  const isShowingSnapshot = React.useRef(seededWorkshops !== null);
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
 
   const handleTabKeyDown = (
@@ -82,6 +105,11 @@ export function Discover() {
   };
 
   useEffect(() => {
+    if (isShowingSnapshot.current) {
+      isShowingSnapshot.current = false;
+      return;
+    }
+
     setState({ kind: 'loading' });
     setStatusMessage('');
     setErrorMessage('');
@@ -90,6 +118,8 @@ export function Discover() {
     const activeTabLabel =
       TABS.find(({ key }) => key === tab)?.label.toLowerCase() ?? 'items';
 
+    // Abort superseded requests: without this, a slow response for an old
+    // query can land after a newer one and overwrite it.
     const controller = new AbortController();
 
     const timer = setTimeout(async () => {
@@ -153,7 +183,7 @@ export function Discover() {
             className="max-w-4xl"
           >
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-6">
-              <Compass size={14} /> Community directory
+              <Compass size={14} aria-hidden="true" /> Community directory
             </span>
 
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
@@ -161,7 +191,8 @@ export function Discover() {
             </h1>
 
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
-              Workshops, classes, free food and volunteering across Glen Eira, in one place —
+              Workshops, classes, free food and volunteering around Glen Eira and neighbouring
+              suburbs, in one place —
               listings published on the MARRA Hub platform alongside events we've gathered from
               local libraries, neighbourhood houses and community centres.
             </p>
@@ -192,6 +223,7 @@ export function Discover() {
             <div className="relative">
               <Search
                 size={16}
+                aria-hidden="true"
                 className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
               />
 
@@ -232,7 +264,7 @@ export function Discover() {
                     : 'border border-border bg-card text-muted-foreground hover:text-primary'
                 }`}
               >
-                <Icon size={15} /> {label}
+                <Icon size={15} aria-hidden="true" /> {label}
               </button>
             ))}
           </div>
@@ -265,7 +297,7 @@ export function Discover() {
             {state.kind === 'ready' && state.items.length === 0 && (
               <div className="mx-auto max-w-md rounded-2xl border border-border bg-card px-6 py-12 text-center">
                 <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-primary">
-                  <Compass size={18} />
+                  <Compass size={18} aria-hidden="true" />
                 </div>
 
                 <h3 className="text-xl font-semibold mb-2">
@@ -289,7 +321,9 @@ export function Discover() {
             )}
 
             {state.kind === 'ready' && state.items.length > 0 && tab === 'volunteer' && (
-              <VolunteerGrid items={state.items as DiscoverOrg[]} />
+              <VolunteerGrid
+                items={(state.items as DiscoverOrg[]).filter(isPublicFacingOrg)}
+              />
             )}
           </div>
         </div>
@@ -342,39 +376,47 @@ function WorkshopsGrid({ items }: { items: DiscoverWorkshop[] }) {
             )}
             <div className="space-y-2 border-t border-border/50 pt-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-2">
-                <CalendarDays size={15} /> {formatWhen(w.startsAt)}
+                <CalendarDays size={15} aria-hidden="true" /> {formatWhenRange(w.startsAt, w.durationMinutes)}
               </span>
               <span className="flex items-center gap-2">
-                <MapPin size={15} /> {w.location || 'TBC'}
+                <MapPin size={15} aria-hidden="true" /> {w.location || 'TBC'}
                 {w.postcode && <span>· {w.postcode}</span>}
               </span>
               {external ? (
                 w.costNote ? (
                   <span className="flex items-center gap-2">
-                    <Ticket size={15} /> {w.costNote}
+                    <Ticket size={15} aria-hidden="true" /> {w.costNote}
                   </span>
                 ) : null
               ) : (
                 <span className="flex items-center gap-2">
-                  <Users size={15} />
+                  <Users size={15} aria-hidden="true" />
                   {full
                     ? 'Full'
                     : `${w.spotsRemaining} spot${w.spotsRemaining === 1 ? '' : 's'} left`}
                 </span>
               )}
             </div>
+            {/*
+              Links to MARRA's own page for the listing when one exists. Every card
+              used to send the visitor straight to the source site, so the
+              directory had no crawlable URL of its own for any of its 30 listings
+              and handed every click and all link equity to the source domain —
+              which for 15 of them is a generic classes page listing everything
+              that organisation runs, not the event you clicked.
+            */}
             <Button
-              href={listingUrl(w)}
+              href={eventPath(w) ?? listingUrl(w)}
               variant={full ? 'outline' : 'primary'}
               size="sm"
               className="mt-5 w-full"
             >
-              {external ? 'View event details' : full ? 'See the organisation' : 'Register on the Hub'}{' '}
-              <ArrowUpRight size={15} />
+              {full ? 'See the organisation' : 'View event details'}{' '}
+              <ArrowUpRight size={15} aria-hidden="true" />
             </Button>
             {external && (
               <p className="mt-2 text-center text-xs text-muted-foreground">
-                Listed by {w.organizationName} — opens their website
+                Listed by {w.organizationName}
               </p>
             )}
           </motion.article>
@@ -412,16 +454,16 @@ function FoodGrid({ items }: { items: DiscoverFood[] }) {
             )}
             <div className="space-y-2 border-t border-border/50 pt-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-2">
-                <CalendarDays size={15} /> {formatWhen(f.startsAt)}
+                <CalendarDays size={15} aria-hidden="true" /> {formatWhenRange(f.startsAt, f.durationMinutes)}
               </span>
               {f.location && (
                 <span className="flex items-center gap-2">
-                  <MapPin size={15} /> {f.location}
+                  <MapPin size={15} aria-hidden="true" /> {f.location}
                 </span>
               )}
               {!external && (
                 <span className="flex items-center gap-2">
-                  <UtensilsCrossed size={15} />
+                  <UtensilsCrossed size={15} aria-hidden="true" />
                   {gone ? 'All portions taken' : `${f.spotsRemaining} left`}
                 </span>
               )}
@@ -433,7 +475,7 @@ function FoodGrid({ items }: { items: DiscoverFood[] }) {
               className="mt-5 w-full"
             >
               {external ? 'View details' : gone ? 'See the organisation' : 'Reserve on the Hub'}{' '}
-              <ArrowUpRight size={15} />
+              <ArrowUpRight size={15} aria-hidden="true" />
             </Button>
           </motion.article>
         );
@@ -455,7 +497,7 @@ function VolunteerGrid({ items }: { items: DiscoverOrg[] }) {
           className="bg-card rounded-2xl p-6 border border-border flex flex-col"
         >
           <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary/5 text-primary">
-            <HeartHandshake size={18} />
+            <HeartHandshake size={18} aria-hidden="true" />
           </span>
           <h3 className="text-xl font-serif font-semibold text-primary mb-2 leading-snug">
             {o.name}
@@ -484,7 +526,7 @@ function VolunteerGrid({ items }: { items: DiscoverOrg[] }) {
             )}
           </p>
           <Button href={`${HUB_SITE_URL}/o/${o.slug}`} size="sm" className="w-full">
-            Apply on the Hub <ArrowUpRight size={15} />
+            Apply on the Hub <ArrowUpRight size={15} aria-hidden="true" />
           </Button>
         </motion.article>
       ))}
