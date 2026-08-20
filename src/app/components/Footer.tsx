@@ -106,7 +106,7 @@ export function Footer() {
                   className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center shrink-0 text-accent"
                   aria-hidden="true"
                 >
-                  <MapPin size={17} />
+                  <MapPin size={17} aria-hidden="true" />
                 </span>
                 <span className="text-primary-foreground/75 pt-1.5">
                   Caulfield South, VIC<br />Glen Eira, Australia
@@ -117,7 +117,7 @@ export function Footer() {
                   className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center shrink-0 text-accent"
                   aria-hidden="true"
                 >
-                  <Mail size={17} />
+                  <Mail size={17} aria-hidden="true" />
                 </span>
                 <a
                   href="mailto:hello@marrahub.com.au"
@@ -131,7 +131,7 @@ export function Footer() {
                   className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center shrink-0 text-accent"
                   aria-hidden="true"
                 >
-                  <Phone size={17} />
+                  <Phone size={17} aria-hidden="true" />
                 </span>
                 <a href="tel:+61433212855" className="text-primary-foreground/75 hover:text-white transition-colors">
                   0433 212 855

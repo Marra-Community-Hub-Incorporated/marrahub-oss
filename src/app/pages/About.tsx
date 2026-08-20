@@ -131,7 +131,7 @@ export function About() {
               className="bg-card rounded-xl p-8 border border-border"
             >
               <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Heart className="text-primary" size={28} />
+                <Heart className="text-primary" size={28} aria-hidden="true" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Care</h3>
               <p className="text-muted-foreground">
@@ -148,7 +148,7 @@ export function About() {
               className="bg-card rounded-xl p-8 border border-border"
             >
               <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Users className="text-primary" size={28} />
+                <Users className="text-primary" size={28} aria-hidden="true" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Connection</h3>
               <p className="text-muted-foreground">
@@ -165,7 +165,7 @@ export function About() {
               className="bg-card rounded-xl p-8 border border-border"
             >
               <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Compass className="text-primary" size={28} />
+                <Compass className="text-primary" size={28} aria-hidden="true" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Integrity</h3>
               <p className="text-muted-foreground">
@@ -182,7 +182,7 @@ export function About() {
               className="bg-card rounded-xl p-8 border border-border"
             >
               <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Shield className="text-primary" size={28} />
+                <Shield className="text-primary" size={28} aria-hidden="true" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Respect</h3>
               <p className="text-muted-foreground">

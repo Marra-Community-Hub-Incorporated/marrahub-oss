@@ -113,7 +113,7 @@ export function Impact() {
             >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Users className="text-primary" size={24} />
+                  <Users className="text-primary" size={24} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Social Connection & Belonging</h3>
@@ -148,7 +148,7 @@ export function Impact() {
             >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Target className="text-primary" size={24} />
+                  <Target className="text-primary" size={24} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Health & Wellbeing</h3>
@@ -183,7 +183,7 @@ export function Impact() {
             >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="text-primary" size={24} />
+                  <TrendingUp className="text-primary" size={24} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Skills & Employment</h3>
@@ -218,7 +218,7 @@ export function Impact() {
             >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Award className="text-primary" size={24} />
+                  <Award className="text-primary" size={24} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Youth Empowerment</h3>

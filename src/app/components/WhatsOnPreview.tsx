@@ -133,19 +133,19 @@ export function WhatsOnPreview() {
                     divider line reads better than a shared baseline. */}
                 <div className="space-y-2 border-t border-border/50 pt-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-2">
-                    <CalendarDays size={15} className="shrink-0" />{' '}
+                    <CalendarDays size={15} className="shrink-0" aria-hidden="true" />{' '}
                     {formatWhen(item.startsAt)}
                   </span>
                   {item.location && (
                     <span className="flex items-center gap-2">
-                      <MapPin size={15} className="shrink-0" />{' '}
+                      <MapPin size={15} className="shrink-0" aria-hidden="true" />{' '}
                       {suburbFrom(item.location)}
                       {item.postcode && <span>· {item.postcode}</span>}
                     </span>
                   )}
                   {item.costNote && (
                     <span className="flex items-center gap-2">
-                      <Ticket size={15} className="shrink-0" /> {item.costNote}
+                      <Ticket size={15} className="shrink-0" aria-hidden="true" /> {item.costNote}
                     </span>
                   )}
                 </div>
@@ -163,7 +163,7 @@ export function WhatsOnPreview() {
             {hasCounts
               ? `Browse all ${items.length} events`
               : 'Browse the directory'}{' '}
-            <ArrowRight size={20} />
+            <ArrowRight size={20} aria-hidden="true" />
           </Button>
         </div>
       </div>

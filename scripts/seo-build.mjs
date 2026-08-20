@@ -315,6 +315,11 @@ function upcomingEventJsonLd() {
  *
  * /launch has no hero image, so it gets no preload.
  */
+// The first community meet-up. Kept as constants so the Event markup and the
+// "is it over yet" check below cannot drift apart.
+const LAUNCH_EVENT_START = '2026-08-15T14:00:00+10:00';
+const LAUNCH_EVENT_END = '2026-08-15T18:00:00+10:00';
+
 const heroImageByRoute = {
   '/': '/media/hero-background.webp',
   '/about': '/media/bkg-pg.webp',
@@ -411,6 +416,10 @@ function buildSeoHead(routePath, { is404 = false } = {}) {
         email: siteConfig.email,
         telephone: siteConfig.phones[0],
         taxID: siteConfig.abn,
+        // Ties the site to the entity on a public register, which is the signal
+        // Google uses to reconcile an organisation it finds on the web with a
+        // real, identifiable one.
+        sameAs: siteConfig.sameAs,
         areaServed: ['Caulfield South', 'Glen Eira', 'Australia'],
         address: {
           '@type': 'PostalAddress',
@@ -462,15 +471,20 @@ function buildSeoHead(routePath, { is404 = false } = {}) {
 
     // Event structured data for our first meet-up (now a past event). Mirrored in
     // src/app/components/Seo.tsx — keep both in sync.
-    if (canonicalPath === '/launch') {
+    // Only while the meet-up is still ahead of us. Google's event features are
+    // for events people can still attend, and this markup kept describing a
+    // finished event as EventScheduled and free to attend — the page itself
+    // reads "A look back at". The page keeps its content and its other markup;
+    // it just stops advertising a date that has passed.
+    if (canonicalPath === '/launch' && Date.now() < Date.parse(LAUNCH_EVENT_END)) {
       lines.push(
         jsonLdScript('event', {
           '@context': 'https://schema.org',
           '@type': 'Event',
           name: 'MARRA Community Hub — First Community Meet-Up',
           description: meta.description,
-          startDate: '2026-08-15T14:00:00+10:00',
-          endDate: '2026-08-15T18:00:00+10:00',
+          startDate: LAUNCH_EVENT_START,
+          endDate: LAUNCH_EVENT_END,
           eventStatus: 'https://schema.org/EventScheduled',
           eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
           isAccessibleForFree: true,

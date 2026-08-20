@@ -11,7 +11,19 @@ export function Layout() {
 
   // Scroll to top on route change
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // ...unless the URL names a section. The footer's "Safeguarding" and
+    // "Accountability" links point at /governance#safeguarding and
+    // #accountability, and both target ids do exist — but this effect ran after
+    // the browser had already jumped to them and scrolled straight back to the
+    // top, so every one of those links looked broken.
+    const hash = location.hash ? location.hash.slice(1) : '';
+    const target = hash ? document.getElementById(hash) : null;
+
+    if (target) {
+      target.scrollIntoView({ block: 'start' });
+    } else {
+      window.scrollTo(0, 0);
+    }
 
     // Keep the initial page load unchanged so the skip link remains
     // the first keyboard-accessible control.
@@ -31,7 +43,7 @@ export function Layout() {
     });
 
     return () => cancelAnimationFrame(frame);
-  }, [location.pathname]);
+  }, [location.pathname, location.hash]);
 
   return (
     <div className="flex flex-col min-h-screen">

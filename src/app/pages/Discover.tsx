@@ -16,7 +16,7 @@ import { CTABanner } from '../components/CTABanner';
 import { Button } from '../components/Button';
 import {
   HUB_SITE_URL,
-  formatWhen,
+  formatWhenRange,
   isPublicFacingOrg,
   listingUrl,
   type DiscoverFood,
@@ -138,7 +138,7 @@ export function Discover() {
             className="max-w-4xl"
           >
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-6">
-              <Compass size={14} /> Community directory
+              <Compass size={14} aria-hidden="true" /> Community directory
             </span>
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">Discover the Hub</h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
@@ -162,7 +162,7 @@ export function Discover() {
 
           <div className="max-w-xl mx-auto mb-8">
             <div className="relative">
-              <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
               <input
                 type="search"
                 value={q}
@@ -200,7 +200,7 @@ export function Discover() {
                     : 'border border-border bg-card text-muted-foreground hover:text-primary'
                 }`}
               >
-                <Icon size={15} /> {label}
+                <Icon size={15} aria-hidden="true" /> {label}
               </button>
             ))}
           </div>
@@ -228,7 +228,7 @@ export function Discover() {
             {state.kind === 'ready' && state.items.length === 0 && (
               <div className="mx-auto max-w-md rounded-2xl border border-border bg-card px-6 py-12 text-center">
                 <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-primary">
-                  <Compass size={18} />
+                  <Compass size={18} aria-hidden="true" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">
                   {q.trim() ? 'Nothing matches that search' : 'Nothing here just yet'}
@@ -304,21 +304,21 @@ function WorkshopsGrid({ items }: { items: DiscoverWorkshop[] }) {
             )}
             <div className="space-y-2 border-t border-border/50 pt-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-2">
-                <CalendarDays size={15} /> {formatWhen(w.startsAt)}
+                <CalendarDays size={15} aria-hidden="true" /> {formatWhenRange(w.startsAt, w.durationMinutes)}
               </span>
               <span className="flex items-center gap-2">
-                <MapPin size={15} /> {w.location || 'TBC'}
+                <MapPin size={15} aria-hidden="true" /> {w.location || 'TBC'}
                 {w.postcode && <span>· {w.postcode}</span>}
               </span>
               {external ? (
                 w.costNote ? (
                   <span className="flex items-center gap-2">
-                    <Ticket size={15} /> {w.costNote}
+                    <Ticket size={15} aria-hidden="true" /> {w.costNote}
                   </span>
                 ) : null
               ) : (
                 <span className="flex items-center gap-2">
-                  <Users size={15} />
+                  <Users size={15} aria-hidden="true" />
                   {full
                     ? 'Full'
                     : `${w.spotsRemaining} spot${w.spotsRemaining === 1 ? '' : 's'} left`}
@@ -332,7 +332,7 @@ function WorkshopsGrid({ items }: { items: DiscoverWorkshop[] }) {
               className="mt-5 w-full"
             >
               {external ? 'View event details' : full ? 'See the organisation' : 'Register on the Hub'}{' '}
-              <ArrowUpRight size={15} />
+              <ArrowUpRight size={15} aria-hidden="true" />
             </Button>
             {external && (
               <p className="mt-2 text-center text-xs text-muted-foreground">
@@ -374,16 +374,16 @@ function FoodGrid({ items }: { items: DiscoverFood[] }) {
             )}
             <div className="space-y-2 border-t border-border/50 pt-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-2">
-                <CalendarDays size={15} /> {formatWhen(f.startsAt)}
+                <CalendarDays size={15} aria-hidden="true" /> {formatWhenRange(f.startsAt, f.durationMinutes)}
               </span>
               {f.location && (
                 <span className="flex items-center gap-2">
-                  <MapPin size={15} /> {f.location}
+                  <MapPin size={15} aria-hidden="true" /> {f.location}
                 </span>
               )}
               {!external && (
                 <span className="flex items-center gap-2">
-                  <UtensilsCrossed size={15} />
+                  <UtensilsCrossed size={15} aria-hidden="true" />
                   {gone ? 'All portions taken' : `${f.spotsRemaining} left`}
                 </span>
               )}
@@ -395,7 +395,7 @@ function FoodGrid({ items }: { items: DiscoverFood[] }) {
               className="mt-5 w-full"
             >
               {external ? 'View details' : gone ? 'See the organisation' : 'Reserve on the Hub'}{' '}
-              <ArrowUpRight size={15} />
+              <ArrowUpRight size={15} aria-hidden="true" />
             </Button>
           </motion.article>
         );
@@ -417,7 +417,7 @@ function VolunteerGrid({ items }: { items: DiscoverOrg[] }) {
           className="bg-card rounded-2xl p-6 border border-border flex flex-col"
         >
           <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary/5 text-primary">
-            <HeartHandshake size={18} />
+            <HeartHandshake size={18} aria-hidden="true" />
           </span>
           <h3 className="text-xl font-serif font-semibold text-primary mb-2 leading-snug">
             {o.name}
@@ -446,7 +446,7 @@ function VolunteerGrid({ items }: { items: DiscoverOrg[] }) {
             )}
           </p>
           <Button href={`${HUB_SITE_URL}/o/${o.slug}`} size="sm" className="w-full">
-            Apply on the Hub <ArrowUpRight size={15} />
+            Apply on the Hub <ArrowUpRight size={15} aria-hidden="true" />
           </Button>
         </motion.article>
       ))}

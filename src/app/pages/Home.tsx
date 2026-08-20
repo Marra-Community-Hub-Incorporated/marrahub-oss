@@ -340,7 +340,8 @@ export function Home() {
         {/* Signature Curved Bottom: SVG Divider for crisp rendering */}
         <div className="absolute bottom-[-1px] left-0 w-full leading-[0] z-10 pointer-events-none">
           <svg 
-            viewBox="0 0 1440 120" 
+            viewBox="0 0 1440 120"
+            aria-hidden="true" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg" 
             className="w-full h-auto"
