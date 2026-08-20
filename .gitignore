@@ -8,6 +8,12 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Node
+# Matches both the directory and a stray symlink named node_modules. The
+# trailing-slash form matched directories only, which is how a
+# "node_modules -> ../../../node_modules" symlink from someone's git worktree
+# got committed to the repo root — every clone then had its node_modules
+# redirected outside the project.
+node_modules
 node_modules/
 dist/
 dist-ssr/
