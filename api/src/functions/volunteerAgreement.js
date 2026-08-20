@@ -99,7 +99,6 @@ app.http('volunteerAgreement', {
       return json(502, { error: 'Could not send the agreement email.' }, cors);
     }
 
-
     // 2) Optionally file it in SharePoint. Failure here does NOT fail the
     //    submission — the email already delivered the record.
     if (String(process.env.SHAREPOINT_ENABLED).toLowerCase() === 'true') {
@@ -197,6 +196,3 @@ function buildEmailHtml(b) {
     </table>
   </div>`;
 }
-
-// Friendly confirmation emailed to the volunteer (from GRAPH_SENDER) with a copy
-// of their signed agreement attached. All interpolated values are escaped.

@@ -5,7 +5,14 @@ const { TableClient } = require('@azure/data-tables');
 
 const MAX_REQUEST_BYTES = 9 * 1024 * 1024;
 const MAX_PDF_BYTES = 6 * 1024 * 1024;
-const ACTIVE_PDF_MARKERS = ['/JavaScript', '/JS', '/Launch', '/EmbeddedFile', '/OpenAction', '/AA', '/RichMedia', '/XFA'];
+const ACTIVE_PDF_MARKERS = ['/JavaScript', '/JS', '/Launch', '/EmbeddedFile', '/AA', '/RichMedia', '/XFA'];
+// /OpenAction is not on that list because jsPDF writes a benign view destination —
+// "/OpenAction [3 0 R /FitH null]" — into the catalog of every agreement the site
+// generates, so rejecting the keyword outright rejects every real submission. Only the
+// destination-array form is allowed: an action dictionary or an indirect reference could
+// carry Launch or JavaScript behaviour inside a compressed object we never see as text.
+const OPEN_ACTION = /\/OpenAction/g;
+const OPEN_ACTION_DESTINATION = /\/OpenAction\s*\[/g;
 
 async function readJsonWithLimit(request, maxBytes = MAX_REQUEST_BYTES) {
   const encoding = (request.headers.get('content-encoding') || 'identity').toLowerCase();
@@ -34,6 +41,10 @@ async function readJsonWithLimit(request, maxBytes = MAX_REQUEST_BYTES) {
   }
 }
 
+function countMatches(text, pattern) {
+  return (text.match(pattern) || []).length;
+}
+
 function validatePdfBase64(pdfBase64) {
   if (typeof pdfBase64 !== 'string' || !pdfBase64.trim()) return { ok: false, error: 'Missing or invalid field: pdfBase64' };
   const normalized = pdfBase64.replace(/\s+/g, '');
@@ -45,6 +56,9 @@ function validatePdfBase64(pdfBase64) {
     return { ok: false, error: 'Attachment is not a complete PDF.' };
   }
   if (text.indexOf('%PDF-', 1) !== -1 || ACTIVE_PDF_MARKERS.some((marker) => text.includes(marker))) {
+    return { ok: false, error: 'Active or polyglot PDF content is not accepted.' };
+  }
+  if (countMatches(text, OPEN_ACTION) !== countMatches(text, OPEN_ACTION_DESTINATION)) {
     return { ok: false, error: 'Active or polyglot PDF content is not accepted.' };
   }
   return { ok: true };
@@ -80,4 +94,4 @@ async function consumeAgreementRateLimit(connectionString, ip, now = new Date())
   return true;
 }
 
-module.exports = { MAX_REQUEST_BYTES, readJsonWithLimit, validatePdfBase64, rateLimitKeys, consumeAgreementRateLimit };
+module.exports = { MAX_REQUEST_BYTES, MAX_PDF_BYTES, readJsonWithLimit, validatePdfBase64, rateLimitKeys, consumeAgreementRateLimit };
