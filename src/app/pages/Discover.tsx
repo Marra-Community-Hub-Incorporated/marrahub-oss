@@ -49,20 +49,29 @@ type State = { kind: 'loading' } | { kind: 'ready'; items: unknown[] } | { kind:
 export function Discover() {
   const [tab, setTab] = useState<Tab>('workshops');
   const [q, setQ] = useState('');
-  // Start from the listings baked in at build time when there are any, so the
-  // first paint (and the prerendered HTML behind it) shows real events rather
-  // than a spinner. React hydrates against this, so it has to be the same value
-  // the build rendered — hence the lazy initialiser reading the same snapshot.
-  const [state, setState] = useState<State>(() => {
-    const seeded = snapshotItemsFor(SECTION_BY_TAB.workshops, '');
-    return seeded ? { kind: 'ready', items: seeded } : { kind: 'loading' };
-  });
+  // Listings baked in at build time, when there are any, so the first paint (and
+  // the prerendered HTML behind it) shows real events rather than a spinner.
+  // React hydrates against this, so it has to be the same value the build
+  // rendered — hence the lazy initialiser reading the same snapshot.
+  const seededWorkshops = snapshotItemsFor(SECTION_BY_TAB.workshops, '');
+  const [state, setState] = useState<State>(() =>
+    seededWorkshops ? { kind: 'ready', items: seededWorkshops } : { kind: 'loading' },
+  );
+  // Seeded to match the listings above, because the fetch effect — which is what
+  // announces results — is skipped when the snapshot already supplied this view.
+  // Without this the live region would say nothing about the listings a
+  // screen-reader user is looking at on first load. Initial live-region content
+  // is not announced on mount, so this is silent and simply tells the truth.
+  const [statusMessage, setStatusMessage] = useState(() =>
+    seededWorkshops
+      ? `${seededWorkshops.length} result${seededWorkshops.length === 1 ? '' : 's'} found in workshops.`
+      : '',
+  );
+  const [errorMessage, setErrorMessage] = useState('');
   // True while the state still holds the build-time snapshot. The fetch effect
   // skips its first run in that case: refetching immediately would flip a
   // populated list back to `loading` and throw away a good first paint.
-  const isShowingSnapshot = React.useRef(
-    snapshotItemsFor(SECTION_BY_TAB.workshops, '') !== null,
-  );
+  const isShowingSnapshot = React.useRef(seededWorkshops !== null);
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
 
   const handleTabKeyDown = (
@@ -102,25 +111,60 @@ export function Discover() {
     }
 
     setState({ kind: 'loading' });
+    setStatusMessage('');
+    setErrorMessage('');
+
     const section = SECTION_BY_TAB[tab];
+    const activeTabLabel =
+      TABS.find(({ key }) => key === tab)?.label.toLowerCase() ?? 'items';
+
     // Abort superseded requests: without this, a slow response for an old
     // query can land after a newer one and overwrite it.
     const controller = new AbortController();
+
     const timer = setTimeout(async () => {
+      setStatusMessage(`Loading ${activeTabLabel}.`);
+
       try {
         const params = new URLSearchParams();
-        if (q.trim()) params.set('q', q.trim());
+        const trimmedQuery = q.trim();
+
+        if (trimmedQuery) {
+          params.set('q', trimmedQuery);
+        }
+
         const qs = params.toString();
+
         const res = await fetch(`/api/hub/${section}${qs ? `?${qs}` : ''}`, {
           signal: controller.signal,
         });
-        if (!res.ok) throw new Error(String(res.status));
-        setState({ kind: 'ready', items: (await res.json()) as unknown[] });
+
+        if (!res.ok) {
+          throw new Error(String(res.status));
+        }
+
+        const items = (await res.json()) as unknown[];
+
+        setState({ kind: 'ready', items });
+
+        setStatusMessage(
+          `${items.length} result${items.length === 1 ? '' : 's'} found${
+            trimmedQuery ? ` for ${trimmedQuery}` : ''
+          } in ${activeTabLabel}.`,
+        );
       } catch (err) {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return;
+        }
+
         setState({ kind: 'error' });
+        setStatusMessage('');
+        setErrorMessage(
+          `We couldn't load ${activeTabLabel} results. Please try again.`,
+        );
       }
     }, 250); // debounce typing
+
     return () => {
       clearTimeout(timer);
       controller.abort();
@@ -141,7 +185,11 @@ export function Discover() {
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-6">
               <Compass size={14} aria-hidden="true" /> Community directory
             </span>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">Discover the Hub</h1>
+
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+              Discover the Hub
+            </h1>
+
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
               Workshops, classes, free food and volunteering around Glen Eira and neighbouring
               suburbs, in one place —
@@ -161,9 +209,24 @@ export function Discover() {
             description="One search box, three ways in. Search by suburb, postcode, organisation or topic."
           />
 
+          <div className="sr-only">
+            <div role="status" aria-live="polite" aria-atomic="true">
+              {statusMessage}
+            </div>
+
+            <div role="alert" aria-atomic="true">
+              {errorMessage}
+            </div>
+          </div>
+
           <div className="max-w-xl mx-auto mb-8">
             <div className="relative">
-              <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+              <Search
+                size={16}
+                aria-hidden="true"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+
               <input
                 type="search"
                 value={q}
@@ -219,7 +282,12 @@ export function Discover() {
               <div className="mx-auto max-w-md rounded-2xl border border-secondary/20 bg-secondary/5 px-6 py-8 text-center text-secondary">
                 We couldn't load the directory just now — try again in a moment, or browse it
                 directly on{' '}
-                <a href={HUB_SITE_URL} target="_blank" rel="noopener noreferrer" className="underline">
+                <a
+                  href={HUB_SITE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
                   the Hub
                 </a>
                 .
@@ -231,9 +299,11 @@ export function Discover() {
                 <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-primary">
                   <Compass size={18} aria-hidden="true" />
                 </div>
+
                 <h3 className="text-xl font-semibold mb-2">
                   {q.trim() ? 'Nothing matches that search' : 'Nothing here just yet'}
                 </h3>
+
                 <p className="text-muted-foreground">
                   {q.trim()
                     ? 'Try a different suburb or a broader word.'
@@ -245,9 +315,11 @@ export function Discover() {
             {state.kind === 'ready' && state.items.length > 0 && tab === 'workshops' && (
               <WorkshopsGrid items={state.items as DiscoverWorkshop[]} />
             )}
+
             {state.kind === 'ready' && state.items.length > 0 && tab === 'food' && (
               <FoodGrid items={state.items as DiscoverFood[]} />
             )}
+
             {state.kind === 'ready' && state.items.length > 0 && tab === 'volunteer' && (
               <VolunteerGrid
                 items={(state.items as DiscoverOrg[]).filter(isPublicFacingOrg)}
@@ -273,7 +345,6 @@ export function Discover() {
     </div>
   );
 }
-
 function WorkshopsGrid({ items }: { items: DiscoverWorkshop[] }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
