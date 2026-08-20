@@ -7,7 +7,25 @@
     "enabled": true
   },
   "assets": {
-    "not_found_handling": "single-page-application",
+    // Without a declared binding, env.ASSETS is undefined at runtime — and
+    // worker/index.ts calls env.ASSETS.fetch() for everything that isn't the
+    // Discover proxy. The types said Fetcher, the runtime said undefined.
+    "binding": "ASSETS",
+    // "404-page" serves the prerendered dist/client/404.html with a real 404
+    // status. The previous "single-page-application" value answered EVERY
+    // unmatched path with index.html at 200 — which made the whole site a soft
+    // 404 to Google and, until public/favicon.ico existed, swallowed
+    // /favicon.ico so Search showed a generic globe. Every real route is
+    // prerendered to its own index.html, so client-side routing still works on
+    // deep links; only genuinely unknown URLs reach the 404 page.
+    "not_found_handling": "404-page",
+    // Serve /about directly instead of 307-ing to /about/. The default
+    // ("auto-trailing-slash") added the slash, so the sitemap listed /about,
+    // the server bounced Googlebot to /about/, and that page's canonical tag
+    // pointed back at /about — a redirect hop plus a contradictory canonical on
+    // every internal page. Dropping the slash matches the canonicals and the
+    // sitemap, which are both slash-less.
+    "html_handling": "drop-trailing-slash",
     "run_worker_first": [
       "/api/*"
     ]

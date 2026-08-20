@@ -21,12 +21,25 @@ export default {
       return handleHubProxy(request, url);
     }
 
+    // wrangler.jsonc routes every /api/* path here via run_worker_first, so an
+    // /api/ path that isn't the proxy has to be answered here. It used to fall
+    // through to env.ASSETS — which is undefined unless the assets block
+    // declares a binding, so `/api/anything` threw and Cloudflare served its own
+    // 1101 error page as an HTTP 500.
+    if (url.pathname === '/api' || url.pathname.startsWith('/api/')) {
+      return jsonError('Not found', 404);
+    }
+
     return env.ASSETS.fetch(request);
   },
 } satisfies ExportedHandler<Env>;
 
 async function handleHubProxy(request: Request, url: URL): Promise<Response> {
-  if (request.method !== 'GET') {
+  // HEAD is a GET without a body, and crawlers and uptime checks use it to probe
+  // a URL cheaply. Rejecting it with 405 made those probes look like the endpoint
+  // was broken. The upstream fetch below is a GET either way; the runtime strips
+  // the body from the response to a HEAD request.
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
     return jsonError('Method not allowed', 405);
   }
 

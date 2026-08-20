@@ -43,7 +43,7 @@ export function Governance() {
             >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Users className="text-primary" size={24} />
+                  <Users className="text-primary" size={24} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Board of Directors</h3>
@@ -78,7 +78,7 @@ export function Governance() {
             >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <FileText className="text-primary" size={24} />
+                  <FileText className="text-primary" size={24} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Constitution & Bylaws</h3>
@@ -113,7 +113,7 @@ export function Governance() {
             >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Eye className="text-primary" size={24} />
+                  <Eye className="text-primary" size={24} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Financial Oversight</h3>
@@ -148,7 +148,7 @@ export function Governance() {
             >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <CheckCircle className="text-primary" size={24} />
+                  <CheckCircle className="text-primary" size={24} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Quality & Compliance</h3>
@@ -195,7 +195,7 @@ export function Governance() {
             >
               <div className="flex items-start gap-4 mb-6">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Shield className="text-primary" size={24} />
+                  <Shield className="text-primary" size={24} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Child Safety</h3>
@@ -238,7 +238,7 @@ export function Governance() {
             >
               <div className="flex items-start gap-4 mb-6">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Heart className="text-primary" size={24} />
+                  <Heart className="text-primary" size={24} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Vulnerable Adults</h3>

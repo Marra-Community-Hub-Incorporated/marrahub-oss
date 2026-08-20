@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 // The Cloudflare Vite plugin builds the client SPA into dist/client (and the
 // Worker into its own dist/<name> alongside it) now that the site has a
@@ -20,164 +21,101 @@ const envFiles = ['.env.production.local', '.env.production', '.env.local', '.en
 const seoHeadStart = '<!-- SEO_HEAD_START -->';
 const seoHeadEnd = '<!-- SEO_HEAD_END -->';
 
-const siteConfig = {
-  name: 'MARRA Community Centre',
-  // Registered entity name as held by the ACNC/ABR — not a display name.
-  legalName: 'Marra Community Hub Incorporated',
-  alternateName: 'MARRA Community Hub',
-  shortName: 'MARRA',
-  siteUrl: 'https://marrahub.com.au',
-  language: 'en-AU',
-  locale: 'en_AU',
-  themeColor: '#1e453a',
-  description:
-    'MARRA is a community hub in Caulfield South connecting people through care, local partnerships, and interactive community programs.',
-  email: 'hello@marrahub.com.au',
-  phones: ['+61421803285', '+61433212855'],
-  locality: 'Caulfield South',
-  region: 'VIC',
-  country: 'AU',
-  abn: '79178583024',
-  logoPath: '/media/favicon/favicon.png',
-  defaultImagePath: '/media/Seo_Prev.png',
-};
+// The SEO source of truth now comes from the app itself. src/app/seo/site.ts
+// used to be duplicated here by hand because a Node script can't import a TS
+// module — and the two copies had already drifted: this file still carried a
+// phone number that site.ts no longer listed, so every prerendered page shipped
+// JSON-LD advertising it to Google. dist/ssr/entry-server.js (built by
+// vite.ssr.config.ts) re-exports the real values, so there is one copy again.
+const ssrEntryPath = path.resolve('dist/ssr/entry-server.js');
 
-// Duplicated from src/app/seo/site.ts (this Node script can't import the TS
-// module) — any edit to the SEO map there must be mirrored here, or the
-// prerendered HTML keeps serving the old meta tags.
-const pageSeoMap = {
-  '/': {
-    title: 'MARRA Community Hub | Interactive Community Centre in Caulfield South',
-    description:
-      'Discover MARRA Community Hub, an interactive community centre in Caulfield South with programs, partnerships, and local support.',
-    keywords: [
-      'MARRA Community Hub',
-      'MARRA Community Centre',
-      'community hub Caulfield South',
-      'community centre Glen Eira',
-      'interactive community programs',
-      'community support Glen Eira',
-    ],
-    pageType: 'WebPage',
-  },
-  '/launch': {
-    title: 'Our First Meet-Up — 15 August 2026 | MARRA Community Hub',
-    description:
-      "A look back at MARRA Community Hub's first community meet-up: Saturday 15 August 2026, 2–6pm at Carnegie Library & Community Centre. AI basics, a sewing workshop, board games, coffee and snacks — supported by Glen Eira City Council.",
-    keywords: [
-      'MARRA first meet-up',
-      'MARRA past events',
-      'community event Glen Eira',
-      'Carnegie Library community centre event',
-      'free community meet-up Melbourne',
-      'community hub Carnegie',
-    ],
-    pageType: 'WebPage',
-    image: {
-      path: '/media/launch/launch-wide-en-poster.jpg',
-      width: 1280,
-      height: 720,
-      alt: "Still from the invitation to MARRA Community Hub's first meet-up on 15 August 2026 at Carnegie Library & Community Centre",
-    },
-  },
-  '/about': {
-    title: 'About MARRA | Community Hub Vision, Values, and Story',
-    description:
-      'Learn about MARRA, our story, values, and long-term vision for a trusted community hub in Caulfield South built through care, belonging, and local partnerships.',
-    keywords: [
-      'about MARRA',
-      'community hub vision',
-      'Caulfield South community centre',
-      'community values',
-      'local partnerships Glen Eira',
-    ],
-    pageType: 'AboutPage',
-  },
-  '/programs': {
-    title: 'Programs and Services | MARRA Community Hub',
-    description:
-      'Our Volunteer IT Program is now running — currently recruiting a volunteer Grant Writer and a volunteer Social Media Manager, with a new developer intake opening soon. Explore the programs MARRA is building across family support, education, wellbeing, and community connection.',
-    keywords: [
-      'volunteer IT program Melbourne',
-      'volunteer grant writer Melbourne',
-      'volunteer social media manager Melbourne',
-      'IT volunteering local experience',
-      'community programs Glen Eira',
-      'family support programs',
-      'youth development Caulfield South',
-      'wellbeing programs community hub',
-      'MARRA services',
-    ],
-    pageType: 'CollectionPage',
-  },
-  '/discover': {
-    title: "What's On in Glen Eira | Workshops, Free Food & Volunteering",
-    description:
-      'Browse workshops, classes, free food and volunteering across Glen Eira — listings from the MARRA Hub platform alongside events gathered from local libraries, neighbourhood houses and community centres.',
-    keywords: [
-      'discover MARRA hub',
-      "what's on Glen Eira",
-      'community events Caulfield South',
-      'community workshops Glen Eira',
-      'free food Caulfield South',
-      'volunteer opportunities Melbourne',
-      'community directory Glen Eira',
-    ],
-    pageType: 'CollectionPage',
-  },
-  '/impact': {
-    title: 'Community Impact | MARRA Community Hub',
-    description:
-      'See the impact areas MARRA Community Hub is focused on, including belonging, wellbeing, youth empowerment, local skills, and stronger community partnerships.',
-    keywords: [
-      'community impact Glen Eira',
-      'community wellbeing Caulfield South',
-      'youth empowerment community hub',
-      'local partnerships Glen Eira',
-      'MARRA impact',
-    ],
-    pageType: 'CollectionPage',
-  },
-  '/governance': {
-    title: 'Governance and Transparency | MARRA Community Hub',
-    description:
-      'Read how MARRA Community Hub approaches governance, safeguarding, accountability, transparency, and ethical community leadership.',
-    keywords: [
-      'community governance',
-      'nonprofit transparency',
-      'community hub accountability',
-      'safeguarding policies Glen Eira',
-      'MARRA governance',
-    ],
-    pageType: 'AboutPage',
-  },
-  '/contact': {
-    title: 'Contact MARRA | Community Hub in Caulfield South',
-    description:
-      'Contact MARRA Community Hub in Caulfield South for enquiries, partnerships, accessibility support, and community collaboration opportunities.',
-    keywords: [
-      'contact MARRA',
-      'community hub contact Caulfield South',
-      'community centre phone Glen Eira',
-      'Glen Eira community partnership',
-      'MARRA email',
-    ],
-    pageType: 'ContactPage',
-  },
-  '/volunteer': {
-    title: 'Volunteer Agreement | MARRA Community Hub',
-    description:
-      'Become a MARRA Community Hub volunteer in Caulfield South. Read and sign the volunteer agreement online to start offering your time, skills, and support.',
-    keywords: [
-      'volunteer Caulfield South',
-      'volunteer Glen Eira',
-      'community volunteering Melbourne',
-      'volunteer agreement',
-      'MARRA volunteer',
-    ],
-    pageType: 'WebPage',
-  },
-};
+if (!fs.existsSync(ssrEntryPath)) {
+  console.error(
+    'SEO build: dist/ssr/entry-server.js is missing. Run "vite build --config vite.ssr.config.ts" first.',
+  );
+  process.exit(1);
+}
+
+const {
+  siteConfig,
+  pageSeoMap,
+  getPageSeo,
+  render,
+  DISCOVER_DATA_ELEMENT_ID,
+  setServerDiscoverSnapshot,
+  assignUniqueEventPaths,
+} = await import(pathToFileURL(ssrEntryPath).href);
+
+// The Hub's public Discover directory, captured at build time so /discover ships
+// with its listings in the HTML. Every event used to arrive from a client-side
+// fetch, which meant the 30-odd real listings — the thing people actually search
+// for — appeared nowhere in the indexable page.
+//
+// A build must never fail because the Hub is briefly unreachable: on any error
+// this returns null and /discover prerenders exactly as it did before, with the
+// client fetching after boot.
+const HUB_DISCOVER_BASE = 'https://hub.marrahub.com.au/api/discover';
+const DISCOVER_FETCH_TIMEOUT_MS = 15000;
+
+async function fetchDiscoverSection(section) {
+  const response = await fetch(`${HUB_DISCOVER_BASE}/${section}`, {
+    headers: { accept: 'application/json' },
+    signal: AbortSignal.timeout(DISCOVER_FETCH_TIMEOUT_MS),
+  });
+
+  if (!response.ok) {
+    throw new Error(`${section} responded ${response.status}`);
+  }
+
+  const json = await response.json();
+
+  if (!Array.isArray(json)) {
+    throw new Error(`${section} did not return an array`);
+  }
+
+  return json;
+}
+
+async function fetchDiscoverSnapshot() {
+  try {
+    const [workshops, food, orgs] = await Promise.all([
+      fetchDiscoverSection('workshops'),
+      fetchDiscoverSection('food'),
+      fetchDiscoverSection('orgs'),
+    ]);
+
+    return {
+      workshops,
+      food,
+      // The Hub's orgs feed includes its internal "Public Intake" tenant, which
+      // is not an organisation anyone can volunteer with. The page filters it
+      // when rendering, but it would still ride to the browser inside the
+      // snapshot and sit in the served HTML, so drop it here too.
+      orgs: orgs.filter((org) => org?.slug !== 'public'),
+      capturedAt: new Date().toISOString(),
+    };
+  } catch (error) {
+    console.warn(
+      `SEO build: could not capture the Discover directory (${error.message}). ` +
+        '/discover will prerender without listings and fetch them in the browser.',
+    );
+    return null;
+  }
+}
+
+const discoverSnapshot = await fetchDiscoverSnapshot();
+
+// getPageSeo derives each listing page's title and description from the snapshot,
+// and buildSeoHead runs independently of render() — so hand the snapshot over
+// before generating any head, not just before rendering.
+setServerDiscoverSnapshot(discoverSnapshot);
+
+// One page per upcoming listing. Both the URL and the ordering come from the same
+// helper the app uses, so a link rendered on /discover always resolves to a file
+// that exists.
+const eventPages = discoverSnapshot
+  ? assignUniqueEventPaths([...discoverSnapshot.workshops, ...discoverSnapshot.food])
+  : [];
 
 function parseEnvFile(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -275,9 +213,166 @@ function jsonLdScript(id, data) {
   return `    <script type="application/ld+json" data-seo-id="${id}">${serialized}</script>`;
 }
 
-function buildSeoHead(routePath) {
+/**
+ * schema.org/Event markup for the captured listings — this is what makes an
+ * event eligible for Google's event rich results, and it is the only route by
+ * which a small site's individual events surface for "what's on near me" style
+ * searches independently of the domain's authority.
+ *
+ * Deliberate omissions:
+ *  - No `offers`. Cost arrives as free text the organisation wrote (costNote),
+ *    and inferring "free" from a blank or chatty value would publish a price
+ *    MARRA never verified. A wrong price in a rich result is worse than none.
+ *  - Past events are dropped. Markup for an event that already happened is
+ *    stale data Google is entitled to distrust.
+ *  - `url` points at whoever actually runs the event, which for a gathered
+ *    listing is the source organisation's own page — this site is aggregating
+ *    these, not claiming them.
+ */
+function splitLocation(location) {
+  const parts = String(location || '')
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length === 0) return { venue: '', street: '', suburb: '' };
+  if (parts.length === 1) return { venue: parts[0], street: '', suburb: '' };
+
+  return {
+    venue: parts[0],
+    street: parts.slice(1, -1).join(', '),
+    suburb: parts[parts.length - 1],
+  };
+}
+
+function eventJsonLdFor(item) {
+  const startsAt = new Date(item.startsAt);
+  if (Number.isNaN(startsAt.getTime())) return null;
+
+  const { venue, street, suburb } = splitLocation(item.location);
+
+  // Google requires a location on an Event, and at least one listing in the feed
+  // arrives with location, postcode and coordinates all empty. Emitting a Place
+  // with a blank name and an address of nothing but "VIC, AU" would be invalid
+  // markup asserting a state the listing never claimed, so skip the event.
+  if (!venue && !street && !suburb && !item.postcode) return null;
+
+  const address = { '@type': 'PostalAddress', addressRegion: 'VIC', addressCountry: 'AU' };
+  if (street) address.streetAddress = street;
+  if (suburb) address.addressLocality = suburb;
+  if (item.postcode) address.postalCode = item.postcode;
+
+  const place = { '@type': 'Place', name: venue || item.location, address };
+
+  if (typeof item.latitude === 'number' && typeof item.longitude === 'number') {
+    place.geo = {
+      '@type': 'GeoCoordinates',
+      latitude: item.latitude,
+      longitude: item.longitude,
+    };
+  }
+
+  const event = {
+    '@type': 'Event',
+    name: item.title,
+    startDate: startsAt.toISOString(),
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: place,
+  };
+
+  if (item.durationMinutes > 0) {
+    event.endDate = new Date(startsAt.getTime() + item.durationMinutes * 60000).toISOString();
+  }
+
+  if (item.description) event.description = item.description;
+  if (item.coverImageThumbUrl) event.image = item.coverImageThumbUrl;
+
+  if (item.organizationName) {
+    event.organizer = { '@type': 'Organization', name: item.organizationName };
+  }
+
+  const url = item.isExternalListing
+    ? item.registrationUrl || item.sourceUrl
+    : `${HUB_SITE_URL_FOR_LISTINGS}/o/${item.organizationSlug}`;
+  if (url) event.url = url;
+
+  return event;
+}
+
+const HUB_SITE_URL_FOR_LISTINGS = 'https://hub.marrahub.com.au';
+
+/**
+ * Markup for a page about exactly one listing. Google's event experience "only
+ * supports pages that focus on a single event", which is precisely what the
+ * /discover list page cannot be and what these pages are.
+ */
+function singleEventJsonLd(item, absoluteUrl) {
+  const event = eventJsonLdFor(item);
+  if (!event) return null;
+
+  return {
+    ...event,
+    '@context': 'https://schema.org',
+    // The page about the event, not the source listing. These pages are
+    // self-canonical: MARRA is the publisher of this aggregated view, and the
+    // organiser is credited and linked in the body.
+    url: absoluteUrl,
+    ...(item.isExternalListing && (item.registrationUrl || item.sourceUrl)
+      ? { isSimilarTo: item.registrationUrl || item.sourceUrl }
+      : {}),
+  };
+}
+
+function upcomingEventJsonLd() {
+  if (!discoverSnapshot) return [];
+
+  const now = Date.now();
+  const items = [...discoverSnapshot.workshops, ...discoverSnapshot.food];
+
+  return items
+    .filter((item) => {
+      const at = new Date(item.startsAt).getTime();
+      return Number.isFinite(at) && at >= now;
+    })
+    .sort((a, b) => new Date(a.startsAt) - new Date(b.startsAt))
+    .map(eventJsonLdFor)
+    .filter(Boolean);
+}
+
+/**
+ * The image behind each page's hero, so the head can preload it.
+ *
+ * Both heroes are CSS/inline background images, which the browser's preload
+ * scanner does not discover — it only sees them once the stylesheet or the
+ * component's inline style has been parsed. That put the LCP element at the end
+ * of a dependency chain instead of the start of the download queue. A preload
+ * with fetchpriority="high" moves it to the front.
+ *
+ * /launch has no hero image, so it gets no preload.
+ */
+// The first community meet-up. Kept as constants so the Event markup and the
+// "is it over yet" check below cannot drift apart.
+const LAUNCH_EVENT_START = '2026-08-15T14:00:00+10:00';
+const LAUNCH_EVENT_END = '2026-08-15T18:00:00+10:00';
+
+const heroImageByRoute = {
+  '/': '/media/hero-background.webp',
+  '/about': '/media/bkg-pg.webp',
+  '/programs': '/media/bkg-pg.webp',
+  '/discover': '/media/bkg-pg.webp',
+  '/impact': '/media/bkg-pg.webp',
+  '/governance': '/media/bkg-pg.webp',
+  '/contact': '/media/bkg-pg.webp',
+  '/volunteer': '/media/bkg-pg.webp',
+};
+
+function buildSeoHead(routePath, { is404 = false } = {}) {
   const canonicalPath = getCanonicalPath(routePath);
-  const meta = pageSeoMap[canonicalPath] || pageSeoMap['/'];
+  // getPageSeo is the same lookup the running app uses, and it already answers
+  // unknown paths with noindex "Page Not Found" meta — which is exactly what the
+  // prerendered 404 document needs.
+  const meta = getPageSeo(canonicalPath);
   const canonicalUrl = getAbsoluteUrl(canonicalPath);
   const imageUrl = getAbsoluteUrl(meta.image?.path ?? siteConfig.defaultImagePath);
   const imageWidth = meta.image?.width ?? 1200;
@@ -286,7 +381,9 @@ function buildSeoHead(routePath) {
     meta.image?.alt ?? 'MARRA Community Hub – Interactive community centre in Caulfield South';
   const logoUrl = getAbsoluteUrl(siteConfig.logoPath);
   const robotsContent =
-    'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
+    is404 || meta.noindex
+      ? 'noindex, nofollow'
+      : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
   const lines = [
     '    <!-- SEO_HEAD_START -->',
     `    <title>${escapeHtml(meta.title)}</title>`,
@@ -305,7 +402,7 @@ function buildSeoHead(routePath) {
     `    <meta property="og:locale" content="${escapeHtml(siteConfig.locale)}" />`,
     `    <meta property="og:title" content="${escapeHtml(meta.title)}" />`,
     `    <meta property="og:description" content="${escapeHtml(meta.description)}" />`,
-    `    <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />`,
+    ...(is404 ? [] : [`    <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />`]),
     `    <meta property="og:image" content="${escapeHtml(imageUrl)}" />`,
     `    <meta property="og:image:width" content="${imageWidth}" />`,
     `    <meta property="og:image:height" content="${imageHeight}" />`,
@@ -314,11 +411,35 @@ function buildSeoHead(routePath) {
     `    <meta name="twitter:title" content="${escapeHtml(meta.title)}" />`,
     `    <meta name="twitter:description" content="${escapeHtml(meta.description)}" />`,
     `    <meta name="twitter:image" content="${escapeHtml(imageUrl)}" />`,
-    `    <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />`,
-    `    <link rel="alternate" hreflang="en-au" href="${escapeHtml(canonicalUrl)}" />`,
   ];
 
-  if (siteUrl) {
+  const heroImage = is404
+    ? undefined
+    : (heroImageByRoute[canonicalPath] ??
+      (canonicalPath.startsWith('/whats-on/') ? '/media/bkg-pg.webp' : undefined));
+
+  // Every page's headings are set in the serif, so it is always on the critical
+  // path. Preloading it means the swap from Georgia happens before first paint
+  // rather than visibly reflowing after it. Only the latin subset — latin-ext is
+  // fetched on demand by unicode-range.
+  lines.push(
+    '    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/ibarra-real-nova-v30-latin.woff2" />',
+  );
+
+  if (heroImage) {
+    lines.push(
+      `    <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="${escapeHtml(heroImage)}" />`,
+    );
+  }
+
+  if (!is404) {
+    lines.push(
+      `    <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />`,
+      `    <link rel="alternate" hreflang="en-au" href="${escapeHtml(canonicalUrl)}" />`,
+    );
+  }
+
+  if (siteUrl && !is404) {
     const organizationId = `${siteUrl}/#organization`;
     const websiteId = `${siteUrl}/#website`;
 
@@ -342,6 +463,10 @@ function buildSeoHead(routePath) {
         email: siteConfig.email,
         telephone: siteConfig.phones[0],
         taxID: siteConfig.abn,
+        // Ties the site to the entity on a public register, which is the signal
+        // Google uses to reconcile an organisation it finds on the web with a
+        // real, identifiable one.
+        sameAs: siteConfig.sameAs,
         areaServed: ['Caulfield South', 'Glen Eira', 'Australia'],
         address: {
           '@type': 'PostalAddress',
@@ -393,15 +518,20 @@ function buildSeoHead(routePath) {
 
     // Event structured data for our first meet-up (now a past event). Mirrored in
     // src/app/components/Seo.tsx — keep both in sync.
-    if (canonicalPath === '/launch') {
+    // Only while the meet-up is still ahead of us. Google's event features are
+    // for events people can still attend, and this markup kept describing a
+    // finished event as EventScheduled and free to attend — the page itself
+    // reads "A look back at". The page keeps its content and its other markup;
+    // it just stops advertising a date that has passed.
+    if (canonicalPath === '/launch' && Date.now() < Date.parse(LAUNCH_EVENT_END)) {
       lines.push(
         jsonLdScript('event', {
           '@context': 'https://schema.org',
           '@type': 'Event',
           name: 'MARRA Community Hub — First Community Meet-Up',
           description: meta.description,
-          startDate: '2026-08-15T14:00:00+10:00',
-          endDate: '2026-08-15T18:00:00+10:00',
+          startDate: LAUNCH_EVENT_START,
+          endDate: LAUNCH_EVENT_END,
           eventStatus: 'https://schema.org/EventScheduled',
           eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
           isAccessibleForFree: true,
@@ -444,6 +574,28 @@ function buildSeoHead(routePath) {
       );
     }
 
+    if (canonicalPath.startsWith('/whats-on/')) {
+      const match = eventPages.find((entry) => entry.path === canonicalPath);
+      const graph = match ? singleEventJsonLd(match.item, canonicalUrl) : null;
+
+      if (graph) {
+        lines.push(jsonLdScript('event', graph));
+      }
+    }
+
+    if (canonicalPath === '/discover') {
+      const events = upcomingEventJsonLd();
+
+      if (events.length > 0) {
+        lines.push(
+          jsonLdScript('discover-events', {
+            '@context': 'https://schema.org',
+            '@graph': events,
+          }),
+        );
+      }
+    }
+
     if (canonicalPath !== '/') {
       lines.push(
         jsonLdScript('breadcrumbs', {
@@ -472,25 +624,164 @@ function buildSeoHead(routePath) {
   return lines.join('\n');
 }
 
-if (fs.existsSync(indexHtmlPath)) {
-  const indexHtmlTemplate = fs.readFileSync(indexHtmlPath, 'utf8');
+const rootDiv = '<div id="root"></div>';
 
-  for (const route of activeRoutes) {
-    const routeHtml = upsertSeoHeadBlock(indexHtmlTemplate, buildSeoHead(route.path));
+/**
+ * Drop the rendered app into the shell. Until this existed the shell shipped an
+ * empty #root, so every crawler that doesn't execute JavaScript — and every
+ * social/AI scraper that never will — saw a page with zero words on it.
+ */
+function injectAppHtml(html, appHtml) {
+  const index = html.indexOf(rootDiv);
 
-    if (route.path === '/') {
-      fs.writeFileSync(indexHtmlPath, routeHtml, 'utf8');
-      continue;
-    }
-
-    const routeSegment = route.path.replace(/^\/+|\/+$/g, '');
-    const routeDirectory = path.join(distDir, routeSegment);
-    const routeIndexPath = path.join(routeDirectory, 'index.html');
-
-    fs.mkdirSync(routeDirectory, { recursive: true });
-    fs.writeFileSync(routeIndexPath, routeHtml, 'utf8');
+  if (index === -1) {
+    throw new Error('SEO build: could not find <div id="root"></div> to prerender into');
   }
+
+  return html.replace(rootDiv, `<div id="root">${appHtml}</div>`);
 }
+
+// Routes whose markup was rendered from the Discover snapshot. They have to
+// carry the same listings to the browser, or React's first client render would
+// build a spinner where the HTML has events and discard the prerendered DOM.
+const snapshotRoutes = new Set(['/', '/discover']);
+
+function needsSnapshot(routePath) {
+  return snapshotRoutes.has(routePath) || routePath.startsWith('/whats-on/');
+}
+
+/**
+ * A `type="application/json"` data block, not an inline script assignment:
+ * script-src in public/_headers allows only 'self' plus one hashed inline
+ * script, and a JSON block is inert so the policy never applies to it.
+ */
+function injectDiscoverSnapshot(html, routePath) {
+  if (!discoverSnapshot || !needsSnapshot(routePath)) return html;
+
+  const serialized = JSON.stringify(discoverSnapshot)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+
+  return html.replace(
+    '</body>',
+    `  <script type="application/json" id="${DISCOVER_DATA_ELEMENT_ID}">${serialized}</script>\n  </body>`,
+  );
+}
+
+if (!fs.existsSync(indexHtmlPath)) {
+  console.error(`SEO build: ${indexHtmlPath} is missing. Run "vite build" first.`);
+  process.exit(1);
+}
+
+const indexHtmlTemplate = fs.readFileSync(indexHtmlPath, 'utf8');
+const redirectRules = [];
+let prerenderedCount = 0;
+
+for (const route of routes) {
+  const result = await render(route.path, { discover: discoverSnapshot });
+
+  // A route whose loader redirects (/volunteer while its feature flag is off)
+  // gets a real server redirect in _redirects instead of a prerendered page.
+  // It used to rely on the SPA fallback serving the shell so the client router
+  // could redirect after boot — which meant Google saw 200 + an empty body at a
+  // URL that is not a page.
+  if (result.redirect) {
+    redirectRules.push(`${route.path} ${result.redirect.location} 302`);
+    continue;
+  }
+
+  if (!result.html) {
+    throw new Error(`SEO build: ${route.path} rendered no markup and no redirect`);
+  }
+
+  if (!activeRoutes.some((active) => active.path === route.path)) {
+    continue;
+  }
+
+  const routeHtml = injectDiscoverSnapshot(
+    injectAppHtml(
+      upsertSeoHeadBlock(indexHtmlTemplate, buildSeoHead(route.path)),
+      result.html,
+    ),
+    route.path,
+  );
+  prerenderedCount += 1;
+
+  if (route.path === '/') {
+    fs.writeFileSync(indexHtmlPath, routeHtml, 'utf8');
+    continue;
+  }
+
+  const routeSegment = route.path.replace(/^\/+|\/+$/g, '');
+  const routeDirectory = path.join(distDir, routeSegment);
+
+  fs.mkdirSync(routeDirectory, { recursive: true });
+  fs.writeFileSync(path.join(routeDirectory, 'index.html'), routeHtml, 'utf8');
+}
+
+// One file per upcoming listing. These are what make an individual event
+// findable: /discover is a single URL standing in for every listing on it, and
+// Google's event rich results only apply to a page about one event.
+let eventPageCount = 0;
+
+for (const { path: eventRoutePath } of eventPages) {
+  const result = await render(eventRoutePath, { discover: discoverSnapshot });
+
+  if (!result.html || result.status !== 200) {
+    console.warn(
+      `SEO build: ${eventRoutePath} rendered status ${result.status}; skipping. ` +
+        'The route in routeConfig.tsx and the slug in lib/eventSlug.ts have diverged.',
+    );
+    continue;
+  }
+
+  const eventHtml = injectDiscoverSnapshot(
+    injectAppHtml(
+      upsertSeoHeadBlock(indexHtmlTemplate, buildSeoHead(eventRoutePath)),
+      result.html,
+    ),
+    eventRoutePath,
+  );
+
+  const eventDirectory = path.join(distDir, eventRoutePath.replace(/^\/+/, ''));
+  fs.mkdirSync(eventDirectory, { recursive: true });
+  fs.writeFileSync(path.join(eventDirectory, 'index.html'), eventHtml, 'utf8');
+  eventPageCount += 1;
+}
+
+// The 404 page is a real prerendered document now, served by Cloudflare with a
+// 404 status (assets.not_found_handling = "404-page" in wrangler.jsonc). The old
+// public/404.html was a GitHub-Pages-era "?/" redirect shim that the Worker made
+// unreachable, so unknown URLs answered 200 with the homepage shell and Google
+// filed the whole site as soft 404s.
+const notFoundProbePath = '/__prerender_probe_for_the_404_page__';
+const notFoundRender = await render(notFoundProbePath, { discover: discoverSnapshot });
+
+if (notFoundRender.status !== 404 || !notFoundRender.html) {
+  throw new Error(
+    `SEO build: expected the 404 probe to render a 404 page, got status ${notFoundRender.status}`,
+  );
+}
+
+const notFoundHtml = injectAppHtml(
+  upsertSeoHeadBlock(indexHtmlTemplate, buildSeoHead(notFoundProbePath, { is404: true })),
+  notFoundRender.html,
+);
+
+fs.writeFileSync(path.join(distDir, '404.html'), notFoundHtml, 'utf8');
+
+if (redirectRules.length > 0) {
+  const redirectsPath = path.join(distDir, '_redirects');
+  const existing = fs.existsSync(redirectsPath) ? `${fs.readFileSync(redirectsPath, 'utf8').trimEnd()}\n` : '';
+  fs.writeFileSync(redirectsPath, `${existing}${redirectRules.join('\n')}\n`, 'utf8');
+}
+
+console.log(
+  `SEO build: prerendered ${prerenderedCount} pages + ${eventPageCount} listing pages + ` +
+    `404.html, ${redirectRules.length} redirect rule(s).`,
+);
 
 if (!siteUrl) {
   if (fs.existsSync(sitemapPath)) {
@@ -516,6 +807,17 @@ const xmlLines = [
       '  </url>',
     ];
   }),
+  // The listing pages. Without these the sitemap described 8 URLs while the site
+  // published dozens, and the ones carrying the actual event content were the
+  // ones left out. No changefreq: a listing's details do not change on a
+  // schedule, and claiming one Google can see is false costs more than it buys.
+  ...eventPages.flatMap(({ path: eventRoutePath }) => [
+    '  <url>',
+    `    <loc>${new URL(eventRoutePath, `${siteUrl}/`).toString()}</loc>`,
+    `    <lastmod>${buildDate}</lastmod>`,
+    '    <priority>0.6</priority>',
+    '  </url>',
+  ]),
   '</urlset>',
 ];
 

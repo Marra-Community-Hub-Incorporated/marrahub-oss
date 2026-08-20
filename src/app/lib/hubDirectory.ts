@@ -13,6 +13,15 @@ export interface DiscoverWorkshop {
   title: string;
   description: string;
   startsAt: string;
+  /** How long it runs. The API sends this; nothing used to read it. */
+  durationMinutes?: number;
+  /**
+   * Venue coordinates, null when the listing has no address at all. Also sent by
+   * the API and also previously undeclared — the event page uses them for a map
+   * link, and the Event markup for schema.org geo.
+   */
+  latitude?: number | null;
+  longitude?: number | null;
   location: string;
   postcode: string;
   spotsRemaining: number;
@@ -38,6 +47,7 @@ export interface DiscoverFood {
   title: string;
   description: string;
   startsAt: string;
+  durationMinutes?: number;
   location: string;
   spotsRemaining: number;
   organizationName: string;
@@ -101,4 +111,42 @@ export function listingUrl(item: {
     if (external) return external;
   }
   return `${HUB_SITE_URL}/o/${item.organizationSlug}`;
+}
+
+/**
+ * Slugs the Hub exposes through its public orgs feed that are not real
+ * organisations. "public" is its internal Public Intake tenant: it carries no
+ * description and no events, and it was being rendered on the Volunteer tab as
+ * though it were somewhere a person could go and volunteer, linking through to
+ * hub.marrahub.com.au/o/public.
+ *
+ * The Hub should not publish it at all — this is a guard on the consuming side,
+ * not the fix.
+ */
+const INTERNAL_ORG_SLUGS = new Set(['public']);
+
+export function isPublicFacingOrg(org: { slug: string }) {
+  return !INTERNAL_ORG_SLUGS.has(org.slug);
+}
+
+/**
+ * Start and finish, when the listing says how long it runs.
+ *
+ * Only the start time used to be shown, so a drop-in session running 5–7 pm
+ * read as "5:00 pm" — indistinguishable from an appointment you had to be on
+ * time for. Falls back to the start alone when no duration is given, rather
+ * than inventing an end time.
+ */
+export function formatWhenRange(iso: string, durationMinutes?: number) {
+  const startText = formatWhen(iso);
+  if (!startText || !durationMinutes || durationMinutes <= 0) return startText;
+
+  const end = new Date(new Date(iso).getTime() + durationMinutes * 60000);
+  const endText = end.toLocaleTimeString('en-AU', {
+    timeZone: 'Australia/Melbourne',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+
+  return `${startText} – ${endText}`;
 }
