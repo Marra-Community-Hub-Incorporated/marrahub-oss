@@ -765,9 +765,22 @@ if (notFoundRender.status !== 404 || !notFoundRender.html) {
   );
 }
 
+// Marked so main.tsx renders this document instead of hydrating it. Cloudflare
+// serves this one file for EVERY unmatched URL, so its prerendered markup is the
+// 404 page while the client router may well match a real route for the URL that
+// was actually requested — a stale /whats-on/ link for a finished event being the
+// case that happens in practice. Hydrating those two against each other throws a
+// React mismatch and the page recovers only by re-rendering anyway.
 const notFoundHtml = injectAppHtml(
   upsertSeoHeadBlock(indexHtmlTemplate, buildSeoHead(notFoundProbePath, { is404: true })),
   notFoundRender.html,
+).replace(
+  '<div id="root">',
+  // Not "data-prerendered-404": dataset only camel-cases a dash before a
+  // lowercase letter, so that name is reachable only as
+  // dataset['prerendered-404'] and a dataset.prerendered404 lookup is silently
+  // undefined — which is exactly how the first attempt at this failed.
+  '<div id="root" data-prerendered-not-found="true">',
 );
 
 fs.writeFileSync(path.join(distDir, '404.html'), notFoundHtml, 'utf8');

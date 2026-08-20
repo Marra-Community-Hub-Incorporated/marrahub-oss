@@ -142,13 +142,34 @@ section('Events');
     check('listing page self-canonicals', page.html.includes(`rel="canonical" href="${eventUrl}"`), 'canonical mismatch');
     const single = jsonLd(page.html, 'event');
     check('listing page carries single-Event markup', single?.['@type'] === 'Event', 'missing');
-    check('listing page cross-links other listings', (page.html.match(/href="\/whats-on\//g) || []).length >= 1,
-      'no internal listing links');
+    // Not a per-page assertion: a listing can genuinely be the only one at its
+    // venue and the only one by its organisation, in which case it correctly has
+    // no siblings to link to. What matters is that the set is cross-linked at all,
+    // checked below across every listing in the sitemap.
+    check('listing page links back to the directory', page.html.includes('href="/discover"'),
+      'no link back to /discover');
     check('listing page has real body text', textOf(page.html).length > 800, `${textOf(page.html).length} chars`);
   }
 
   const fake = await head('/whats-on/not-an-org/not-an-event-2020-01-01');
   check('unknown listing URL 404s', fake.status === 404, `got ${fake.status}`);
+
+  // The 404 document is served for every unmatched URL, so its markup describes
+  // the 404 page while the router may match a real route for the URL requested.
+  // It is marked so the client renders rather than hydrates — without that, every
+  // stale listing link throws a React hydration error.
+  const notFoundDoc = await body('/whats-on/not-an-org/not-an-event-2020-01-01');
+  check('404 document opts out of hydration', notFoundDoc.html.includes('data-prerendered-not-found="true"'),
+    'marker absent — stale links will throw a hydration error');
+
+  const allLocs = [...(await body('/sitemap.xml')).html.matchAll(/<loc>([^<]*whats-on[^<]*)<\/loc>/g)].map((m) => m[1]);
+  let withCrossLinks = 0;
+  for (const url of allLocs.slice(0, 6)) {
+    const page = await body(new URL(url).pathname);
+    if ((page.html.match(/href="\/whats-on\//g) || []).length >= 1) withCrossLinks += 1;
+  }
+  check('listings cross-link each other', withCrossLinks > 0,
+    `none of the first ${Math.min(6, allLocs.length)} listings link to a sibling`);
 }
 
 // ---------------------------------------------------------------- entity + meta

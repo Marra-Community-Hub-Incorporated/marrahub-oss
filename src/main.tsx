@@ -30,14 +30,24 @@ async function resolveLazyRoutes(pathname: string) {
 
 async function boot() {
   const container = document.getElementById('root')!;
-  const isPrerendered = container.firstElementChild !== null;
+  // The 404 document is served for every unmatched URL, so the markup in it
+  // describes the 404 page while the router may match a real route for whatever
+  // URL was actually requested. Those two cannot be reconciled, so render rather
+  // than hydrate — a brief flash on an error page, instead of a hydration error
+  // on every stale link.
+  const isPrerendered =
+    container.firstElementChild !== null && container.dataset.prerenderedNotFound !== 'true';
+
+  // Either way the lazy module for this URL is resolved first. Hydration needs it
+  // to match the prerendered tree; the render path wants it so the router does not
+  // boot with an unresolved route and warn about a missing HydrateFallback.
+  await resolveLazyRoutes(window.location.pathname);
 
   if (!isPrerendered) {
     createRoot(container).render(<App router={createAppRouter()} />);
     return;
   }
 
-  await resolveLazyRoutes(window.location.pathname);
   hydrateRoot(container, <App router={createAppRouter()} />);
 }
 
