@@ -18,7 +18,8 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.worker.json",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "verify": "node scripts/verify-site.mjs"
   },
   "dependencies": {
     "jspdf": "^4.2.1",
