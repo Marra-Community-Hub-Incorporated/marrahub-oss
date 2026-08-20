@@ -33,8 +33,17 @@ export {
 } from './app/seo/site';
 export {
   DISCOVER_DATA_ELEMENT_ID,
+  setServerDiscoverSnapshot,
   type DiscoverSnapshot,
 } from './app/lib/discoverInitialData';
+// The build pass needs the same URL derivation the app uses, so a link rendered
+// on /discover and the file written for that event cannot disagree.
+export {
+  assignUniqueEventPaths,
+  eventPath,
+  melbourneDate,
+  slugifyTitle,
+} from './app/lib/eventSlug';
 
 export interface RenderResult {
   /** Markup for #root, or null when the route is a redirect. */
