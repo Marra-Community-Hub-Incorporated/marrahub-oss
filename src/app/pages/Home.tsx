@@ -168,6 +168,7 @@ function EventPopup({ open, onClose }: EventPopupProps) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="home-event-popup-title"
+            aria-describedby="home-event-popup-description"
             onClick={(event) => event.stopPropagation()}
           >
             <button
@@ -202,7 +203,10 @@ function EventPopup({ open, onClose }: EventPopupProps) {
             </div>
 
             <div className="p-8 md:p-10">
-              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+              <p
+                id="home-event-popup-description"
+                className="text-lg text-muted-foreground leading-relaxed mb-6"
+              >
                 Join MARRA's first meet-up for AI basics, a sewing workshop, board games,
                 coffee, tea, and snacks. Entry is free and everyone is welcome.
               </p>

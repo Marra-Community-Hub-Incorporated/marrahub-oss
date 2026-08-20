@@ -70,7 +70,7 @@ export function Header() {
           <Link to="/" className="flex items-center group" aria-label="MARRA home">
             <img
               src={logoUrl}
-              alt="MARRA Community Hub logo"
+              alt=""
               width="56"
               height="56"
               className="w-14 h-14 object-contain -mr-1 transition-transform duration-300 ease-out group-hover:rotate-6 group-hover:scale-110"
