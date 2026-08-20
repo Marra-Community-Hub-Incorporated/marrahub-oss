@@ -256,7 +256,7 @@ export function Home() {
   const [eventPopupOpen, setEventPopupOpen] = useState(
     () => eventPromoActive && shouldShowHomeEventPopup(),
   );
-  const heroBackgroundUrl = `${import.meta.env.BASE_URL}media/hero-background.png`;
+  const heroBackgroundUrl = `${import.meta.env.BASE_URL}media/hero-background.webp`;
   const closeEventPopup = () => {
     setEventPopupOpen(false);
     try {

@@ -9,7 +9,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuButtonRef = React.useRef<HTMLButtonElement>(null);
   const location = useLocation();
-  const logoUrl = `${import.meta.env.BASE_URL}media/favicon/favicon.png`;
+  const logoUrl = `${import.meta.env.BASE_URL}media/marra-wordmark.webp`;
 
   // Always close the mobile menu when the route changes — covers taps on a link,
   // the CTA button, or any other navigation, including re-selecting the current tab.

@@ -304,6 +304,28 @@ function upcomingEventJsonLd() {
     .filter(Boolean);
 }
 
+/**
+ * The image behind each page's hero, so the head can preload it.
+ *
+ * Both heroes are CSS/inline background images, which the browser's preload
+ * scanner does not discover — it only sees them once the stylesheet or the
+ * component's inline style has been parsed. That put the LCP element at the end
+ * of a dependency chain instead of the start of the download queue. A preload
+ * with fetchpriority="high" moves it to the front.
+ *
+ * /launch has no hero image, so it gets no preload.
+ */
+const heroImageByRoute = {
+  '/': '/media/hero-background.webp',
+  '/about': '/media/bkg-pg.webp',
+  '/programs': '/media/bkg-pg.webp',
+  '/discover': '/media/bkg-pg.webp',
+  '/impact': '/media/bkg-pg.webp',
+  '/governance': '/media/bkg-pg.webp',
+  '/contact': '/media/bkg-pg.webp',
+  '/volunteer': '/media/bkg-pg.webp',
+};
+
 function buildSeoHead(routePath, { is404 = false } = {}) {
   const canonicalPath = getCanonicalPath(routePath);
   // getPageSeo is the same lookup the running app uses, and it already answers
@@ -349,6 +371,14 @@ function buildSeoHead(routePath, { is404 = false } = {}) {
     `    <meta name="twitter:description" content="${escapeHtml(meta.description)}" />`,
     `    <meta name="twitter:image" content="${escapeHtml(imageUrl)}" />`,
   ];
+
+  const heroImage = is404 ? undefined : heroImageByRoute[canonicalPath];
+
+  if (heroImage) {
+    lines.push(
+      `    <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="${escapeHtml(heroImage)}" />`,
+    );
+  }
 
   if (!is404) {
     lines.push(
