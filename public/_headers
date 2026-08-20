@@ -35,6 +35,11 @@
 /favicon.ico
   Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
+# Fonts carry their upstream version in the filename, so the bytes behind a given
+# URL never change and a year is safe. A font update lands as a new filename.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
 # Media uses stable (non-hashed) filenames, so cache for a day and revalidate
 # — long enough to help repeat visits, short enough that image swaps show up.
 /media/*
