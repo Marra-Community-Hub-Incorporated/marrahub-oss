@@ -17,4 +17,8 @@ paths = [
 regexes = [
   # Cloudflare Turnstile SITE key — public by design (embedded in the widget).
   '''0x4AAAAAACksijQmW93tasP6''',
+  # Cloudflare Web Analytics beacon token — public by design. It is served to
+  # every visitor in index.html so the beacon can attribute the page view; it
+  # grants no read access to the analytics data. Not the Cloudflare API token.
+  '''d43c23f02d5f47f6a76c8e6b02780e16''',
 ]
