@@ -1,6 +1,6 @@
 name: CI
 
-# Guardrails before anything reaches `main` (which Cloudflare auto-deploys):
+# Guardrails before anything reaches this public mirror's `main` branch:
 #  - secret-scan : block commits that contain real secrets/keys
 #  - website     : type-check + lint + the production build must succeed
 #  - api         : the Azure Function must parse + its deps install

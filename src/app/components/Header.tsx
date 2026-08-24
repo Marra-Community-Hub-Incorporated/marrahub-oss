@@ -7,8 +7,9 @@ import { featureFlags } from '../featureFlags';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const menuButtonRef = React.useRef<HTMLButtonElement>(null);
   const location = useLocation();
-  const logoUrl = `${import.meta.env.BASE_URL}media/favicon/favicon.png`;
+  const logoUrl = `${import.meta.env.BASE_URL}media/marra-wordmark.webp`;
 
   // Always close the mobile menu when the route changes — covers taps on a link,
   // the CTA button, or any other navigation, including re-selecting the current tab.
@@ -16,10 +17,31 @@ export function Header() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMobileMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileMenuOpen]);
+
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Programs', href: '/programs' },
+    { name: 'Discover', href: '/discover' },
     { name: 'Impact', href: '/impact' },
     { name: 'Governance', href: '/governance' },
     // The Volunteer page is only listed when the volunteer flow is enabled
@@ -48,7 +70,7 @@ export function Header() {
           <Link to="/" className="flex items-center group" aria-label="MARRA home">
             <img
               src={logoUrl}
-              alt="MARRA Community Hub logo"
+              alt=""
               width="56"
               height="56"
               className="w-14 h-14 object-contain -mr-1 transition-transform duration-300 ease-out group-hover:rotate-6 group-hover:scale-110"
@@ -62,6 +84,7 @@ export function Header() {
               <Link
                 key={item.name}
                 to={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                   isActive(item.href)
                     ? 'text-primary bg-primary/5'
@@ -80,12 +103,15 @@ export function Header() {
 
           {/* Mobile menu button */}
           <button
+            ref={menuButtonRef}
             type="button"
             className="md:hidden p-2 rounded-xl text-foreground hover:bg-primary/5 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            {mobileMenuOpen ? <X size={28} aria-hidden="true" /> : <Menu size={28} aria-hidden="true" />}
           </button>
         </div>
 
@@ -93,6 +119,7 @@ export function Header() {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
+              id="mobile-navigation"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -104,6 +131,7 @@ export function Header() {
                   <Link
                     key={item.name}
                     to={item.href}
+                    aria-current={isActive(item.href) ? 'page' : undefined}
                     className={`block px-4 py-3 rounded-xl transition-all ${
                       isActive(item.href)
                         ? 'text-primary bg-primary/5 font-semibold'

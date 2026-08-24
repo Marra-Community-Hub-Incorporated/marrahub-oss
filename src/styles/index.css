@@ -29,7 +29,7 @@
   .page-hero-background {
     background-image:
       linear-gradient(rgba(30, 69, 58, 0.82), rgba(30, 69, 58, 0.78)),
-      url("/media/bkg-pg.png");
+      url("/media/bkg-pg.webp");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

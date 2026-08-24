@@ -3,10 +3,12 @@ import { motion } from 'motion/react';
 import { SectionHeader } from '../components/SectionHeader';
 import { ProgramCard } from '../components/ProgramCard';
 import { CTABanner } from '../components/CTABanner';
-import { 
-  Users, 
-  Heart, 
-  BookOpen, 
+import { Button } from '../components/Button';
+import { RecruitingRoleCard } from '../components/RecruitingRoleCard';
+import {
+  Users,
+  Heart,
+  BookOpen,
   Sprout,
   HandHeart,
   Shield,
@@ -15,8 +17,128 @@ import {
   Home,
   Lightbulb,
   Coffee,
-  GraduationCap
+  GraduationCap,
+  Clock,
+  MapPin,
+  CalendarDays,
+  Laptop,
+  Mail
 } from 'lucide-react';
+
+// Practical details are the same shape for every volunteer role, so the two
+// open ones differ only in their content.
+const grantWriterRole = {
+  title: 'Volunteer Grant Writer',
+  intro: [
+    'MARRA is a registered charity run entirely by volunteers. Grants are how an organisation our size turns donated time into rooms, equipment and programs the community can actually use — and right now nobody is writing them.',
+    "You'd help us find the funding that fits, write the applications, and keep track of what closes when. We'll give you the numbers, the story and the governance documents; you turn them into a submission that answers the question actually being asked.",
+  ],
+  brings: [
+    'Clear, plain-English writing — the discipline to answer the question in front of you',
+    'Comfort with budgets and outcome measures, or the willingness to learn them with us',
+    'An organised approach to deadlines — a lot of grant writing is simply not missing them',
+    'An interest in how small community organisations get funded',
+    'Previous grant, tender or bid writing is a bonus, genuinely not a requirement',
+  ],
+  gains: [
+    'Real submissions to council, state and philanthropic funders, with your drafting behind them',
+    'A written reference and volunteer certificate on completing the program',
+    'Hands-on experience of how nonprofit funding, budgeting and reporting actually work',
+    'A say in which programs we go after funding for first',
+  ],
+  details: [
+    {
+      icon: GraduationCap,
+      label: 'Eligibility',
+      text: 'Strong written English. Grant, tender, bid or academic writing experience is a plus, not a must.',
+    },
+    {
+      icon: Clock,
+      label: 'Commitment',
+      text: 'Around 4–8 hours a week, flexible — busier in the week before a submission closes.',
+    },
+    {
+      icon: CalendarDays,
+      label: 'Duration',
+      text: 'Typically 3–6 months, adjusted to suit each volunteer.',
+    },
+    {
+      icon: MapPin,
+      label: 'Location',
+      text: "Remote-friendly; we're based in Caulfield South, Melbourne.",
+    },
+    {
+      icon: Laptop,
+      label: "You'll Need",
+      text: 'Your own computer, an internet connection, and confident written English.',
+    },
+    {
+      icon: HandHeart,
+      label: 'Type',
+      text: 'Volunteer (unpaid) role — no cost to participants.',
+    },
+  ],
+  applyHref: 'mailto:hello@marrahub.com.au?subject=Volunteer%20Grant%20Writer%20application',
+  applyLabel: 'Apply by Email',
+  applyNote:
+    "Send a short note about yourself and a writing sample — a grant application, report, essay, anything you're happy to show. We'll arrange an informal chat; there's no formal interview process.",
+};
+
+const socialMediaManagerRole = {
+  title: 'Volunteer Social Media Manager',
+  intro: [
+    "Our volunteer developers built the platform that runs our programs. Now we're looking for the person who tells the story — MARRA's first Social Media Manager.",
+    "You'll run our channels (LinkedIn first), promote the community workshops we'll be holding soon, and occasionally join us in Caulfield South to capture photos, stories, and content from the day.",
+  ],
+  brings: [
+    'Working knowledge of social media marketing — content planning, writing, simple visuals',
+    'A basic understanding of targeted / paid social, to put workshops in front of the right local audience',
+    'The ability to occasionally attend workshops in person in Caulfield South / Glen Eira',
+    'A warm, honest communication style and a genuine interest in community work',
+  ],
+  gains: [
+    'Real campaigns for your portfolio, with an Australian organisation',
+    'A written reference and volunteer certificate on completing the program',
+    'A genuine say in the voice of a community hub being built from day one',
+  ],
+  details: [
+    {
+      icon: GraduationCap,
+      label: 'Eligibility',
+      text: 'Confident creating content and running social channels. Marketing or communications study or experience is a plus, not a must.',
+    },
+    {
+      icon: Clock,
+      label: 'Commitment',
+      text: 'Around 5–10 hours a week, flexible around study and work.',
+    },
+    {
+      icon: CalendarDays,
+      label: 'Duration',
+      text: 'Typically 3–6 months, adjusted to suit each volunteer.',
+    },
+    {
+      icon: MapPin,
+      label: 'Location',
+      text: 'Plan and post from anywhere; workshops are occasional and in person in Caulfield South, Melbourne.',
+    },
+    {
+      icon: Laptop,
+      label: "You'll Need",
+      text: 'Your own computer, a phone camera, an internet connection, and conversational English.',
+    },
+    {
+      icon: HandHeart,
+      label: 'Type',
+      text: 'Volunteer (unpaid) role — no cost to participants.',
+    },
+  ],
+  applyHref:
+    'mailto:hello@marrahub.com.au?subject=Volunteer%20Social%20Media%20Manager%20application',
+  applyLabel: 'Apply by Email',
+  applyNote:
+    "Email a short note about yourself with your CV or profile links. We'll arrange an informal chat — no formal interview process.",
+};
 
 export function Programs() {
   return (
@@ -33,8 +155,179 @@ export function Programs() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">Programs & Services</h1>
             <p className="text-xl text-primary-foreground/90 leading-relaxed">
               The programs we want to build at MARRA are designed to foster connection, growth,
-              and wellbeing through practical, community-shaped support.
+              and wellbeing through practical, community-shaped support. Our first program — the
+              Volunteer IT Program — is now running. We're currently recruiting a volunteer Grant
+              Writer and a volunteer Social Media Manager, and a new intake for developer roles
+              will open soon.
             </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Now Recruiting: Volunteer Grant Writer */}
+      <section id="volunteer-grant-writer" className="pt-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <RecruitingRoleCard {...grantWriterRole} />
+        </div>
+      </section>
+
+      {/* Now Recruiting: Volunteer Social Media Manager */}
+      <section id="volunteer-social-media-manager" className="pt-12 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <RecruitingRoleCard {...socialMediaManagerRole} />
+        </div>
+      </section>
+
+      {/* Now Running: Volunteer IT Program */}
+      <section id="volunteer-it-program" className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="rounded-3xl border border-primary/10 bg-card shadow-2xl shadow-primary/10 overflow-hidden">
+              <div className="grid lg:grid-cols-5">
+                {/* Program story */}
+                <div className="lg:col-span-3 p-10 md:p-14">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary/10 text-secondary px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-6">
+                    <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                    Now running · New intake soon
+                  </span>
+                  <h2 className="font-serif text-4xl md:text-5xl text-primary mb-6 leading-tight">
+                    Volunteer IT Program
+                  </h2>
+                  <div className="max-w-[70ch] space-y-9 text-muted-foreground leading-relaxed text-lg mb-8">
+                    <p>
+                      Hands-on volunteering for people with an IT background — especially those
+                      who find that a lack of local experience holds them back in the Australian
+                      job market. Volunteers join a small development team and build genuine
+                      features that ship to our volunteer and workshop platform.
+                    </p>
+                    <p>
+                      This is not classroom-style training. Volunteers pick up real tickets, open
+                      pull requests, get code review, and see their work go live.
+                    </p>
+                  </div>
+
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground/70 mb-3">
+                    Volunteer roles — intake closed
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {['Frontend Developer', 'Backend Developer', 'DevOps / Cloud Engineer', 'QA & Test Engineer'].map((role) => (
+                      <span
+                        key={role}
+                        className="rounded-full border border-muted-foreground/20 text-muted-foreground/70 px-4 py-1.5 text-sm"
+                      >
+                        {role}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-8">
+                    Applications are closed for now — a new intake will open soon. Keep an eye on
+                    this page or get in touch to hear when it does.
+                  </p>
+
+                  <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-3">
+                    What volunteers gain
+                  </p>
+                  <ul className="space-y-2 mb-10">
+                    {[
+                      'Local project experience on a production system, with an Australian organisation',
+                      'A portfolio contribution — real features you can point to in interviews',
+                      'A written reference and volunteer certificate on completing the program',
+                      'Mentoring and code review — structured feedback on every contribution',
+                    ].map((item) => (
+                      <li key={item} className="text-sm text-muted-foreground flex items-start">
+                        <div className="w-1.5 h-1.5 rounded-full bg-accent mr-3 mt-2 shrink-0"></div>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <a
+                      href="mailto:hello@marrahub.com.au?subject=Volunteer%20IT%20Program%20next%20intake"
+                      className="inline-flex items-center justify-center gap-2 rounded-xl transition-all duration-300 font-medium active:scale-95 hover:scale-[1.02] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 px-8 py-4 text-lg"
+                    >
+                      <Mail size={20} aria-hidden="true" />
+                      Register for the Next Intake
+                    </a>
+                    <Button href="/contact" variant="outline" size="lg">
+                      Ask a Question
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-4">
+                    Email your CV with a short note about which role interests you, and we'll get
+                    in touch when the next intake opens.
+                  </p>
+                </div>
+
+                {/* Practical details */}
+                <div className="lg:col-span-2 bg-primary text-primary-foreground p-10 md:p-14">
+                  <h3 className="font-serif text-2xl text-white mb-8">Practical Details</h3>
+                  <div className="space-y-7">
+                    <div className="flex items-start gap-4">
+                      <GraduationCap size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Eligibility</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Hold, or be currently studying towards, an IT certificate or bachelor's
+                          degree.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <Clock size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Commitment</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          From 15 hours per fortnight (approx. 5–10 hours a week), flexible around
+                          study and work.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <CalendarDays size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Duration</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Typically 3–6 months, adjusted to suit each volunteer.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <MapPin size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Location</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Remote-friendly; we're based in Caulfield South, Melbourne.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <Laptop size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">You'll Need</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Your own computer, an internet connection, and conversational English.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <HandHeart size={22} className="text-accent mt-1 shrink-0" aria-hidden="true" />
+                      <div>
+                        <p className="font-semibold text-white mb-1">Type</p>
+                        <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                          Volunteer (unpaid) role — no cost to participants.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>

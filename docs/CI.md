@@ -1,45 +1,33 @@
-# CI / Security pipeline
+# CI and security pipeline
 
-`main` is auto-deployed by Cloudflare on every push. The CI in
-`.github/workflows/ci.yml` runs on every PR and push to `main` to make sure
-nothing broken or leaky gets there.
+The workflow in `.github/workflows/ci.yml` runs on pull requests and pushes to
+`main`. A merge here updates the OSS contribution mirror; it does not deploy the
+production website.
 
-## What runs
+## Checks
 
-| Check | Blocks merge? | What it protects against |
-|---|---|---|
-| **Secret scan** (gitleaks) | ✅ should be required | A real key/secret being committed (scans full history) |
-| **Website build** (`typecheck` + `lint` + `npm run build`) | ✅ should be required | A type error, lint error, or broken production build reaching `main` |
-| **API checks** (`npm ci` + `node --check`) | ✅ should be required | The Azure Function failing to parse / deps not installing |
-| Dependency audit (`npm audit`) | ℹ️ informational | Surfaces vulnerable deps without blocking unrelated PRs |
+| Check | What it protects against |
+|---|---|
+| Secret scan (gitleaks) | Credentials or private keys committed anywhere in history |
+| Frontend contract tests | Drift in security-sensitive volunteer-agreement behavior |
+| Type-check and lint | Browser or Worker type errors and lint regressions |
+| Production build | Broken client, Worker, SSR or prerender output |
+| API syntax and tests | Invalid Azure Function code and agreement-security regressions |
+| Dependency audits | Known high-severity dependency issues; currently informational |
 
-Public browser values such as Turnstile **site** keys, provider endpoints and
-the site URL are not secrets, but this OSS repo keeps production-specific values
-out of source control. Real values belong in the hosting/provider dashboards;
-everything in the repo stays scanned.
+Public browser values such as Turnstile site keys and provider endpoints are
+not secrets, but this mirror still keeps production-specific values out of
+source control. Configure them in your own hosting or provider dashboard.
 
-## Make the checks actually block `main` (one-time)
+## Recommended branch protection
 
-CI only *reports* until you mark the checks **required**:
+Repository maintainers should require the three CI jobs and at least one review
+before merge. Confirm the live GitHub configuration rather than relying on this
+document:
 
-GitHub → repo **Settings → Branches → Add branch ruleset** (or "Branch protection rule")
-for `main`:
-- ✅ Require a pull request before merging
-- ✅ Require status checks to pass → select **Secret scan**, **Website build**, **API checks**
-- ✅ (recommended) Require branches to be up to date before merging
-
-Or via CLI (needs admin):
 ```bash
-gh api -X PUT repos/Marra-Community-Hub-Incorporated/marrahub-oss/branches/main/protection \
-  -H "Accept: application/vnd.github+json" \
-  -f 'required_status_checks[strict]=true' \
-  -f 'required_status_checks[checks][][context]=Secret scan (gitleaks)' \
-  -f 'required_status_checks[checks][][context]=Website build' \
-  -f 'required_status_checks[checks][][context]=API checks' \
-  -F 'enforce_admins=false' \
-  -F 'required_pull_request_reviews=null' \
-  -F 'restrictions=null'
+gh api repos/Marra-Community-Hub-Incorporated/marrahub-oss/branches/main/protection
 ```
 
-After that, a PR can't merge into `main` (and therefore can't deploy) unless the
-build passes and no secret is detected.
+Do not weaken secret scanning or required reviews merely to make a pull request
+pass; fix the underlying problem instead.

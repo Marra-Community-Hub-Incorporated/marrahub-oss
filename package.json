@@ -11,15 +11,16 @@
     "url": "https://github.com/Marra-Community-Hub-Incorporated/marrahub-oss.git"
   },
   "scripts": {
-    "build": "vite build && node scripts/seo-build.mjs",
+    "build": "vite build && vite build --config vite.ssr.config.ts && node scripts/seo-build.mjs",
     "dev": "vite",
     "preview": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy",
     "test": "node --test tests/*.test.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.worker.json",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "verify": "node scripts/verify-site.mjs"
   },
   "dependencies": {
     "jspdf": "^4.2.1",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.42.3",
+    "@cloudflare/workers-types": "^4.20260630.0",
     "@eslint/js": "^9.39.4",
     "@tailwindcss/vite": "4.1.12",
     "@types/react": "^18.3.31",
@@ -39,6 +41,7 @@
     "@vitejs/plugin-react": "4.7.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",

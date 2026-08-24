@@ -1,0 +1,63 @@
+name: Accessibility problem
+description: Something is hard or impossible to use with a keyboard, screen reader, or low vision
+labels: ["accessibility", "bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search the [OSS issue tracker](https://github.com/Marra-Community-Hub-Incorporated/marrahub-oss/issues)
+        first. If this fits an existing issue, a comment there is often better
+        than a duplicate ticket.
+
+  - type: textarea
+    id: barrier
+    attributes:
+      label: What's blocked
+      description: What can't be done, and by whom.
+      placeholder: |
+        The mobile menu can be opened with a keyboard but focus stays behind it,
+        so a keyboard user tabs into links they can't see.
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: Which page or component
+      placeholder: Header — mobile navigation
+    validations:
+      required: true
+
+  - type: dropdown
+    id: how-found
+    attributes:
+      label: How you found it
+      multiple: true
+      options:
+        - Keyboard only (Tab / Shift-Tab / Enter / Esc)
+        - Screen reader
+        - Zoom or large text
+        - Colour contrast check
+        - Automated tool (axe, Lighthouse, WAVE)
+        - Reduced motion
+    validations:
+      required: true
+
+  - type: input
+    id: tooling
+    attributes:
+      label: Screen reader / tool and version
+      placeholder: VoiceOver on macOS 15, or axe DevTools 4.9
+
+  - type: input
+    id: wcag
+    attributes:
+      label: WCAG criterion
+      description: If you know it. Leave blank if you don't — the report still counts.
+      placeholder: 2.4.3 Focus Order (A)
+
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested fix
+      description: Optional. "No ARIA is better than bad ARIA" — prefer native semantics.

@@ -1,0 +1,46 @@
+name: Content or feature request
+description: A page, section, or copy change the site should have
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: |
+        What is someone visiting the site trying to do that they currently
+        can't? Describe the situation, not the solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you think should happen
+    validations:
+      required: true
+
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Who is this for
+      options:
+        - Community members looking for what's on
+        - Organisations considering the Hub
+        - Volunteers wanting to help
+        - Funders, councils, partners
+        - Search engines / Ad Grants eligibility
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you file
+      options:
+        - label: >-
+            Any claim in the copy I'm proposing is true today — we describe
+            MARRA honestly as an early-stage organisation and never overstate
+            our scale or maturity.
+          required: true
+        - label: I searched open issues and this isn't already tracked
+          required: true

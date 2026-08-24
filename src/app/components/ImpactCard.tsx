@@ -13,7 +13,7 @@ export function ImpactCard({ number, label, description, icon: Icon }: ImpactCar
     <div className="w-full h-full bg-white rounded-2xl p-8 text-center border border-primary/5 shadow-sm hover:shadow-md transition-all duration-300 group flex flex-col items-center">
       {Icon ? (
         <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 flex items-center justify-center text-primary transition-transform group-hover:scale-110 duration-500">
-          <Icon size={32} />
+          <Icon size={32} aria-hidden="true" />
         </div>
       ) : (
         <div className="text-5xl font-serif font-bold text-primary mb-4 tabular-nums transition-transform group-hover:scale-110 duration-500">

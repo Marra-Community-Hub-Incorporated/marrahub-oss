@@ -56,7 +56,7 @@ export function About() {
                 title="The Meaning of MARRA"
                 align="left"
               />
-              <div className="space-y-6 text-muted-foreground leading-relaxed">
+              <div className="max-w-[70ch] space-y-8 text-muted-foreground leading-relaxed">
                 <p>
                   The name <strong className="text-foreground">MARRA</strong> is inspired by Aboriginal 
                   language, representing concepts of connection, helping hands, and working together. 
@@ -89,7 +89,7 @@ export function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="space-y-6 text-muted-foreground leading-relaxed"
+            className="mx-auto max-w-[70ch] space-y-8 text-muted-foreground leading-relaxed"
           >
             <p>
               MARRA began in Caulfield South in response to a growing need for inclusive,
@@ -131,7 +131,7 @@ export function About() {
               className="bg-card rounded-xl p-8 border border-border"
             >
               <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Heart className="text-primary" size={28} />
+                <Heart className="text-primary" size={28} aria-hidden="true" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Care</h3>
               <p className="text-muted-foreground">
@@ -148,7 +148,7 @@ export function About() {
               className="bg-card rounded-xl p-8 border border-border"
             >
               <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Users className="text-primary" size={28} />
+                <Users className="text-primary" size={28} aria-hidden="true" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Connection</h3>
               <p className="text-muted-foreground">
@@ -165,7 +165,7 @@ export function About() {
               className="bg-card rounded-xl p-8 border border-border"
             >
               <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Compass className="text-primary" size={28} />
+                <Compass className="text-primary" size={28} aria-hidden="true" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Integrity</h3>
               <p className="text-muted-foreground">
@@ -182,7 +182,7 @@ export function About() {
               className="bg-card rounded-xl p-8 border border-border"
             >
               <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Shield className="text-primary" size={28} />
+                <Shield className="text-primary" size={28} aria-hidden="true" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Respect</h3>
               <p className="text-muted-foreground">

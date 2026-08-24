@@ -1,0 +1,56 @@
+name: Bug report
+description: Something on marrahub.com.au is broken or looks wrong
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For anything security-related, don't open a public issue — email
+        hello@marrahub.com.au (see `public/.well-known/security.txt`).
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: Which page
+      placeholder: https://marrahub.com.au/discover
+    validations:
+      required: true
+
+  - type: dropdown
+    id: viewport
+    attributes:
+      label: Screen size
+      description: A lot of our bugs only show up at one end of the range.
+      options:
+        - Phone
+        - Tablet
+        - Desktop
+        - All of them
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      placeholder: Safari 17 on iOS
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshot or console output
+      description: A screenshot is worth a paragraph for anything visual.

@@ -8,6 +8,11 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 export default defineConfig(() => ({
   plugins: [react(), tailwindcss(), cloudflare()],
   base: '/',
+  server: {
+    // Lets browsers running inside Docker (e.g. Playwright) reach the dev
+    // server via host.docker.internal. Dev-only; no effect on builds.
+    allowedHosts: ['host.docker.internal'],
+  },
   build: {
     rollupOptions: {
       output: {

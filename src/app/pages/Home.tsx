@@ -1,25 +1,280 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router';
+import { AnimatePresence, motion } from 'motion/react';
 import { Button } from '../components/Button';
 import { SectionHeader } from '../components/SectionHeader';
 import { ProgramCard } from '../components/ProgramCard';
 import { ImpactCard } from '../components/ImpactCard';
 import { CTABanner } from '../components/CTABanner';
+import { WhatsOnPreview } from '../components/WhatsOnPreview';
 import { featureFlags } from '../featureFlags';
-import { 
-  Users, 
-  Heart, 
-  BookOpen, 
+import {
+  Users,
+  Heart,
+  BookOpen,
   Sprout,
   HandHeart,
-  Shield
+  Shield,
+  Clock,
+  MapPin,
+  Play,
+  CalendarDays,
+  ExternalLink,
+  X
 } from 'lucide-react';
 
-export function Home() {
-  const heroBackgroundUrl = `${import.meta.env.BASE_URL}media/hero-background.png`;
+const HUB_ORG_URL = 'https://hub.marrahub.com.au/o/marra-community-hub-inc';
+
+const launchEvent = {
+  dateLabel: 'Saturday, 15 August 2026',
+  timeLabel: '2:00pm - 6:00pm',
+  venueLabel: 'Carnegie Library & Community Centre',
+  venueDetail: 'Level 2, 7 Shepparson Avenue, Carnegie',
+  title: 'MARRA Launch Meet-Up',
+  href: '/launch',
+  // Keep in sync with timeLabel: the promo hides itself once the event ends.
+  endsAtIso: '2026-08-15T18:00:00+10:00',
+};
+
+function launchEventHasEnded() {
+  return Date.now() >= new Date(launchEvent.endsAtIso).getTime();
+}
+
+const homeEventPopupStorageKey = 'marrahub.homeEventPopupDismissed';
+
+function shouldShowHomeEventPopup() {
+  try {
+    return window.sessionStorage.getItem(homeEventPopupStorageKey) !== 'true';
+  } catch {
+    return true;
+  }
+}
+
+function EventNoticeBanner() {
+  return (
+    <section className="bg-primary text-primary-foreground border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <span className="inline-flex items-center self-start rounded-full bg-white/10 ring-1 ring-accent/40 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-white">
+              First Event
+            </span>
+            <p className="text-sm md:text-base text-primary-foreground/90">
+              <span className="font-semibold text-white">{launchEvent.title}</span>
+              <span className="mx-2 text-accent">|</span>
+              {launchEvent.dateLabel}, {launchEvent.timeLabel}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link
+              to={launchEvent.href}
+              className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-accent hover:text-white transition-colors"
+            >
+              See event details
+              <Play size={14} aria-hidden="true" />
+            </Link>
+            <a
+              href={HUB_ORG_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-primary-foreground/85 hover:text-white transition-colors"
+            >
+              Open Hub page
+              <ExternalLink size={14} aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+interface EventPopupProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+function EventPopup({ open, onClose }: EventPopupProps) {
+  const panelRef = React.useRef<HTMLDivElement>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    // The popup opens on page load, so a keyboard or screen-reader user
+    // must land inside it: move focus in, keep Tab cycling within the
+    // panel, lock the page behind it, and put focus back on close.
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    closeButtonRef.current?.focus();
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (event.key !== 'Tab' || !panelRef.current) {
+        return;
+      }
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (event.shiftKey && (active === first || !panelRef.current.contains(active))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (active === last || !panelRef.current.contains(active))) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previouslyFocused?.focus();
+    };
+  }, [onClose, open]);
 
   return (
-    <div className="min-h-screen">
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[80] flex items-center justify-center px-4 py-6 bg-primary/60 backdrop-blur-sm"
+          onClick={onClose}
+        >
+          <motion.div
+            ref={panelRef}
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.98 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-5/6 sm:w-full sm:max-w-2xl max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden rounded-3xl bg-background shadow-2xl shadow-black/25 border border-white/20"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="home-event-popup-title"
+            aria-describedby="home-event-popup-description"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              ref={closeButtonRef}
+              type="button"
+              onClick={onClose}
+              className="absolute right-8 sm:right-4 top-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary shadow-lg transition-colors hover:bg-white"
+              aria-label="Close event announcement"
+            >
+              <X size={20} aria-hidden="true" />
+            </button>
+
+            <div className="relative min-h-[180px] bg-primary text-primary-foreground">
+              <div className="absolute inset-0 bg-cultural-fusion" aria-hidden="true"></div>
+              <img
+                src={`${import.meta.env.BASE_URL}media/launch/launch-wide-en-poster.jpg`}
+                alt=""
+                aria-hidden="true"
+                loading="eager"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover opacity-45"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary/30"></div>
+              <div className="relative z-10 p-8 pr-16 md:p-10">
+                <span className="inline-flex items-center rounded-full bg-white/10 ring-1 ring-accent/40 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white mb-4">
+                  New community event
+                </span>
+                <h2 id="home-event-popup-title" className="font-serif text-3xl sm:text-4xl md:text-5xl text-white leading-tight break-words">
+                  A New Digital Community
+                </h2>
+              </div>
+            </div>
+
+            <div className="p-8 md:p-10">
+              <p
+                id="home-event-popup-description"
+                className="text-lg text-muted-foreground leading-relaxed mb-6"
+              >
+                Join MARRA's first meet-up for AI basics, a sewing workshop, board games,
+                coffee, tea, and snacks. Entry is free and everyone is welcome.
+              </p>
+
+              <div className="grid sm:grid-cols-3 gap-3 mb-8">
+                <div className="rounded-2xl bg-muted/50 p-4">
+                  <CalendarDays className="text-secondary mb-2" size={22} aria-hidden="true" />
+                  <p className="font-semibold text-foreground">{launchEvent.dateLabel}</p>
+                </div>
+                <div className="rounded-2xl bg-muted/50 p-4">
+                  <Clock className="text-secondary mb-2" size={22} aria-hidden="true" />
+                  <p className="font-semibold text-foreground">{launchEvent.timeLabel}</p>
+                </div>
+                <div className="rounded-2xl bg-muted/50 p-4">
+                  <MapPin className="text-secondary mb-2" size={22} aria-hidden="true" />
+                  <p className="font-semibold text-foreground">{launchEvent.venueLabel}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{launchEvent.venueDetail}</p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button href={launchEvent.href} variant="primary" size="lg" className="w-full sm:w-auto">
+                  Event Details & Invitation
+                </Button>
+                <Button
+                  href={HUB_ORG_URL}
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto border-primary/20"
+                >
+                  Open Hub Page
+                </Button>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="inline-flex items-center justify-center rounded-xl px-8 py-4 text-lg font-medium text-primary border-2 border-primary/20 transition-colors hover:bg-primary/5"
+                >
+                  Maybe Later
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+export function Home() {
+  const eventPromoActive = !launchEventHasEnded();
+  const [eventPopupOpen, setEventPopupOpen] = useState(
+    () => eventPromoActive && shouldShowHomeEventPopup(),
+  );
+  const heroBackgroundUrl = `${import.meta.env.BASE_URL}media/hero-background.webp`;
+  const closeEventPopup = () => {
+    setEventPopupOpen(false);
+    try {
+      window.sessionStorage.setItem(homeEventPopupStorageKey, 'true');
+    } catch {
+      // Dismissal is still valid even if sessionStorage is unavailable.
+    }
+  };
+
+  return (
+    <div className="min-h-screen overflow-x-hidden">
+      <EventPopup open={eventPopupOpen} onClose={closeEventPopup} />
+      {eventPromoActive && <EventNoticeBanner />}
+
       {/* 
           Hero Section: 'The Shared Journey'
           Redesigned with a high-quality background image and signature curved bottom.
@@ -78,7 +333,7 @@ export function Home() {
                 href={featureFlags.volunteer ? '/volunteer' : '/contact'}
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto h-16 px-10 text-lg bg-white/10 hover:bg-white/20 border-white/40 text-white backdrop-blur-md rounded-2xl transition-all hover:scale-105 active:scale-95 ring-offset-primary focus-visible:ring-2 focus-visible:ring-white"
+                className="w-full sm:w-auto h-16 px-10 text-lg bg-white/10 hover:bg-white/20 border-white/40 text-white backdrop-blur-md rounded-2xl transition-all hover:scale-105 active:scale-95 focus-visible:outline-white"
               >
                 {featureFlags.volunteer ? 'Become a Volunteer' : 'Get in touch'}
               </Button>
@@ -89,7 +344,8 @@ export function Home() {
         {/* Signature Curved Bottom: SVG Divider for crisp rendering */}
         <div className="absolute bottom-[-1px] left-0 w-full leading-[0] z-10 pointer-events-none">
           <svg 
-            viewBox="0 0 1440 120" 
+            viewBox="0 0 1440 120"
+            aria-hidden="true"
             fill="none" 
             xmlns="http://www.w3.org/2000/svg" 
             className="w-full h-auto"
@@ -102,6 +358,51 @@ export function Home() {
           </svg>
         </div>
       </section>
+
+      {/* Volunteer IT Program Announcement */}
+      <section className="pt-16 pb-4 bg-background relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-primary text-primary-foreground rounded-3xl p-10 md:p-12 shadow-2xl shadow-primary/10 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 opacity-20 pointer-events-none">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-secondary rounded-full blur-[100px]"></div>
+            </div>
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center gap-8">
+              <div className="flex-grow">
+                <span className="inline-flex items-center rounded-full bg-white/10 ring-1 ring-accent/40 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] mb-4">
+                  Now running
+                </span>
+                <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
+                  Now Recruiting: Grant Writer & Social Media Manager
+                </h2>
+                <p className="text-primary-foreground/80 text-lg leading-relaxed max-w-2xl">
+                  Two volunteer roles are open. Help us win the grants that fund our programs, or
+                  run MARRA's social media and share our community's stories. Applications for
+                  developer roles are closed for now, with a new intake opening soon.
+                </p>
+              </div>
+              <div className="shrink-0">
+                <Button
+                  href="/programs"
+                  variant="secondary"
+                  size="lg"
+                  className="w-full lg:w-auto shadow-xl shadow-black/10"
+                >
+                  Learn More & Apply
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* What's on near you — live preview of the Discover directory */}
+      <WhatsOnPreview />
 
       {/* Why MARRA Section */}
       <section className="py-24 bg-background relative z-10">
@@ -138,7 +439,7 @@ export function Home() {
                 title="Connection, Helping Hands & Working Together"
                 align="left"
               />
-              <div className="space-y-6 text-muted-foreground leading-relaxed text-lg">
+              <div className="max-w-[70ch] space-y-9 text-muted-foreground leading-relaxed text-lg">
                 <p>
                   The name <strong className="text-primary font-semibold">MARRA</strong> is inspired by Aboriginal language. 
                   It represents the very essence of what we do: reaching out, providing support, and building lasting bonds.

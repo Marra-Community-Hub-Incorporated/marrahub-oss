@@ -1,92 +1,86 @@
 # MARRA Community Hub
 
-Public website for MARRA Community Hub, a community centre growing in Caulfield South.
+Public contribution mirror for the MARRA Community Hub website, a community
+centre growing in Caulfield South.
 
 Live site: **[marrahub.com.au](https://marrahub.com.au)**
 
 Open source — contributions welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md).
-Reviewed changes here get promoted to the production site separately — see
+Reviewed changes here are promoted to the production repository separately; see
 [docs/PROMOTING.md](./docs/PROMOTING.md).
 
 ## Overview
 
-A React + Vite single-page website focused on:
+The site includes:
 
-- community programs and future initiatives
-- impact and governance information
-- contact and enquiry handling
-- SEO-friendly public pages and metadata
+- community programs, volunteering, impact and governance pages
+- a Discover directory backed by the public MARRA Hub API
+- event detail pages and build-time prerendering for search engines
+- optional contact and volunteer-agreement integrations
+- a small Cloudflare Worker that serves static assets and proxies Discover data
 
 ## Stack
 
-- React 18 + React Router 7 (routes are lazy-loaded / code-split)
+- React 18 + React Router 7 (lazy-loaded routes)
 - Vite 6 + TypeScript
 - Tailwind CSS 4
-- Motion (animations) · Lucide (icons)
-- Optional contact form via Formspree, spam protection via Cloudflare Turnstile
+- Cloudflare Workers and Wrangler
+- Motion (animations) and Lucide (icons)
 
 ## Development
 
-Prerequisites: **Node.js 18+** and npm.
+Prerequisites: **Node.js 22+** and npm.
 
 ```bash
 npm install
-npm run dev        # dev server with hot reload
+npm run dev
 ```
 
-| Command           | What it does                                          |
-| ----------------- | ----------------------------------------------------- |
-| `npm run dev`     | Start the Vite dev server                             |
-| `npm run build`   | Production build to `dist/` + generate SEO metadata   |
-| `npm run preview` | Serve the production build locally to sanity-check it |
+| Command | What it does |
+|---|---|
+| `npm test` | Run the frontend contract tests |
+| `npm run typecheck` | Type-check the browser app and Worker |
+| `npm run lint` | Run ESLint |
+| `npm run build` | Build the client and Worker, prerender routes and generate SEO files |
+| `npm run preview` | Build and serve the result through Wrangler |
+| `npm run verify -- <url>` | Run HTTP, SEO and asset checks against a deployed URL |
 
-## Deployment
+## Configuration and deployment
 
-Hosted on **Cloudflare Pages**, which **auto-deploys on every push to `main`**.
+The build writes browser assets to `dist/client/`; Wrangler packages the Worker
+from `worker/index.ts`. The Worker name in this mirror is `marrahub-oss` so a
+volunteer deployment cannot accidentally target the production project by name.
 
-- Build command: `npm run build`
-- Output directory: `dist`
-- Production URL and provider endpoints are set in your hosting environment.
-  Use [.env.production.example](./.env.production.example) as the template.
+Copy [.env.production.example](./.env.production.example) or
+[.env.example](./.env.example) into an ignored local file and supply your own
+provider values. This repository intentionally contains no production form
+endpoint, analytics token, Turnstile site key or volunteer API URL.
 
-Security and cache headers are defined in [`public/_headers`](./public/_headers)
-(CSP, HSTS, clickjacking protection, plus long-lived caching for hashed assets).
+See [docs/PREVIEW_DEPLOYS.md](./docs/PREVIEW_DEPLOYS.md) for an optional
+Cloudflare preview and [docs/PROMOTING.md](./docs/PROMOTING.md) for the separate
+production promotion process.
 
 ## Project structure
 
 ```text
-public/
-  _headers           # Cloudflare Pages: security headers + caching
-  media/             # images, favicons
-  404.html           # SPA deep-link fallback
-  robots.txt
-src/
-  main.tsx           # app entry
-  app/
-    App.tsx          # RouterProvider
-    routes.ts        # routes (pages lazy-loaded)
-    Layout.tsx       # shared header + footer
-    pages/           # Home, About, Programs, Impact, Governance, Contact, NotFound
-    components/      # Button, Header, Footer, cards, SEO helper…
-    seo/             # SEO config
-  styles/            # Tailwind entry + theme + fonts
-scripts/
-  seo-build.mjs      # post-build: injects JSON-LD / meta tags
+api/                  # optional volunteer-agreement Azure Function
+public/               # images, fonts, security headers and static files
+scripts/              # SEO/prerender and deployment verification scripts
+src/app/pages/        # public website pages
+src/app/seo/          # shared SEO configuration
+tests/                # frontend contract tests
+worker/               # Cloudflare Worker and Discover proxy
 ```
 
 ## Security notes
 
-- No private API secrets are stored in this repository.
-- Provider endpoints and Cloudflare Turnstile **site keys** are public browser
-  values, but this OSS repo keeps production-specific values as placeholders so
-  volunteers do not need production access. Secret keys live only in provider
-  dashboards and must never be committed.
-- Anything prefixed `VITE_` is **baked into the public client bundle** — never
-  put a secret in a `VITE_` variable.
-- The Content-Security-Policy in `public/_headers` allows the inline
-  SPA-redirect script by an exact `sha256` hash. If you edit that script in
-  `index.html`, recompute the hash (see [CONTRIBUTING.md](./CONTRIBUTING.md)) or
-  deep links will silently break under CSP.
+- Never commit passwords, tokens, private tenant values or provider secrets.
+- `VITE_*` variables are compiled into the public client bundle and cannot hold
+  secrets.
+- Public-but-environment-specific values are placeholders in this mirror and
+  belong in the volunteer's hosting settings.
+- If you change the inline redirect script in `index.html`, recompute its CSP
+  hash as described in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
