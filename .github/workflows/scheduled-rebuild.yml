@@ -1,0 +1,74 @@
+name: Scheduled rebuild
+
+# Listings are captured at BUILD time: /discover, every /whats-on page and
+# sitemap.xml are only as fresh as the last deploy (issue #75). Cloudflare
+# Workers Builds deploys on push, and nothing pushes on a quiet day — so without
+# this, served event dates drift from reality and finished events keep being
+# advertised. Google is entitled to distrust stale event data, and a "What's On"
+# page listing last week is worse than useless to a resident.
+#
+# Runs twice a day so a morning-published change is live the same day.
+
+on:
+  schedule:
+    # 05:40 and 15:40 AEST (UTC+10). Off the hour on purpose: scheduled jobs
+    # bunch up on the hour and GitHub delays them under load.
+    - cron: '40 19 * * *'
+    - cron: '40 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scheduled-rebuild
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    name: Rebuild and deploy
+    runs-on: ubuntu-latest
+    # Never let a fork's scheduled run try to deploy production.
+    if: github.repository == 'Marra-Community-Hub-Incorporated/marrahub'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build (captures the current Hub listings)
+        run: npm run build
+
+      # The build deliberately tolerates the Hub being unreachable: it warns and
+      # prerenders without listings rather than failing, which is right for a
+      # developer's local build. It is NOT right here. A scheduled deploy that
+      # lands during a Hub blip would publish a listing-less Discover page and a
+      # sitemap with every event URL removed — turning a transient outage into
+      # the deletion of every indexed listing page. Stale beats gone, so fail
+      # and leave the last good deploy serving.
+      - name: Refuse to deploy an empty directory
+        run: |
+          SITEMAP=dist/client/sitemap.xml
+          if [ ! -f "$SITEMAP" ]; then
+            echo "::error::$SITEMAP was not generated - refusing to deploy."
+            exit 1
+          fi
+          COUNT=$(grep -c '/whats-on/' "$SITEMAP" || true)
+          echo "Listing pages in sitemap: $COUNT"
+          if [ "$COUNT" -lt 1 ]; then
+            echo "::error::No listing pages in the sitemap. The Hub feed was probably unreachable."
+            echo "::error::Refusing to deploy - the previous deploy keeps serving until this is fixed."
+            exit 1
+          fi
+
+      - name: Deploy to Cloudflare
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

@@ -318,10 +318,33 @@ function singleEventJsonLd(item, absoluteUrl) {
     // self-canonical: MARRA is the publisher of this aggregated view, and the
     // organiser is credited and linked in the body.
     url: absoluteUrl,
+    // sameAs, not isSimilarTo: schema.org scopes isSimilarTo to Product and
+    // Service, so on an Event it is out of domain and a validator is entitled to
+    // ignore it. sameAs is defined on Thing and means exactly what is meant here
+    // — the source page that unambiguously identifies this same event.
     ...(item.isExternalListing && (item.registrationUrl || item.sourceUrl)
-      ? { isSimilarTo: item.registrationUrl || item.sourceUrl }
+      ? { sameAs: item.registrationUrl || item.sourceUrl }
       : {}),
   };
+}
+
+/**
+ * The listing pages for events that have not happened yet, earliest first.
+ *
+ * eventPages is built from the snapshot in feed order, which is not date order,
+ * and the snapshot can still carry an event whose start time has just passed.
+ * An ItemList that claims ItemListOrderAscending has to actually be ascending,
+ * so sort and filter here rather than trusting the feed.
+ */
+function upcomingEventPages() {
+  const now = Date.now();
+
+  return eventPages
+    .filter((entry) => {
+      const at = new Date(entry.item.startsAt).getTime();
+      return Number.isFinite(at) && at >= now;
+    })
+    .sort((a, b) => new Date(a.item.startsAt) - new Date(b.item.startsAt));
 }
 
 function upcomingEventJsonLd() {
@@ -594,27 +617,68 @@ function buildSeoHead(routePath, { is404 = false } = {}) {
           }),
         );
       }
+
+      // Google drives its event carousel from a summary page's ItemList, whose
+      // entries point at pages that each focus on ONE event. The @graph above
+      // cannot do that job: it describes many events on a page that is about
+      // many events, which is explicitly outside the single-event experience.
+      // These entries point at the /whats-on pages, which carry the full Event
+      // markup — so this is the only markup on the site that can put MARRA's own
+      // pages in the carousel that renders above the ordinary blue links.
+      const carouselItems = upcomingEventPages();
+
+      if (carouselItems.length > 0) {
+        lines.push(
+          jsonLdScript('discover-itemlist', {
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: "What's On in Glen Eira",
+            itemListOrder: 'https://schema.org/ItemListOrderAscending',
+            numberOfItems: carouselItems.length,
+            itemListElement: carouselItems.map((entry, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              url: getAbsoluteUrl(entry.path),
+            })),
+          }),
+        );
+      }
     }
 
     if (canonicalPath !== '/') {
+      // A listing page sits under the What's On index, so its trail has to say
+      // so. Claiming Home -> Event skips the level the URL itself declares, and
+      // left Google with a two-step trail for a three-step path.
+      const trail = [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: siteUrl,
+        },
+      ];
+
+      if (canonicalPath.startsWith('/whats-on/')) {
+        trail.push({
+          '@type': 'ListItem',
+          position: 2,
+          name: "What's On in Glen Eira",
+          item: getAbsoluteUrl('/discover'),
+        });
+      }
+
+      trail.push({
+        '@type': 'ListItem',
+        position: trail.length + 1,
+        name: meta.title.split(' | ')[0],
+        item: canonicalUrl,
+      });
+
       lines.push(
         jsonLdScript('breadcrumbs', {
           '@context': 'https://schema.org',
           '@type': 'BreadcrumbList',
-          itemListElement: [
-            {
-              '@type': 'ListItem',
-              position: 1,
-              name: 'Home',
-              item: siteUrl,
-            },
-            {
-              '@type': 'ListItem',
-              position: 2,
-              name: meta.title.split(' | ')[0],
-              item: canonicalUrl,
-            },
-          ],
+          itemListElement: trail,
         }),
       );
     }
@@ -677,6 +741,13 @@ if (!fs.existsSync(indexHtmlPath)) {
 
 const indexHtmlTemplate = fs.readFileSync(indexHtmlPath, 'utf8');
 const redirectRules = [];
+
+// Every listing lives under /whats-on/<org>/<slug>, but /whats-on itself was
+// never a page — it answered 404 for anyone who trimmed the URL back, and for
+// the crawlers that try parent paths as a matter of course. /discover already IS
+// the What's On index, and duplicating it at a second URL would just split the
+// signal, so point the parent at it permanently.
+redirectRules.push('/whats-on /discover 301');
 let prerenderedCount = 0;
 
 for (const route of routes) {
