@@ -70,25 +70,39 @@ function rateLimitKeys(ip, now = new Date()) {
   return [{ key: `ip-${ipHash}`, limit: 5 }, { key: 'global', limit: 100 }].map((item) => ({ ...item, bucket }));
 }
 
-async function consumeAgreementRateLimit(connectionString, ip, now = new Date()) {
+async function consumeAgreementRateLimit(
+  connectionString,
+  ip,
+  now = new Date(),
+  createClient = (value) => TableClient.fromConnectionString(value, 'VolunteerAgreementRateLimits'),
+) {
   if (!connectionString) throw new Error('AzureWebJobsStorage is required for durable rate limiting.');
-  const client = TableClient.fromConnectionString(connectionString, 'VolunteerAgreementRateLimits');
+  const client = createClient(connectionString);
   await client.createTable().catch((error) => { if (error.statusCode !== 409) throw error; });
   for (const item of rateLimitKeys(ip, now)) {
+    let updated = false;
     for (let attempt = 0; attempt < 8; attempt++) {
       try {
         const entity = await client.getEntity(item.bucket, item.key);
         if (Number(entity.count) >= item.limit) return false;
         await client.updateEntity({ ...entity, count: Number(entity.count) + 1 }, 'Replace', { etag: entity.etag });
+        updated = true;
         break;
       } catch (error) {
         if (error.statusCode === 404) {
-          try { await client.createEntity({ partitionKey: item.bucket, rowKey: item.key, count: 1 }); break; }
+          try {
+            await client.createEntity({ partitionKey: item.bucket, rowKey: item.key, count: 1 });
+            updated = true;
+            break;
+          }
           catch (createError) { if (createError.statusCode === 409) continue; throw createError; }
         }
         if (error.statusCode === 412) continue;
         throw error;
       }
+    }
+    if (!updated) {
+      throw new Error(`Rate-limit update contention exceeded the retry budget for ${item.key}.`);
     }
   }
   return true;

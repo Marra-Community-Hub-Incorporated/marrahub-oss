@@ -17,10 +17,25 @@ const REQUIRED_FIELDS = [
   'signedDate',
   'agreementVersion',
   'signedAtIso',
-  'signatureImage',
   'turnstileToken',
   'pdfBase64',
 ];
+
+const FIELD_LIMITS = {
+  fullName: 200,
+  email: 320,
+  phone: 50,
+  area: 200,
+  emergencyContact: 300,
+  dietary: 200,
+  allergies: 1000,
+  signedName: 200,
+  startDate: 32,
+  signedDate: 32,
+  agreementVersion: 64,
+  signedAtIso: 64,
+  turnstileToken: 4096,
+};
 
 app.http('volunteerAgreement', {
   methods: ['POST', 'OPTIONS'],
@@ -45,6 +60,11 @@ app.http('volunteerAgreement', {
         return json(400, { error: `Missing or invalid field: ${field}` }, cors);
       }
     }
+    for (const [field, limit] of Object.entries(FIELD_LIMITS)) {
+      if (typeof body[field] === 'string' && body[field].length > limit) {
+        return json(400, { error: `Field is too long: ${field}` }, cors);
+      }
+    }
 
     const turnstileSecret = process.env.TURNSTILE_SECRET;
     if (!turnstileSecret) {
@@ -56,17 +76,17 @@ app.http('volunteerAgreement', {
       return json(400, { error: 'Security verification failed. Please try again.' }, cors);
     }
 
+    const pdfValidation = validatePdfBase64(body.pdfBase64);
+    if (!pdfValidation.ok) {
+      return json(400, { error: pdfValidation.error }, cors);
+    }
+
     try {
       const allowed = await consumeAgreementRateLimit(process.env.AzureWebJobsStorage, clientIp(request));
       if (!allowed) return json(429, { error: 'Too many agreement submissions. Please try again later.' }, cors);
     } catch (err) {
       context.error('durable rate limit error:', err);
       return json(503, { error: 'Submission protection is temporarily unavailable.' }, cors);
-    }
-
-    const pdfValidation = validatePdfBase64(body.pdfBase64);
-    if (!pdfValidation.ok) {
-      return json(400, { error: pdfValidation.error }, cors);
     }
 
     let token;
@@ -123,13 +143,11 @@ function corsHeaders(origin) {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
-  const isAllowed = allowed.length === 0 || allowed.includes(origin);
-  if (!isAllowed) {
+  if (allowed.length === 0 || !allowed.includes(origin)) {
     return undefined;
   }
-  const allowOrigin = allowed.length === 0 ? '*' : origin;
   return {
-    'Access-Control-Allow-Origin': allowOrigin,
+    'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     Vary: 'Origin',

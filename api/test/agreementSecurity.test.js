@@ -2,7 +2,12 @@
 
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
-const { readJsonWithLimit, validatePdfBase64, rateLimitKeys } = require('../src/lib/agreementSecurity');
+const {
+  readJsonWithLimit,
+  validatePdfBase64,
+  rateLimitKeys,
+  consumeAgreementRateLimit,
+} = require('../src/lib/agreementSecurity');
 
 test('bounded reader rejects declared and streamed oversized bodies before JSON parsing', async () => {
   const declared = new Request('https://example.test', { method: 'POST', headers: { 'content-length': '100' }, body: '{}' });
@@ -36,4 +41,27 @@ test('rate keys cap each source and the global workflow bucket', () => {
     { key: 'ip', limit: 5, bucket: '2026-08-18T04' },
     { key: 'global', limit: 100, bucket: '2026-08-18T04' },
   ]);
+});
+
+test('durable rate limiting fails closed after repeated optimistic concurrency conflicts', async () => {
+  let updateAttempts = 0;
+  const client = {
+    createTable: async () => {},
+    getEntity: async () => ({ partitionKey: 'bucket', rowKey: 'ip', count: 0, etag: 'stale' }),
+    updateEntity: async () => {
+      updateAttempts += 1;
+      throw Object.assign(new Error('precondition failed'), { statusCode: 412 });
+    },
+  };
+
+  await assert.rejects(
+    consumeAgreementRateLimit(
+      'UseDevelopmentStorage=true',
+      '192.0.2.1',
+      new Date('2026-08-18T04:20:00Z'),
+      () => client,
+    ),
+    /retry budget/,
+  );
+  assert.equal(updateAttempts, 8);
 });
