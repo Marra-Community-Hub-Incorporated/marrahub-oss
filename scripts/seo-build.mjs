@@ -872,7 +872,8 @@ if (!siteUrl) {
     fs.unlinkSync(sitemapPath);
   }
 
-  fs.writeFileSync(robotsPath, 'User-agent: *\nAllow: /\n', 'utf8');
+  // No group here on purpose — see the note on the main robots.txt write below.
+  fs.writeFileSync(robotsPath, '# Crawl rules are served by Cloudflare.\n', 'utf8');
   console.warn('SEO build: VITE_SITE_URL is not set. Skipping sitemap.xml generation.');
   process.exit(0);
 }
@@ -906,8 +907,21 @@ const xmlLines = [
 ];
 
 fs.writeFileSync(sitemapPath, `${xmlLines.join('\n')}\n`, 'utf8');
-fs.writeFileSync(
-  robotsPath,
-  `User-agent: *\nAllow: /\nSitemap: ${siteUrl}/sitemap.xml\n`,
-  'utf8',
-);
+// Sitemap only, and deliberately no "User-agent: *" group.
+//
+// Cloudflare prepends its own managed block to this file at the edge, and that
+// block already contains a "User-agent: *" group (plus the AI-crawler rules and
+// the Content-Signal line). Emitting a second one here meant the served
+// robots.txt carried two groups for the same user-agent, which parsers are not
+// obliged to merge the way a human reads it.
+//
+// That is not theoretical. Python's stdlib robotparser, pointed at two
+// third-party sites with duplicate "User-agent: *" groups, reported paths as
+// disallowed that neither file actually disallows — so the same shape on our own
+// domain is a real risk of being read as more restrictive than intended.
+//
+// Dropping the group loses nothing: it said "Allow: /", and the absence of any
+// rule already means exactly that. Cloudflare's managed block carries the
+// sitemap too, but keep it here so the file still points at the sitemap if that
+// block is ever turned off.
+fs.writeFileSync(robotsPath, `Sitemap: ${siteUrl}/sitemap.xml\n`, 'utf8');
