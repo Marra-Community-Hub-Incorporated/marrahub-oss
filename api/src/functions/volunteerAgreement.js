@@ -3,7 +3,12 @@
 const { app } = require('@azure/functions');
 const { verifyTurnstile } = require('../lib/turnstile');
 const { getGraphToken, sendMailWithAttachment, uploadToSharePoint } = require('../lib/graph');
-const { readJsonWithLimit, validatePdfBase64, consumeAgreementRateLimit } = require('../lib/agreementSecurity');
+const {
+  readJsonWithLimit,
+  validatePdfBase64,
+  clientIpFromHeaders,
+  consumeAgreementRateLimit,
+} = require('../lib/agreementSecurity');
 
 const REQUIRED_FIELDS = [
   'fullName',
@@ -71,7 +76,8 @@ app.http('volunteerAgreement', {
       return json(500, { error: 'Security configuration missing: TURNSTILE_SECRET.' }, cors);
     }
 
-    const ok = await verifyTurnstile(turnstileSecret, body.turnstileToken, clientIp(request));
+    const clientIp = clientIpFromHeaders(request.headers);
+    const ok = await verifyTurnstile(turnstileSecret, body.turnstileToken, clientIp);
     if (!ok) {
       return json(400, { error: 'Security verification failed. Please try again.' }, cors);
     }
@@ -82,7 +88,7 @@ app.http('volunteerAgreement', {
     }
 
     try {
-      const allowed = await consumeAgreementRateLimit(process.env.AzureWebJobsStorage, clientIp(request));
+      const allowed = await consumeAgreementRateLimit(process.env.AzureWebJobsStorage, clientIp);
       if (!allowed) return json(429, { error: 'Too many agreement submissions. Please try again later.' }, cors);
     } catch (err) {
       context.error('durable rate limit error:', err);
@@ -171,14 +177,6 @@ function parseRecipientList(rawRecipients, sender) {
 
 function json(status, obj, headers) {
   return { status, headers: { 'Content-Type': 'application/json', ...headers }, jsonBody: obj };
-}
-
-function clientIp(request) {
-  return (
-    request.headers.get('cf-connecting-ip') ||
-    (request.headers.get('x-forwarded-for') || '').split(',')[0].trim() ||
-    ''
-  );
 }
 
 function safe(s) {

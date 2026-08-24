@@ -85,6 +85,11 @@ Backend settings:
 | `SHAREPOINT_FOLDER` | Optional destination folder |
 | `AzureWebJobsStorage` | Required Azure Functions storage and durable rate-limit counters |
 
+The volunteer endpoint accepts the source address only from Azure App Service's
+`x-client-ip` header. It deliberately ignores caller-controlled forwarding
+headers; requests without the trusted header share the conservative `unknown`
+rate-limit bucket.
+
 ## Validation
 
 Run these before submitting a PR:

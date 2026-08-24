@@ -6,6 +6,7 @@ const {
   readJsonWithLimit,
   validatePdfBase64,
   rateLimitKeys,
+  clientIpFromHeaders,
   consumeAgreementRateLimit,
 } = require('../src/lib/agreementSecurity');
 
@@ -36,11 +37,34 @@ test('PDF validation accepts a jsPDF-shaped view destination but not an action',
   assert.equal(validatePdfBase64(pdf('/OpenAction << /S /GoTo /D [3 0 R /Fit] >>')).ok, false);
 });
 
+test('PDF validation rejects escaped active names and compressed-object syntax', () => {
+  const encode = (value) => Buffer.from(value, 'latin1').toString('base64');
+  const pdf = (content) => encode(`%PDF-1.7\n${content}\nstartxref\n9\n%%EOF`);
+
+  assert.equal(validatePdfBase64(pdf('/Names << /J#61vaScript 4 0 R >>')).ok, false);
+  assert.equal(validatePdfBase64(pdf('<< /Type /ObjStm /Filter /FlateDecode >>')).ok, false);
+  assert.equal(validatePdfBase64(pdf('<< /Encrypt 4 0 R >>')).ok, false);
+  assert.equal(validatePdfBase64(pdf('(Unit #12 is ordinary text)')).ok, true);
+});
+
 test('rate keys cap each source and the global workflow bucket', () => {
   assert.deepEqual(rateLimitKeys('192.0.2.1', new Date('2026-08-18T04:20:00Z')).map(({ key, limit, bucket }) => ({ key: key.startsWith('ip-') ? 'ip' : key, limit, bucket })), [
     { key: 'ip', limit: 5, bucket: '2026-08-18T04' },
     { key: 'global', limit: 100, bucket: '2026-08-18T04' },
   ]);
+});
+
+test('client identity ignores caller-supplied Cloudflare and forwarding headers', () => {
+  const spoofed = new Headers({
+    'cf-connecting-ip': '203.0.113.99',
+    'x-forwarded-for': '203.0.113.98',
+    'x-client-ip': '198.51.100.42',
+  });
+  assert.equal(clientIpFromHeaders(spoofed), '198.51.100.42');
+  assert.equal(
+    clientIpFromHeaders(new Headers({ 'cf-connecting-ip': '203.0.113.99' })),
+    '',
+  );
 });
 
 test('durable rate limiting fails closed after repeated optimistic concurrency conflicts', async () => {

@@ -105,6 +105,12 @@ The signed PDF should arrive in your `NOTIFY_RECIPIENT` inbox.
 > Cloudflare test widget/secret and run Azurite (or use an isolated development
 > storage account) before submitting locally.
 
+The production Function relies on Azure App Service's `x-client-ip` header for
+the per-source quota. Do not replace it with caller-supplied forwarding headers.
+If a CDN or Front Door is added later, restrict the Function origin to that
+proxy and explicitly document which proxy-authenticated client-IP header is
+trusted.
+
 ---
 
 ## Step 4 — Deploy to Azure
