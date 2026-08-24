@@ -56,7 +56,7 @@ export function About() {
                 title="The Meaning of MARRA"
                 align="left"
               />
-              <div className="space-y-6 text-muted-foreground leading-relaxed">
+              <div className="max-w-[70ch] space-y-8 text-muted-foreground leading-relaxed">
                 <p>
                   The name <strong className="text-foreground">MARRA</strong> is inspired by Aboriginal 
                   language, representing concepts of connection, helping hands, and working together. 
@@ -89,7 +89,7 @@ export function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="space-y-6 text-muted-foreground leading-relaxed"
+            className="mx-auto max-w-[70ch] space-y-8 text-muted-foreground leading-relaxed"
           >
             <p>
               MARRA began in Caulfield South in response to a growing need for inclusive,

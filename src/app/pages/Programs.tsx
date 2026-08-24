@@ -198,7 +198,7 @@ export function Programs() {
                   <h2 className="font-serif text-4xl md:text-5xl text-primary mb-6 leading-tight">
                     Volunteer IT Program
                   </h2>
-                  <div className="space-y-4 text-muted-foreground leading-relaxed text-lg mb-8">
+                  <div className="max-w-[70ch] space-y-9 text-muted-foreground leading-relaxed text-lg mb-8">
                     <p>
                       Hands-on volunteering for people with an IT background — especially those
                       who find that a lack of local experience holds them back in the Australian

@@ -366,7 +366,7 @@ export function LaunchEvent() {
                 title="Carnegie Library & Community Centre"
                 align="left"
               />
-              <div className="space-y-4 text-muted-foreground leading-relaxed text-lg">
+              <div className="max-w-[70ch] space-y-9 text-muted-foreground leading-relaxed text-lg">
                 <p>
                   We were upstairs on <strong className="text-primary font-semibold">Level 2</strong>{' '}
                   at 7 Shepparson Avenue, Carnegie — right in the heart of Carnegie, a short walk

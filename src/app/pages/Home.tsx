@@ -56,7 +56,7 @@ function EventNoticeBanner() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-            <span className="inline-flex items-center self-start rounded-full bg-white/10 ring-1 ring-accent/40 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
+            <span className="inline-flex items-center self-start rounded-full bg-white/10 ring-1 ring-accent/40 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-white">
               First Event
             </span>
             <p className="text-sm md:text-base text-primary-foreground/90">
@@ -439,7 +439,7 @@ export function Home() {
                 title="Connection, Helping Hands & Working Together"
                 align="left"
               />
-              <div className="space-y-6 text-muted-foreground leading-relaxed text-lg">
+              <div className="max-w-[70ch] space-y-9 text-muted-foreground leading-relaxed text-lg">
                 <p>
                   The name <strong className="text-primary font-semibold">MARRA</strong> is inspired by Aboriginal language. 
                   It represents the very essence of what we do: reaching out, providing support, and building lasting bonds.
