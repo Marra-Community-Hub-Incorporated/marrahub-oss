@@ -73,27 +73,36 @@ Backend settings:
 
 | Setting | Purpose |
 |---|---|
-| `TENANT_ID` | Microsoft Entra tenant id |
-| `CLIENT_ID` | App registration client id |
-| `CLIENT_SECRET` | App registration secret; never commit |
-| `GRAPH_SENDER` | Sender mailbox |
-| `NOTIFY_RECIPIENT` | Recipient mailbox or comma-separated list |
-| `TURNSTILE_SECRET` | Server-side Turnstile secret; never commit |
-| `ALLOWED_ORIGINS` | CORS allowlist |
+| `TENANT_ID` | Microsoft Entra directory tenant id |
+| `CLIENT_ID` | Entra app registration client id |
+| `CLIENT_SECRET` | Entra app registration secret; never commit |
+| `GRAPH_SENDER` | Mailbox used to send signed agreements |
+| `NOTIFY_RECIPIENT` | Organisation-controlled recipient mailbox or comma-separated list |
+| `TURNSTILE_SECRET` | Required server-side Turnstile secret; missing configuration fails closed |
+| `ALLOWED_ORIGINS` | Required CORS allowlist; missing configuration rejects requests |
 | `SHAREPOINT_ENABLED` | Enables optional SharePoint upload |
 | `SHAREPOINT_SITE_ID` | Optional SharePoint site id |
 | `SHAREPOINT_FOLDER` | Optional destination folder |
+| `AzureWebJobsStorage` | Required Azure Functions storage and durable rate-limit counters |
+
+The volunteer endpoint accepts the source address only from Azure App Service's
+`x-client-ip` header. It deliberately ignores caller-controlled forwarding
+headers; requests without the trusted header share the conservative `unknown`
+rate-limit bucket.
 
 ## Validation
 
 Run these before submitting a PR:
 
 ```bash
+npm test
 npm run typecheck
 npm run lint
 npm run build
 npm ci --prefix api
+node --test api/test/*.test.js
 node --check api/src/functions/volunteerAgreement.js
+node --check api/src/lib/agreementSecurity.js
 node --check api/src/lib/graph.js
 node --check api/src/lib/turnstile.js
 ```

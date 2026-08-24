@@ -16,6 +16,7 @@ async function verifyTurnstile(secret, token, remoteIp) {
       method: 'POST',
       body: form,
     });
+    if (!res.ok) return false;
     const data = await res.json();
     return Boolean(data && data.success);
   } catch {

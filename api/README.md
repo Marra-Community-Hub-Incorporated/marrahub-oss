@@ -73,8 +73,9 @@ Fill `local.settings.json`:
 | `CLIENT_SECRET` | The secret **Value** from Step 1 |
 | `GRAPH_SENDER` | Mailbox to send **from**, e.g. `hello@marrahub.com.au` |
 | `NOTIFY_RECIPIENT` | Where agreements should arrive (comma-separate for several) |
-| `TURNSTILE_SECRET` | Cloudflare Turnstile **secret** key (see Step 5). Leave blank to skip spam checks locally. |
-| `ALLOWED_ORIGINS` | `https://marrahub.com.au,http://localhost:5173` |
+| `TURNSTILE_SECRET` | Cloudflare Turnstile **secret** key (see Step 5). Required; use a Cloudflare test widget/secret for local work. |
+| `ALLOWED_ORIGINS` | Required CORS allowlist, e.g. `https://marrahub.com.au,http://localhost:5173` |
+| `AzureWebJobsStorage` | Required by Azure Functions and the durable upload limiter. Use `UseDevelopmentStorage=true` with Azurite locally. |
 | `SHAREPOINT_ENABLED` | `false` for now |
 
 `local.settings.json` is git-ignored — secrets never get committed.
@@ -86,6 +87,7 @@ Fill `local.settings.json`:
 ```bash
 cd api
 npm install
+npm test
 npm start          # starts http://localhost:7071/api/volunteer-agreement
 ```
 
@@ -99,9 +101,15 @@ Then run the site (`npm run dev`), open `/volunteer`, fill it in, and submit.
 The signed PDF should arrive in your `NOTIFY_RECIPIENT` inbox.
 
 > Sending email via Graph works even when running locally — it uses your real
-> tenant. (Turnstile's widget won't load on `localhost` unless you add localhost
-> to the Turnstile widget's allowed hostnames in Cloudflare; leaving
-> `TURNSTILE_SECRET` blank lets the backend accept local submissions for testing.)
+> tenant. Turnstile and the durable rate limiter do not fail open: configure a
+> Cloudflare test widget/secret and run Azurite (or use an isolated development
+> storage account) before submitting locally.
+
+The production Function relies on Azure App Service's `x-client-ip` header for
+the per-source quota. Do not replace it with caller-supplied forwarding headers.
+If a CDN or Front Door is added later, restrict the Function origin to that
+proxy and explicitly document which proxy-authenticated client-IP header is
+trusted.
 
 ---
 

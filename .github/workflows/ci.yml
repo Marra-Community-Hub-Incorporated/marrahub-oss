@@ -49,6 +49,8 @@ jobs:
         run: npm run typecheck
       - name: Lint (eslint)
         run: npm run lint
+      - name: Contract tests
+        run: npm test
       - name: Production build must succeed
         run: npm run build
       - name: Dependency audit (informational)
@@ -71,8 +73,13 @@ jobs:
         working-directory: api
         run: |
           node --check src/functions/volunteerAgreement.js
+          node --check src/lib/agreementSecurity.js
+          node --check src/lib/pdfValidation.js
           node --check src/lib/graph.js
           node --check src/lib/turnstile.js
+      - name: API tests
+        run: npm test
+        working-directory: api
       - name: API dependency audit (informational)
         run: npm audit --audit-level=high || true
         working-directory: api

@@ -3,6 +3,12 @@
 const { app } = require('@azure/functions');
 const { verifyTurnstile } = require('../lib/turnstile');
 const { getGraphToken, sendMailWithAttachment, uploadToSharePoint } = require('../lib/graph');
+const {
+  readJsonWithLimit,
+  validatePdfBase64,
+  clientIpFromHeaders,
+  consumeAgreementRateLimit,
+} = require('../lib/agreementSecurity');
 
 const REQUIRED_FIELDS = [
   'fullName',
@@ -12,11 +18,29 @@ const REQUIRED_FIELDS = [
   'emergencyContact',
   'dietary',
   'signedName',
+  'startDate',
+  'signedDate',
+  'agreementVersion',
+  'signedAtIso',
+  'turnstileToken',
   'pdfBase64',
 ];
 
-// Max base64 length for the attached PDF (~8 MB encoded). Guards against abuse.
-const MAX_PDF_BASE64 = 8 * 1024 * 1024;
+const FIELD_LIMITS = {
+  fullName: 200,
+  email: 320,
+  phone: 50,
+  area: 200,
+  emergencyContact: 300,
+  dietary: 200,
+  allergies: 1000,
+  signedName: 200,
+  startDate: 32,
+  signedDate: 32,
+  agreementVersion: 64,
+  signedAtIso: 64,
+  turnstileToken: 4096,
+};
 
 app.http('volunteerAgreement', {
   methods: ['POST', 'OPTIONS'],
@@ -24,35 +48,51 @@ app.http('volunteerAgreement', {
   route: 'volunteer-agreement',
   handler: async (request, context) => {
     const cors = corsHeaders(request.headers.get('origin') || '');
+    if (!cors) {
+      return json(403, { error: 'Cross-origin request is not allowed.' }, {});
+    }
 
     if (request.method === 'OPTIONS') {
       return { status: 204, headers: cors };
     }
 
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return json(400, { error: 'Invalid JSON body.' }, cors);
-    }
+    const parsed = await readJsonWithLimit(request);
+    if (parsed.error) return json(parsed.status, { error: parsed.error }, cors);
+    const body = parsed.body;
 
     for (const field of REQUIRED_FIELDS) {
       if (!body[field] || typeof body[field] !== 'string') {
         return json(400, { error: `Missing or invalid field: ${field}` }, cors);
       }
     }
-
-    if (body.pdfBase64.length > MAX_PDF_BASE64) {
-      return json(413, { error: 'Attachment too large.' }, cors);
+    for (const [field, limit] of Object.entries(FIELD_LIMITS)) {
+      if (typeof body[field] === 'string' && body[field].length > limit) {
+        return json(400, { error: `Field is too long: ${field}` }, cors);
+      }
     }
 
-    // Spam protection — only enforced when a Turnstile secret is configured.
     const turnstileSecret = process.env.TURNSTILE_SECRET;
-    if (turnstileSecret) {
-      const ok = await verifyTurnstile(turnstileSecret, body.turnstileToken, clientIp(request));
-      if (!ok) {
-        return json(400, { error: 'Security verification failed. Please try again.' }, cors);
-      }
+    if (!turnstileSecret) {
+      return json(500, { error: 'Security configuration missing: TURNSTILE_SECRET.' }, cors);
+    }
+
+    const clientIp = clientIpFromHeaders(request.headers);
+    const ok = await verifyTurnstile(turnstileSecret, body.turnstileToken, clientIp);
+    if (!ok) {
+      return json(400, { error: 'Security verification failed. Please try again.' }, cors);
+    }
+
+    const pdfValidation = validatePdfBase64(body.pdfBase64);
+    if (!pdfValidation.ok) {
+      return json(400, { error: pdfValidation.error }, cors);
+    }
+
+    try {
+      const allowed = await consumeAgreementRateLimit(process.env.AzureWebJobsStorage, clientIp);
+      if (!allowed) return json(429, { error: 'Too many agreement submissions. Please try again later.' }, cors);
+    } catch (err) {
+      context.error('durable rate limit error:', err);
+      return json(503, { error: 'Submission protection is temporarily unavailable.' }, cors);
     }
 
     let token;
@@ -63,12 +103,12 @@ app.http('volunteerAgreement', {
       return json(500, { error: 'Server email configuration error.' }, cors);
     }
 
-    const filename = body.pdfFilename || `Marra-Volunteer-Agreement-${safe(body.fullName)}.pdf`;
+    const filename = `Marra-Volunteer-Agreement-${safe(body.fullName)}.pdf`;
     const sender = process.env.GRAPH_SENDER;
-    const recipients = (process.env.NOTIFY_RECIPIENT || sender || '')
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const recipients = parseRecipientList(process.env.NOTIFY_RECIPIENT, sender);
+    if (!recipients.length) {
+      return json(500, { error: 'Server email configuration error.' }, cors);
+    }
 
     // 1) Email the signed PDF to the organisation.
     try {
@@ -83,25 +123,6 @@ app.http('volunteerAgreement', {
     } catch (err) {
       context.error('sendMail error:', err);
       return json(502, { error: 'Could not send the agreement email.' }, cors);
-    }
-
-    // 1b) Send the volunteer a thank-you confirmation with a copy of their
-    //     signed agreement. Non-fatal: a bounce (e.g. a mistyped address) must
-    //     not fail the submission — the org has already received the record.
-    //     Skipped if CONFIRMATION_EMAIL_ENABLED is explicitly set to "false".
-    if (String(process.env.CONFIRMATION_EMAIL_ENABLED || 'true').toLowerCase() !== 'false') {
-      try {
-        await sendMailWithAttachment(token, {
-          sender,
-          to: [body.email],
-          subject: 'Thank you for volunteering with Marra Community Hub',
-          html: buildConfirmationHtml(body),
-          attachmentName: filename,
-          attachmentBase64: body.pdfBase64,
-        });
-      } catch (err) {
-        context.error('confirmation email error (non-fatal):', err);
-      }
     }
 
     // 2) Optionally file it in SharePoint. Failure here does NOT fail the
@@ -128,26 +149,34 @@ function corsHeaders(origin) {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
-  const allowOrigin =
-    allowed.length === 0 ? '*' : allowed.includes(origin) ? origin : allowed[0];
+  if (allowed.length === 0 || !allowed.includes(origin)) {
+    return undefined;
+  }
   return {
-    'Access-Control-Allow-Origin': allowOrigin,
+    'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     Vary: 'Origin',
   };
 }
 
-function json(status, obj, headers) {
-  return { status, headers: { 'Content-Type': 'application/json', ...headers }, jsonBody: obj };
+function parseRecipientList(rawRecipients, sender) {
+  const fromEnv = (rawRecipients || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .filter((candidate) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate));
+  if (fromEnv.length) {
+    return fromEnv;
+  }
+  if (sender && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sender)) {
+    return [sender];
+  }
+  return [];
 }
 
-function clientIp(request) {
-  return (
-    request.headers.get('cf-connecting-ip') ||
-    (request.headers.get('x-forwarded-for') || '').split(',')[0].trim() ||
-    ''
-  );
+function json(status, obj, headers) {
+  return { status, headers: { 'Content-Type': 'application/json', ...headers }, jsonBody: obj };
 }
 
 function safe(s) {
@@ -181,25 +210,5 @@ function buildEmailHtml(b) {
       ${row('Signed date', b.signedDate || '—')}
       ${row('Agreement version', b.agreementVersion || '—')}
     </table>
-  </div>`;
-}
-
-// Friendly confirmation emailed to the volunteer (from GRAPH_SENDER) with a copy
-// of their signed agreement attached. All interpolated values are escaped.
-function buildConfirmationHtml(b) {
-  const firstName = esc((b.fullName || '').trim().split(/\s+/)[0] || 'there');
-  return `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1c1c1c;line-height:1.6;max-width:560px;margin:0 auto">
-    <div style="background:#1e453a;color:#ffffff;padding:20px 24px;border-radius:12px 12px 0 0">
-      <h1 style="margin:0;font-size:20px">Marra Community Hub</h1>
-      <p style="margin:4px 0 0;opacity:0.85;font-size:13px">Volunteer Agreement</p>
-    </div>
-    <div style="border:1px solid #1e453a1f;border-top:none;padding:24px;border-radius:0 0 12px 12px">
-      <p style="margin:0 0 14px">Hi ${firstName},</p>
-      <p style="margin:0 0 14px">Thank you so much for signing up to volunteer with <strong>Marra Community Hub</strong>! We've received your signed Volunteer Agreement and we're thrilled to have you on board.</p>
-      <p style="margin:0 0 14px">We'll be in touch soon with the next steps${b.area ? ` about <strong>${esc(b.area)}</strong>` : ''}. In the meantime, a copy of your signed agreement is attached for your records.</p>
-      <p style="margin:0 0 14px">If you have any questions, just reply to this email &mdash; we're always happy to help.</p>
-      <p style="margin:18px 0 0">With gratitude,<br/><strong>The Marra Community Hub Team</strong></p>
-    </div>
-    <p style="margin:16px 0 0;font-size:12px;color:#666666;text-align:center">This is an automated confirmation from Marra Community Hub Incorporated &middot; marrahub.com.au</p>
   </div>`;
 }
