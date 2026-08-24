@@ -74,6 +74,7 @@ jobs:
         run: |
           node --check src/functions/volunteerAgreement.js
           node --check src/lib/agreementSecurity.js
+          node --check src/lib/pdfValidation.js
           node --check src/lib/graph.js
           node --check src/lib/turnstile.js
       - name: API tests
