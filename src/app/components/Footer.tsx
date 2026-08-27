@@ -21,28 +21,28 @@ export function Footer() {
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/about" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <Link to="/about" className="inline-block py-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                   About MARRA
                 </Link>
               </li>
               <li>
-                <Link to="/programs" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <Link to="/programs" className="inline-block py-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                   Programs & Services
                 </Link>
               </li>
               <li>
-                <Link to="/impact" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <Link to="/impact" className="inline-block py-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                   Community Impact
                 </Link>
               </li>
               <li>
-                <Link to="/governance" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <Link to="/governance" className="inline-block py-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                   Governance
                 </Link>
               </li>
               {featureFlags.volunteer && (
                 <li>
-                  <Link to="/volunteer" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                  <Link to="/volunteer" className="inline-block py-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                     Volunteer
                   </Link>
                 </li>
@@ -62,14 +62,14 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail size={20} className="flex-shrink-0" />
-                <a href="mailto:hello@marrahub.com.au" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <a href="mailto:hello@marrahub.com.au" className="inline-block py-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                   hello@marrahub.com.au
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <Phone size={20} className="mt-1 flex-shrink-0" />
                 <div className="text-primary-foreground/80">
-                  <a href="tel:+61433212855" className="hover:text-primary-foreground transition-colors">
+                  <a href="tel:+61433212855" className="inline-block py-2 hover:text-primary-foreground transition-colors">
                     0433 212 855
                   </a>
                 </div>
@@ -82,22 +82,22 @@ export function Footer() {
             <h4 className="font-semibold mb-4">Transparency</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/governance" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <Link to="/governance" className="inline-block py-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                   Governance Structure
                 </Link>
               </li>
               <li>
-                <Link to="/governance#safeguarding" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <Link to="/governance#safeguarding" className="inline-block py-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                   Safeguarding Policy
                 </Link>
               </li>
               <li>
-                <Link to="/governance#accountability" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <Link to="/governance#accountability" className="inline-block py-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                   Accountability
                 </Link>
               </li>
               <li>
-                <Link to="/contact#accessibility" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <Link to="/contact#accessibility" className="inline-block py-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                   Accessibility
                 </Link>
               </li>
