@@ -360,9 +360,9 @@ export function Contact() {
                   If you're experiencing a crisis or urgent situation, please contact:
                 </p>
                 <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>Emergency Services: <a href="tel:000" className="text-primary hover:underline">000</a></li>
-                  <li>Lifeline: <a href="tel:131114" className="text-primary hover:underline">13 11 14</a></li>
-                  <li>Beyond Blue: <a href="tel:1300224636" className="text-primary hover:underline">1300 22 4636</a></li>
+                  <li>Emergency Services: <a href="tel:000" className="inline-block py-2 text-primary hover:underline">000</a></li>
+                  <li>Lifeline: <a href="tel:131114" className="inline-block py-2 text-primary hover:underline">13 11 14</a></li>
+                  <li>Beyond Blue: <a href="tel:1300224636" className="inline-block py-2 text-primary hover:underline">1300 22 4636</a></li>
                 </ul>
               </div>
             </motion.div>
