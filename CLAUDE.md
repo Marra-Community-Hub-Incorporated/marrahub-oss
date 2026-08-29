@@ -18,6 +18,7 @@ npm install
 npm run dev          # Vite dev server with hot reload
 npm run build         # production build to dist/ + scripts/seo-build.mjs post-processing
 npm run preview       # build, then serve it via `wrangler dev` locally
+npm test              # node --test tests/*.test.mjs
 npm run typecheck     # tsc --noEmit
 npm run lint          # eslint .
 npm run format        # prettier --write .
@@ -25,9 +26,10 @@ npm run format:check  # prettier --check .
 npm run deploy        # build, then `wrangler deploy` (Cloudflare)
 ```
 
-There is no test suite/runner configured in this repo (no `test` script, no
-`*.test.*`/`*.spec.*` files) — validation is typecheck + lint + a successful
-build.
+Tests run with `npm test` (`node --test tests/*.test.mjs`); CI runs them as the
+"Contract tests" step. Coverage is deliberately thin — the volunteer-agreement
+contract test, plus `api/test/agreementSecurity.test.js` on the API side — so
+validation is typecheck + lint + tests + a successful build.
 
 The optional backend in `api/` (an Azure Function) is a separate Node project
 with its own `package.json`, excluded from the website's `lint`/`typecheck`.
