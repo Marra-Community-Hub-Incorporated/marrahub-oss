@@ -133,7 +133,7 @@ export const SignaturePad = forwardRef<SignaturePadHandle, SignaturePadProps>(
             type="button"
             onClick={clear}
             disabled={disabled || !hasInk}
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors disabled:opacity-50 disabled:pointer-events-none"
+            className=" py-2 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors disabled:opacity-50 disabled:pointer-events-none"
           >
             <Eraser size={16} />
             Clear signature

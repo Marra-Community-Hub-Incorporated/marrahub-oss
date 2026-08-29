@@ -311,7 +311,7 @@ export function Contact() {
                   <div>
                     <h3 className="font-semibold mb-1">Phone</h3>
                     <div className="text-muted-foreground space-y-1">
-                      <a href="tel:+61433212855" className="block hover:text-primary transition-colors">
+                      <a href="tel:+61433212855" className="py-2 block hover:text-primary transition-colors">
                         0433 212 855
                       </a>
                     </div>
@@ -327,7 +327,7 @@ export function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Email</h3>
-                    <a href="mailto:hello@marrahub.com.au" className="text-muted-foreground hover:text-primary transition-colors">
+                    <a href="mailto:hello@marrahub.com.au" className="inline-block py-2 text-muted-foreground hover:text-primary transition-colors">
                       hello@marrahub.com.au
                     </a>
                     <p className="text-sm text-muted-foreground mt-1">
