@@ -7,9 +7,18 @@
 useDefault = true
 
 [allowlist]
-description = "Placeholder example files"
+description = "Intentionally-public values and placeholder example files"
 paths = [
   '''\.env\.example$''',
   '''\.env\.production\.example$''',
   '''api/local\.settings\.json\.example$''',
+]
+regexes = [
+  # Cloudflare Web Analytics beacon token — public by design. It was served to
+  # every visitor in index.html so the beacon could attribute the page view; it
+  # grants no read access to the analytics data, and it is NOT a Cloudflare API
+  # token. The value no longer appears in the working tree, but CI scans full
+  # history (fetch-depth: 0), so it must stay allowlisted — otherwise every PR
+  # opened after commit f952e05 fails this job for a reason unrelated to itself.
+  '''d43c23f02d5f47f6a76c8e6b02780e16''',
 ]
