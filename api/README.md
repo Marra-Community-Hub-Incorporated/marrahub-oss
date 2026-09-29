@@ -21,7 +21,7 @@ Browser (website)  ──POST JSON (fields + signed PDF as base64)──►  Azu
 
 ## What you need (one-time)
 
-- An **Azure subscription** (your Microsoft non-profit grant) — to host the Function.
+- An **Azure subscription** — to host the Function.
 - **Microsoft 365** with a mailbox to send from (e.g. `hello@marrahub.com.au`).
 - **Global Administrator** access to your Microsoft Entra (Azure AD) tenant, to
   grant the email permission once.
