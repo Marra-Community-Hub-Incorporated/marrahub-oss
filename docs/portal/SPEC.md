@@ -42,7 +42,7 @@ Role is enforced **server-side** (a trusted `admin` claim), never by hiding a bu
 
 ## 5. Architecture (recommended — open to veto)
 
-Microsoft stack, because the org already has M365/Outlook + Entra ID (nonprofit) and Azure credits.
+Microsoft stack, because the org already uses M365/Outlook + Entra ID.
 
 ```
 Browser ── React site (Cloudflare Pages, existing)
@@ -67,7 +67,7 @@ Browser ── React site (Cloudflare Pages, existing)
 | Secrets | **Azure Key Vault** | Enterprise secret management; never in the public repo |
 
 > Cloud choice: **Azure** (uses existing M365/Entra, most "corporate" stack, strongest
-> cybersec career value). Smaller credit pool ($2k) than Google but ample at this scale.
+> cybersec career value).
 
 ## 6. Data model (Azure SQL — relational)
 
